@@ -1,7 +1,7 @@
 export interface BoardType {
-  Author: number;
-  content: string;
-  id: string;
-  image: string;
-  date: string;
+  id: number;
+  board_content: string;
+  board_user_id: string;
+  board_img: File | string;
+  createAt: string;
 }

@@ -12,6 +12,7 @@ import axios from 'axios';
 
 // types
 import { BoardType } from '@/types/home';
+import { IMessage } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -23,22 +24,39 @@ import Modal from '@/components/Modal';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/useModalOpen';
+import { useSocket } from '@/components/provider/SocketWrapper';
 
 // img
 import TestImg from '@/assets/images/campus.jpg';
-import BoardDetail from '@/components/BoardDetail';
 
 const Home = () => {
+  // const time = new Date();
+
+  // const year = time.getFullYear();
+  // const month = time.getMonth() + 1;
+  // const date = time.getDate();
+
+  // const times = time.toLocaleString('ko-KR', {
+  //   hour: '2-digit',
+  //   minute: '2-digit',
+  //   second: '2-digit',
+  //   hour12: false,
+  // });
+
+  const { socket } = useSocket();
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [currentMessage, setCurrentMessage] = useState<string>('');
+
   const [selected, setSelected] = useRecoilState<BoardType>(selectedPost);
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const [data, setData] = useState<BoardType[]>([
     {
-      Author: 0,
-      content: '',
-      id: '',
-      image: '',
-      date: '',
+      id: 0,
+      board_content: '',
+      board_user_id: '',
+      board_img: '',
+      createAt: '',
     },
   ]);
 
@@ -58,10 +76,46 @@ const Home = () => {
 
   async function getData() {
     try {
-      const response = await axios.get('http://localhost:3001/posts');
-
+      const response = await axios.get('/api/board');
+      // console.log(response);
       if (response.status === 200) {
         setData(response.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function getDateAscendData() {
+    try {
+      const response = await axios.get('/api/board/sort/date_ascend');
+      // console.log('date_ascend: ', response);
+      if (response.status === 200) {
+        setData(response.data.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function getDateDescendData() {
+    try {
+      const response = await axios.get('/api/board/sort/date_descend');
+      // console.log('date_descend: ', response);
+      if (response.status === 200) {
+        setData(response.data.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function getContentAscendData() {
+    try {
+      const response = await axios.get('/api/board/sort/content_ascend');
+      // console.log('content_ascend: ', response);
+      if (response.status === 200) {
+        setData(response.data.data);
       }
     } catch (e) {
       console.log(e);
@@ -71,28 +125,53 @@ const Home = () => {
   function sortingBoards(value: string) {
     switch (value) {
       case '최신순':
-        const newArray = data.map((d) => {
-          const time = new Date(d.date).toJSON();
-          console.log(time);
-          return;
-        });
-        console.log(newArray);
+        getDateDescendData();
         break;
       case '오래된 순':
+        getDateAscendData();
         break;
       case '이름순':
+        getContentAscendData();
         break;
     }
   }
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // sendMessages
+  const sendMessage = async () => {
+    if (currentMessage) {
+      // const res = await fetch('/api/chat', {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     user: username,
+      //     content: currentMessage,
+      //   }),
+      // });
+      // if (res.ok) setCurrentMessage('');
+      const res = await axios.post('/api/chat', {
+        user: 'test',
+        content: currentMessage,
+      });
+
+      console.log(res);
+    }
+  };
 
   useEffect(() => {
-    console.log('data: ', data);
-    console.log('selected data : ', selected);
-  }, [data, selected]);
+    socket?.on('message', (message: IMessage) => {
+      console.log(message);
+      setMessages((prev) => [...prev, message]);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    getData();
+  }, [selected.board_img]);
+
+  useEffect(() => {
+    console.log('data: ', selected);
+    console.log('currentMessage: ', currentMessage);
+    console.log('messages: ', messages);
+  }, [data, currentMessage, messages]);
 
   return (
     <Container>
@@ -114,7 +193,25 @@ const Home = () => {
         }}
       >
         <Nav>
-          <div></div>
+          <div>
+            <input
+              type="file"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const file = e.currentTarget.files?.[0] || null; // 파일 또는 null
+                if (file) {
+                  setSelected({
+                    ...selected,
+                    board_img: file, // Blob 타입을 사용
+                  });
+                }
+              }}
+            />
+            <input onChange={(e) => setCurrentMessage(e.target.value)} />{' '}
+            <button onClick={sendMessage}>클릭</button>
+            {messages.map((message, i) => (
+              <div key={i}>{message.content}</div>
+            ))}
+          </div>
           <div></div>
           <div></div>
           <select
@@ -138,7 +235,7 @@ const Home = () => {
             >
               <div className="boardColumn">
                 <div className="boardTitle">{d.id}</div>
-                <span className="boardContent">{d.date}</span>
+                <span className="boardContent">{d.createAt}</span>
               </div>
             </div>
           ))}
@@ -147,9 +244,9 @@ const Home = () => {
           <Modal openModal={openModal} modal={isOpened}>
             <div style={{ padding: '10px' }}>
               <div className="publisher">{selected.id}</div>
-              <div className="date">{selected.date}</div>
+              <div className="date">{selected.createAt}</div>
               <div className="row">
-                <div className="content">{selected.content}</div>
+                <div className="content">{selected.board_content}</div>
                 <Image
                   src={TestImg}
                   style={{ borderRadius: '5px' }}

@@ -3,5 +3,11 @@ import { atom } from 'recoil';
 
 export const selectedPost = atom<BoardType>({
   key: 'selectedPost',
-  default: { Author: 0, id: '', content: '', image: '', date: '' },
+  default: {
+    id: 0,
+    board_user_id: '',
+    board_content: '',
+    board_img: '',
+    createAt: '',
+  },
 });
