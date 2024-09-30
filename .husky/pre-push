@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-branch="$(git rev-parse --abbrev-ref HEAD)"
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+remote_branch="$(git remote show origin | grep "pushes to" | awk '{print $5}')"
 
-if [ "$branch" != "dev" ]; then
+if [ "$current_branch" = "dev" ] && [ "$remote_branch" != "main" ]; then
   echo "Only 'dev' branch can push to 'main'!"
   exit 1
 fi
