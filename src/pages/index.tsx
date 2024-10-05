@@ -30,18 +30,18 @@ import { useSocket } from '@/components/provider/SocketWrapper';
 import TestImg from '@/assets/images/campus.jpg';
 
 const Home = () => {
-  // const time = new Date();
+  const time = new Date();
 
-  // const year = time.getFullYear();
-  // const month = time.getMonth() + 1;
-  // const date = time.getDate();
+  const year = time.getFullYear();
+  const month = time.getMonth() + 1;
+  const date = time.getDate();
 
-  // const times = time.toLocaleString('ko-KR', {
-  //   hour: '2-digit',
-  //   minute: '2-digit',
-  //   second: '2-digit',
-  //   hour12: false,
-  // });
+  const times = time.toLocaleString('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
 
   const { socket } = useSocket();
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -174,6 +174,7 @@ const Home = () => {
   }, [data, currentMessage, messages]);
 
   return (
+    // <h1>Home</h1>
     <Container>
       <div id="modal-container"></div>
       {isOpened && <div className="background"> </div>}
@@ -194,7 +195,7 @@ const Home = () => {
       >
         <Nav>
           <div>
-            <input
+            {/* <input
               type="file"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const file = e.currentTarget.files?.[0] || null; // 파일 또는 null
@@ -205,12 +206,12 @@ const Home = () => {
                   });
                 }
               }}
-            />
-            <input onChange={(e) => setCurrentMessage(e.target.value)} />{' '}
+            /> */}
+            {/* <input onChange={(e) => setCurrentMessage(e.target.value)} />{' '}
             <button onClick={sendMessage}>클릭</button>
             {messages.map((message, i) => (
               <div key={i}>{message.content}</div>
-            ))}
+            ))} */}
           </div>
           <div></div>
           <div></div>

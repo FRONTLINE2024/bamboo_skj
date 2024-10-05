@@ -5,13 +5,18 @@ import type { AppProps } from 'next/app';
 import { MSWComponent } from '@/components/provider/MSWComponent';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const MSWState = process.env.NEXT_PUBLIC_MSW_STATE === 'true';
   return (
-    <MSWComponent>
-      <SocketProvider>
-        <RecoilRootWrapper>
+    <SocketProvider>
+      <RecoilRootWrapper>
+        {MSWState ? (
+          <MSWComponent>
+            <Component {...pageProps} />
+          </MSWComponent>
+        ) : (
           <Component {...pageProps} />
-        </RecoilRootWrapper>
-      </SocketProvider>
-    </MSWComponent>
+        )}
+      </RecoilRootWrapper>
+    </SocketProvider>
   );
 }
