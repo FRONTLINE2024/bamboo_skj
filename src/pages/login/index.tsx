@@ -9,6 +9,11 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 
 // types
 import { userType } from '@/types/user';
+import { useMutation } from '@tanstack/react-query';
+
+// apis
+import { login } from '../api/clients/login';
+import Link from 'next/link';
 
 const Login = () => {
   const [isShowed, setIsShowed] = useState<boolean>(false);
@@ -16,6 +21,8 @@ const Login = () => {
     user_id: '',
     user_password: '',
   });
+
+  const { user_id, user_password } = loginData;
 
   function handlePwd() {
     setIsShowed(!isShowed);
@@ -28,11 +35,33 @@ const Login = () => {
     }));
   }
 
+  function doLogin() {
+    if (user_id.length > 0 && user_password.length > 0) {
+      userLogin.mutate();
+    }
+  }
+
+  const userLogin = useMutation({
+    mutationKey: ['login'],
+    mutationFn: async () => {
+      const response = await login(loginData);
+
+      console.log(response);
+
+      return response.data;
+    },
+
+    onError(err) {
+      console.log(err.message);
+    },
+  });
+
   useEffect(() => {
     console.log('loginData: ', loginData);
   }, [loginData]);
   return (
     <>
+      <div id="toast_message"></div>
       <Container>
         <div
           style={{
@@ -61,6 +90,11 @@ const Login = () => {
                 onChange={(e) =>
                   handleLoginDate('user_password', e.target.value)
                 }
+                onKeyDown={(e) => {
+                  if (e.code === 'Enter') {
+                    doLogin();
+                  }
+                }}
               />
               {isShowed ? (
                 <FaEyeSlash
@@ -81,8 +115,10 @@ const Login = () => {
               gap: '8px',
             }}
           >
-            <LoginButton>로그인</LoginButton>
-            <SignupButton>회원가입</SignupButton>
+            <LoginButton onClick={() => userLogin.mutate()}>로그인</LoginButton>
+            <Link href={'/signup'}>
+              <SignupButton>회원가입</SignupButton>
+            </Link>
           </div>
         </div>
       </Container>
