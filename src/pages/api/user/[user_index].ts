@@ -1,4 +1,5 @@
 import { createConnection } from '@/lib/db';
+import { RowDataPacket } from 'mysql2/promise';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -11,12 +12,10 @@ export default async function handler(
     try {
       const { user_index } = req.query;
       console.log(user_index);
-      const [rows, fields] = await connection.execute(
+      const [rows, fields] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM user WHERE user_index = ?',
         [user_index]
       );
-
-      console.log(rows);
 
       if (rows.length > 0) {
         res.status(200).json({ sucess: true, data: rows[0] });

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // styles
 import { Flex } from '@/styles/common/direction';
@@ -15,8 +16,26 @@ import { useMutation } from '@tanstack/react-query';
 import { login } from '../api/clients/login';
 import Link from 'next/link';
 
+// components
+import Toast from '@/components/common/Toast';
+
+// libraries
+import Cookie from 'js-cookie';
+import { ToastStateType } from '@/types/home';
+
 const Login = () => {
+  // toast boolean
+  const [toastState, setToastState] = useState<ToastStateType>({
+    state: false,
+    stateText: '',
+    stateCode: '',
+  });
+  const { state, stateText, stateCode } = toastState;
+  // router
+  const router = useRouter();
+  // password show
   const [isShowed, setIsShowed] = useState<boolean>(false);
+  // login data
   const [loginData, setLoginData] = useState<userType>({
     user_id: '',
     user_password: '',
@@ -26,6 +45,19 @@ const Login = () => {
 
   function handlePwd() {
     setIsShowed(!isShowed);
+  }
+
+  function handleToast() {
+    setToastState((prev) => ({
+      ...prev,
+      state: true,
+    }));
+    setTimeout(() => {
+      setToastState((prev) => ({
+        ...prev,
+        state: false,
+      }));
+    }, 2500);
   }
 
   function handleLoginDate(sort: string, value: string) {
@@ -48,20 +80,40 @@ const Login = () => {
 
       console.log(response);
 
+      if (response.status === 200) {
+        Cookie.set('token', response.data.token);
+        router.push('/');
+      }
+
       return response.data;
     },
 
-    onError(err) {
-      console.log(err.message);
+    // 타입 지정 알아보기
+    onError(err: any) {
+      console.log(err);
+      setToastState((prev) => ({
+        ...prev,
+        stateText: `${err.response.data.message}`,
+        stateCode: `${err.status}`,
+      }));
+
+      handleToast();
     },
   });
 
   useEffect(() => {
     console.log('loginData: ', loginData);
-  }, [loginData]);
+    console.log('toastState: ', toastState);
+  }, [loginData, toastState]);
   return (
     <>
       <div id="toast_message"></div>
+      {state && (
+        <Toast stateCode={stateCode}>
+          <div>{stateText}</div>
+        </Toast>
+      )}
+
       <Container>
         <div
           style={{
@@ -96,6 +148,7 @@ const Login = () => {
                   }
                 }}
               />
+
               {isShowed ? (
                 <FaEyeSlash
                   style={{ marginRight: '0.2rem' }}
@@ -111,7 +164,7 @@ const Login = () => {
             style={{
               ...Flex,
               flexDirection: 'column',
-              marginTop: '2rem',
+              marginTop: '1rem',
               gap: '8px',
             }}
           >

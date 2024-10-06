@@ -5,3 +5,9 @@ export interface BoardType {
   board_img: File | string;
   createAt: string;
 }
+
+export interface ToastStateType {
+  state: boolean;
+  stateText: string;
+  stateCode: string;
+}

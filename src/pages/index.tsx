@@ -20,7 +20,7 @@ import { useRecoilState } from 'recoil';
 import { selectedPost } from '@/atom/state';
 
 // compnents
-import Modal from '@/components/Modal';
+import Modal from '@/components/common/Modal';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/useModalOpen';

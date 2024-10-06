@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const ModalContainer = styled.div`
   width: 40vw;
@@ -24,5 +24,37 @@ export const ModalContainer = styled.div`
   }
 
   .logo {
+  }
+`;
+
+const toastShow = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+`;
+
+export const ToastContainer = styled.div`
+  width: 20vw;
+  height: 40px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10%;
+  left: 40%;
+  box-shadow: 0px 1px 2px 1px gray;
+  border-radius: 0.2rem;
+  font-family: 'GmarketSansMedium';
+
+  animation: 0.5s ${toastShow};
+
+  span {
+    margin-right: 1rem;
   }
 `;
