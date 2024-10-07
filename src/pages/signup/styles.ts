@@ -1,6 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-
 import { theme } from '@/styles/common/color';
+import styled, { keyframes } from 'styled-components';
 
 const showContainer = keyframes`
   0% {
@@ -13,7 +12,7 @@ const showContainer = keyframes`
   }
 `;
 
-export const Container = styled.div`
+export const SignupContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,10 +21,6 @@ export const Container = styled.div`
 
   animation: 1s ${showContainer};
   animation-fill-mode: forwards;
-
-  h2 {
-    font-family: 'GmarketSansBold';
-  }
 
   .inputContainer {
     width: 30vw;
@@ -50,38 +45,5 @@ export const Container = styled.div`
     &:focus-within {
       border: 2px solid ${theme.primary};
     }
-  }
-`;
-
-const Button = styled.button`
-  width: 31vw;
-  height: 40px;
-  padding: 5px;
-  border-radius: 0.3rem;
-  font-family: 'GmarketSansMedium';
-  background-color: white;
-
-  outline: none;
-  border: none;
-`;
-
-export const LoginButton = styled(Button)`
-  color: ${theme.primary};
-  border: 2px solid ${theme.primary};
-
-  &:hover {
-    background: ${theme.primary};
-    color: white;
-  }
-`;
-
-export const SignupButton = styled(Button)`
-  background: ${theme.primary};
-  color: white;
-
-  &:hover {
-    color: ${theme.primary};
-    background: white;
-    border: 2px solid ${theme.primary};
   }
 `;

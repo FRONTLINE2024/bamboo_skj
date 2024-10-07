@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 // styles
 import { Container, HomeHeader, HomeInput, Main, Nav } from '@/styles/styles';
 
@@ -9,6 +10,7 @@ import { FaUserCircle } from 'react-icons/fa';
 
 // libraries
 import axios from 'axios';
+import Cookie from 'js-cookie';
 
 // types
 import { BoardType } from '@/types/home';
@@ -30,6 +32,9 @@ import { useSocket } from '@/components/provider/SocketWrapper';
 import TestImg from '@/assets/images/campus.jpg';
 
 const Home = () => {
+  //
+  const router = useRouter();
+
   const time = new Date();
 
   const year = time.getFullYear();
@@ -166,6 +171,13 @@ const Home = () => {
   useEffect(() => {
     getData();
   }, [selected.board_img]);
+
+  // 토큰 없으면 로그인 페이지로 이동
+  useEffect(() => {
+    if (Cookie.get('token') === undefined) {
+      router.push('/login');
+    }
+  }, []);
 
   useEffect(() => {
     console.log('data: ', selected);

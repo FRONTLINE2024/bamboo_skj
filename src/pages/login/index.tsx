@@ -9,7 +9,7 @@ import { Container, LoginButton, SignupButton } from './styles';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 
 // types
-import { userType } from '@/types/user';
+import { userType } from '@/types/login';
 import { useMutation } from '@tanstack/react-query';
 
 // apis

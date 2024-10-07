@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createConnection } from '../../lib/db';
-import { userType } from '@/types/user';
+import { userType } from '@/types/login';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 export default async function handler(
