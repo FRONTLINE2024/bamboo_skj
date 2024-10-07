@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { theme } from './common/color';
 
 export const Container = styled.div`
   display: flex;
@@ -62,7 +63,6 @@ export const HomeHeader = styled.header`
     width: 6%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
   }
   .search {
     cursor: pointer;
@@ -112,7 +112,7 @@ export const Main = styled.main`
   align-items: center;
   flex-wrap: wrap;
   overflow-y: scroll;
-  flex-grow: 0.4; /* 부모 요소가 flexbox일 때 남은 공간을 차지하게 함 */
+  flex-grow: 0.4;
 
   &::-webkit-scrollbar {
     display: none;
@@ -123,39 +123,64 @@ export const Main = styled.main`
     justify-content: center;
     width: 40%;
   }
+  .boardHeader {
+    width: 100%;
+    height: 15px;
+    border-radius: 0.2rem 0.2rem 0 0;
+    background-color: ${theme.primary};
+  }
+
+  .boardStructure {
+    padding: 5px;
+  }
 
   .boardColumn {
     width: 90%;
-    height: 80px;
+    height: 100px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0px 1px 4px 1px gray;
+    box-shadow: 0px 1px 2px 1px gray;
     border-radius: 0.2rem;
     margin: 10px;
-    padding: 7px;
+  }
+
+  .boardRow {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+  }
+
+  .boardStructure {
+    flex-grow: 1;
   }
 
   .boardTitle {
     font-family: 'GmarketSansMedium';
   }
 
-  .boardContent {
+  .boardCreateAt {
     font-family: 'GmarketSansLight';
+    font-size: 0.8rem;
+  }
+
+  img {
+    margin-left: 10px;
+    object-fit: contain;
   }
 `;
 
 export const HomeInput = styled.input`
   width: 30%;
   height: 30px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   outline: none;
-  background-color: #f1f1f1;
+  background-color: #efefef;
   border-radius: 0.2rem;
   margin-top: 0.3rem;
   margin-bottom: 0.3rem;
 
-  &:hover {
+  &:focus {
     background-color: white;
-    border-color: #f1f1f1;
+    border-color: ${theme.primary};
   }
 `;

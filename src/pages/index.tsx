@@ -58,6 +58,7 @@ const Home = () => {
   const [data, setData] = useState<BoardType[]>([
     {
       id: 0,
+      board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
@@ -79,10 +80,14 @@ const Home = () => {
     execute();
   }
 
+  function closeModal() {
+    setIsOpened(false);
+  }
+
   async function getData() {
     try {
       const response = await axios.get('/api/board');
-      // console.log(response);
+      console.log(response);
       if (response.status === 200) {
         setData(response.data);
       }
@@ -189,12 +194,15 @@ const Home = () => {
     // <h1>Home</h1>
     <Container>
       <div id="modal-container"></div>
-      {isOpened && <div className="background"> </div>}
+      {isOpened && (
+        <div className="background" onClick={closeModal}>
+          {' '}
+        </div>
+      )}
       <HomeHeader>
-        <span className="projectTitle">FrontLine</span>
+        <span className="projectTitle">FrontLine▹</span>
         <HomeInput />
         <div className="headerContainer">
-          <IoSearch size={25} className="search" />
           <FaUserCircle size={25} className="user" />
         </div>
       </HomeHeader>
@@ -247,8 +255,21 @@ const Home = () => {
               onClick={() => getSelectedData(d)}
             >
               <div className="boardColumn">
-                <div className="boardTitle">{d.id}</div>
-                <span className="boardContent">{d.createAt}</span>
+                <div className="boardHeader">&nbsp;</div>
+                <div className="boardRow">
+                  <div className="boardStructure">
+                    <div className="boardTitle">{d.board_title}</div>
+                    <span className="boardCreateAt">{d.createAt}</span>
+                  </div>
+                  {typeof d.board_img === 'string' && (
+                    <Image
+                      src={d.board_img}
+                      alt="게시글 이미지"
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -260,14 +281,17 @@ const Home = () => {
               <div className="date">{selected.createAt}</div>
               <div className="row">
                 <div className="content">{selected.board_content}</div>
-                <Image
-                  src={TestImg}
-                  style={{ borderRadius: '5px' }}
-                  alt="이미지"
-                  width={200}
-                  height={200}
-                  unoptimized={true}
-                />
+
+                {typeof selected.board_img === 'string' && (
+                  <Image
+                    src={selected.board_img}
+                    style={{ borderRadius: '5px' }}
+                    alt="이미지"
+                    width={200}
+                    height={200}
+                    unoptimized={true}
+                  />
+                )}
               </div>
             </div>
           </Modal>

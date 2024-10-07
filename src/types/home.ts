@@ -1,5 +1,6 @@
 export interface BoardType {
   id: number;
+  board_title: string;
   board_content: string;
   board_user_id: string;
   board_img: File | string;
