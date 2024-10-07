@@ -63,6 +63,7 @@ const Button = styled.button`
 
   outline: none;
   border: none;
+  cursor: pointer;
 `;
 
 export const LoginButton = styled(Button)`
@@ -84,4 +85,38 @@ export const SignupButton = styled(Button)`
     background: white;
     border: 2px solid ${theme.primary};
   }
+`;
+
+const SocialButton = styled.div`
+  width: 31vw;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 0.3rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  > .btn {
+    background: none;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .loginText {
+    width: 8rem;
+    text-align: end;
+  }
+`;
+
+export const KakaoButton = styled(SocialButton)`
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fee500;
+  border: 2px solid #fee500;
 `;

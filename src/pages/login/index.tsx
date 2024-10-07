@@ -3,10 +3,11 @@ import { useRouter } from 'next/navigation';
 
 // styles
 import { Flex } from '@/styles/common/direction';
-import { Container, LoginButton, SignupButton } from './styles';
+import { Container, KakaoButton, LoginButton, SignupButton } from './styles';
 
 // icons
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
+import { RiKakaoTalkFill } from 'react-icons/ri';
 
 // types
 import { userType } from '@/types/login';
@@ -174,6 +175,15 @@ const Login = () => {
             </Link>
           </div>
         </div>
+        <KakaoButton>
+          <div className="btn">
+            <RiKakaoTalkFill size={36} fill="#000000" />
+          </div>
+
+          <span className="loginText">카카오 로그인</span>
+          <span></span>
+          <span></span>
+        </KakaoButton>
       </Container>
     </>
   );
