@@ -18,7 +18,7 @@ export default async function handler(
       res.status(200).json(board); // 200: OK
 
       const [rows] = await connection.execute(
-        'SELECT * FROM board ORDER BY createAt'
+        'SELECT * FROM board ORDER BY createdAt'
       );
 
       // console.log(rows);
@@ -51,6 +51,7 @@ export default async function handler(
         'SELECT * FROM board WHERE id = ?',
         [id]
       );
+      console.log(rows);
 
       if (rows.length === 0) {
         return res
@@ -62,6 +63,8 @@ export default async function handler(
         'DELETE FROM board WHERE id = ?',
         [id]
       );
+
+      console.log(result);
 
       if (result.affectedRows > 0) {
         res.status(200).json({ success: true, message: 'Delete successful' });

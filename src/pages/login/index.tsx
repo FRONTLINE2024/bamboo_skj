@@ -83,6 +83,7 @@ const Login = () => {
 
       if (response.status === 200) {
         Cookie.set('token', response.data.token);
+        Cookie.set('user_index', response.data.data.user_index);
         router.push('/');
       }
 

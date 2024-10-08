@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ModalContainer } from './styles';
+import { ModalContainer } from '../common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';
@@ -9,12 +9,12 @@ interface ModalType {
   modal: boolean;
   openModal: () => void;
 }
-const Modal = ({ modal, openModal, children }: ModalType) => {
+const ModalBoard = ({ modal, openModal, children }: ModalType) => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     const root = document.querySelector(
-      '#modal-container'
+      '#modal-container2'
     ) as HTMLElement | null;
     setModalRoot(root);
   }, []);
@@ -46,4 +46,4 @@ const Modal = ({ modal, openModal, children }: ModalType) => {
     modalRoot
   );
 };
-export default Modal;
+export default ModalBoard;

@@ -18,7 +18,6 @@ export default async function handler(
         'SELECT * FROM board ORDER BY board_content'
       );
 
-      console.log(rows);
       res.status(200).json({ status: 'content_ascend', data: rows });
     }
   } catch (err) {

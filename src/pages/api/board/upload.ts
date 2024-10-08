@@ -43,7 +43,8 @@ export default async function handler(
   const connection = await createConnection();
 
   try {
-    const { board_content, board_user_id, createAt } = req.body;
+    const { board_title, board_content, board_user_id, createdAt } = req.body;
+    console.log(req.body);
 
     if (!req.file) {
       return res
@@ -54,8 +55,8 @@ export default async function handler(
     const board_img = `/uploads/${req.file.filename}`;
 
     const [rows] = await connection.execute<ResultSetHeader>(
-      `INSERT INTO board (board_content, board_user_id, board_img, createAt) VALUES (?, ?, ?, ?)`,
-      [board_content, board_user_id, board_img, createAt]
+      `INSERT INTO board (board_title, board_content, board_user_id, board_img, createdAt) VALUES (?, ?, ?, ?, ?)`,
+      [board_title, board_content, board_user_id, board_img, createdAt]
     );
 
     if (rows.affectedRows > 0) {
@@ -63,10 +64,11 @@ export default async function handler(
         success: true,
         data: {
           id: rows.insertId,
+          board_title,
           board_content,
           board_user_id,
           board_img,
-          createAt,
+          createdAt,
         },
       });
     } else {

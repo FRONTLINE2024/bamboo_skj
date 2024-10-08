@@ -51,7 +51,13 @@ export default async function handler(
         { expiresIn: '1h' }
       );
 
-      return res.status(200).json({ message: 'Login successful!', token });
+      return res
+        .status(200)
+        .json({
+          message: 'Login successful!',
+          token,
+          data: { user_index: user.user_index },
+        });
     } else {
       return res.status(405).json({ message: 'Method not allowed' });
     }

@@ -35,10 +35,9 @@ export default async function handler(
   try {
     if (req.method === 'GET') {
       const [rows] = await connection.execute(
-        'SELECT * FROM board ORDER BY createAt desc'
+        'SELECT * FROM board ORDER BY createdAt desc'
       );
 
-      console.log(rows);
       res.status(200).json({ status: 'date_descend', data: rows });
     }
   } catch (err) {

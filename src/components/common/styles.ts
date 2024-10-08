@@ -1,14 +1,26 @@
+import { theme } from '@/styles/common/color';
 import styled, { keyframes } from 'styled-components';
 
-export const ModalContainer = styled.div`
-  width: 40vw;
-  height: 60vh;
+const showModal = keyframes`
+  0% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
+`;
+
+export const ModalContainer = styled.div<{ modal: boolean }>`
+  width: 50vw;
+  height: 70vh;
   background-color: white;
   border-radius: 0.2rem;
   position: absolute;
-  top: 25%;
-  right: 30%;
+  top: 15%;
+  right: 25%;
   z-index: 500;
+  animation: 0.5s ${showModal};
 
   .modal {
     width: 100%;
@@ -17,13 +29,12 @@ export const ModalContainer = styled.div`
   }
 
   .modalHeader {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    margin-right: 0.3rem;
-  }
-
-  .logo {
+    background-color: ${theme.primary};
+    border-radius: 0.2rem 0.2rem 0 0;
   }
 `;
 
