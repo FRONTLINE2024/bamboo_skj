@@ -23,3 +23,11 @@ export const postBoardData = (body: {}) => {
 export const deleteBoardData = (body: {}) => {
   return basicClient.delete('/board', body);
 };
+
+export const patchBoardData = (body: {}) => {
+  return basicClient.patch('/board/patch', body);
+};
+
+export const getSpecificBoard = (id: number) => {
+  return basicClient.get(`/board/${id}`);
+};

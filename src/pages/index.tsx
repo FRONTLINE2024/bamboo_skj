@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // styles
@@ -9,6 +9,7 @@ import {
   HomeHeader,
   HomeInput,
   Main,
+  ModifyBtn,
   Nav,
   WriteBtn,
 } from '@/styles/styles';
@@ -37,7 +38,7 @@ import Modal from '@/components/common/Modal';
 import ModalBoard from '@/components/home/ModalBoard';
 
 // hooks
-import useModalOpen, { useModalOpenType } from '@/hooks/useModalOpen';
+import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
 import { useSocket } from '@/components/provider/SocketWrapper';
 
 // apis
@@ -47,16 +48,24 @@ import {
   ContentAscendData,
   DescendData,
   deleteBoardData,
+  getSpecificBoard,
+  patchBoardData,
   postBoardData,
 } from './api/clients/home';
+import useFormData, { FormDataType } from '@/hooks/home/useFormData';
 
 const Home = () => {
   const router = useRouter();
 
+  // 채팅
   const { socket } = useSocket();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>('');
 
+  // 컴포넌트 내에서
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // 게시글 수정
+  const [boardModify, setBoardModify] = useState<boolean>(false);
   // 선택된 데이터
   const [selected, setSelected] = useRecoilState<BoardType>(selectedPost);
   // 모달 boolean
@@ -85,6 +94,13 @@ const Home = () => {
 
   const { board_title, board_content, board_img, createdAt } = boardData;
 
+  // 이미지 수정
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   // 게시글 input
   function inputBoardData(sort: string, value: string | number) {
     setBoardData((prev) => ({
@@ -93,21 +109,27 @@ const Home = () => {
     }));
   }
 
+  // 게시글 input
+  function inputSelectedBoardData(sort: string, value: string | number) {
+    setSelected((prev) => ({
+      ...prev,
+      [sort]: value,
+    }));
+  }
+
+  // FormData 생성
+  const formData = useFormData({
+    board_title,
+    board_content,
+    board_user_id: `${Cookie.get('user_index')}`,
+    createdAt,
+    board_img,
+  });
+
   // 게시글 저장
   const boardWrite = useMutation({
     mutationKey: ['boardWrite'],
     mutationFn: async () => {
-      const formData = new FormData();
-
-      formData.append('board_title', board_title);
-      formData.append('board_content', board_content);
-      formData.append('board_user_id', `${Cookie.get('user_index')}`);
-      formData.append('createdAt', createdAt);
-
-      if (board_img) {
-        formData.append('board_img', board_img);
-      }
-
       const response = await postBoardData(formData);
 
       console.log(response);
@@ -164,6 +186,27 @@ const Home = () => {
       }));
     }
   }
+  // 게시글
+  function getImgs(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.currentTarget.files?.[0] || null; // 파일 또는 null
+    if (file) {
+      setSelected((prev) => ({
+        ...prev,
+        board_img: file, // Blob 타입을 사용
+      }));
+    }
+  }
+
+  // 수정 버튼 변환
+  function modifyChange() {
+    setBoardModify(!boardModify);
+  }
+
+  // 게시글 수정
+  function PatchBoardData() {
+    setBoardModify(false);
+    patchBoard.mutate();
+  }
 
   // 게시글 선택
   function getSelectedData(data: BoardType) {
@@ -196,16 +239,63 @@ const Home = () => {
     setIsBoardOpened(false);
   }
 
+  // 특정 게시글 데이터 가져오기
+  const getSpecificBoardData = useQuery({
+    queryKey: ['getSpecificBoardData', selected.id],
+    queryFn: async () => {
+      const response = await getSpecificBoard(selected.id);
+      console.log(response);
+      return response.data;
+    },
+    enabled: false, // 기본적으로 비활성화하여 자동 실행을 막음
+  });
+
+  useEffect(() => {
+    if (getSpecificBoardData.isSuccess) {
+      setSelected(getSpecificBoardData.data.data);
+    }
+  }, [getSpecificBoardData.isSuccess, getSpecificBoardData.data]);
+
+  // hook을 통해 FormData 생성
+  const formPatchData = useFormData({
+    id: `${selected.id}`,
+    board_title: selected.board_title,
+    board_content: selected.board_content,
+    board_user_id: `${Cookie.get('user_index')}`,
+    createdAt: selected.createdAt,
+    board_img: selected.board_img, // 필요한 데이터 포함
+  });
+
+  // 게시글 수정
+  const patchBoard = useMutation({
+    mutationKey: ['patchBoard'],
+    mutationFn: async () => {
+      const response = await patchBoardData(formPatchData);
+
+      console.log(response);
+
+      return response.data;
+    },
+    onSuccess: () => {
+      getSpecificBoardData.refetch();
+      getData.refetch();
+    },
+  });
+
   // 게시글 삭제
   const deleteBoard = useMutation({
     mutationKey: ['deleteBoard'],
     mutationFn: async (id: number) => {
+      const board_user_id = Cookie.get('user_index');
+      console.log(typeof board_user_id);
       const body = {
-        data: { id },
+        data: { id, board_user_id },
       };
       const response = await deleteBoardData(body);
 
       console.log(response);
+
+      return response.data;
     },
     onSuccess: () => {
       getData.refetch();
@@ -220,7 +310,6 @@ const Home = () => {
     id: number,
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    e.preventDefault();
     deleteBoard.mutate(id);
   }
 
@@ -340,10 +429,9 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    console.log('data: ', selected);
-    console.log('currentMessage: ', currentMessage);
-    console.log('messages: ', messages);
-  }, [data, currentMessage, messages]);
+    console.log('boardData: ', boardData);
+    console.log('selected: ', selected);
+  }, [boardData, selected]);
 
   // if (getData.isLoading) return <div>Loading...</div>;
 
@@ -458,13 +546,20 @@ const Home = () => {
                     ...Flex,
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
-                    padding: '2px',
+                    padding: '4px',
                     height: '80%',
                   }}
                 >
-                  <DeleteBtn onClick={(e) => boardDelete(d.id, e)}>
-                    삭제
-                  </DeleteBtn>
+                  {Cookie.get('user_index') === String(d.board_user_id) && (
+                    <DeleteBtn
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        boardDelete(d.id, e);
+                      }}
+                    >
+                      삭제
+                    </DeleteBtn>
+                  )}
                 </div>
               </div>
             </div>
@@ -472,11 +567,56 @@ const Home = () => {
         </Main>
         {isOpened === true && (
           <Modal openModal={openModal} modal={isOpened}>
-            <div style={{ padding: '10px' }}>
-              <div className="publisher">{selected.board_title}</div>
-              <div className="date">{selected.createdAt}</div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '10px',
+                gap: '5px',
+              }}
+            >
+              <div className="publisher">
+                {boardModify ? (
+                  <input
+                    className="boardTitleInput"
+                    value={selected.board_title}
+                    onChange={(e) =>
+                      inputSelectedBoardData('board_title', e.target.value)
+                    }
+                  />
+                ) : (
+                  selected.board_title
+                )}
+              </div>
+              <div className="date">
+                {' '}
+                {boardModify ? (
+                  <input
+                    className="boardTitleInput"
+                    value={selected.createdAt}
+                    onChange={(e) =>
+                      inputSelectedBoardData('createdAt', e.target.value)
+                    }
+                  />
+                ) : (
+                  selected.createdAt
+                )}
+              </div>
               <div className="row">
-                <div className="content">{selected.board_content}</div>
+                <div className="content">
+                  {boardModify ? (
+                    <textarea
+                      className="boardContent2"
+                      value={selected.board_content}
+                      style={{ height: '20vh' }}
+                      onChange={(e) =>
+                        inputSelectedBoardData('board_content', e.target.value)
+                      }
+                    />
+                  ) : (
+                    selected.board_content
+                  )}
+                </div>
 
                 {typeof selected.board_img === 'string' && (
                   <Image
@@ -484,13 +624,43 @@ const Home = () => {
                     style={{
                       borderRadius: '5px',
                       boxShadow: '0px 1px 3px 1px gray',
+                      cursor: 'pointer', // 이미지에 커서 포인터 추가
                     }}
                     alt="이미지"
                     width={200}
                     height={200}
                     unoptimized={true}
+                    onClick={handleImageClick} // 이미지를 클릭했을 때 파일 입력 클릭
                   />
                 )}
+                {boardModify && (
+                  <input
+                    type="file"
+                    ref={fileInputRef} // useRef로 파일 입력 참조 연결
+                    style={{ display: 'none' }} // 파일 입력은 화면에서는 보이지 않음
+                    onChange={(e) => {
+                      const file = e.currentTarget.files?.[0];
+                      if (file) {
+                        getImgs(e);
+                      }
+                    }}
+                  />
+                )}
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-end',
+                  height: '12vh',
+                }}
+              >
+                {Cookie.get('user_index') === String(selected.board_user_id) &&
+                  (boardModify ? (
+                    <ModifyBtn onClick={() => PatchBoardData()}>확인</ModifyBtn>
+                  ) : (
+                    <ModifyBtn onClick={() => modifyChange()}>수정</ModifyBtn>
+                  ))}
               </div>
             </div>
           </Modal>

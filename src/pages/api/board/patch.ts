@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import { createConnection } from '@/lib/db';
-import { ResultSetHeader } from 'mysql2/promise';
+import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 export const config = {
   api: {
@@ -33,6 +33,7 @@ const runMiddleware = (
   });
 
 // 게시글 업로드
+
 export default async function handler(
   req: NextApiRequestWithFile,
   res: NextApiResponse
@@ -42,7 +43,8 @@ export default async function handler(
   const connection = await createConnection();
 
   try {
-    const { board_title, board_content, board_user_id, createdAt } = req.body;
+    const { id, board_title, board_content, board_user_id, createdAt } =
+      req.body;
     console.log(req.body);
 
     if (!req.file) {
@@ -53,26 +55,43 @@ export default async function handler(
 
     const board_img = `/uploads/${req.file.filename}`;
 
-    const [rows] = await connection.execute<ResultSetHeader>(
-      `INSERT INTO board (board_title, board_content, board_user_id, board_img, createdAt) VALUES (?, ?, ?, ?, ?)`,
-      [board_title, board_content, board_user_id, board_img, createdAt]
-    );
-    console.log(rows);
+    if (!id || !board_title || !board_content || !board_user_id || !board_img) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Missing required fields' });
+    }
+    console.log(board_img);
 
-    if (rows.affectedRows > 0) {
-      res.status(201).json({
-        success: true,
-        data: {
-          id: rows.insertId,
-          board_title,
-          board_content,
-          board_user_id,
-          board_img,
-          createdAt,
-        },
-      });
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      'SELECT * FROM board WHERE id = ?',
+      [id]
+    );
+
+    if (rows.length > 0) {
+      const [result] = await connection.execute<ResultSetHeader>(
+        'UPDATE board SET board_title = ?, board_content = ?, board_user_id = ?, board_img = ? WHERE id = ?',
+        [board_title, board_content, board_user_id, board_img, id]
+      );
+      console.log(result);
+
+      if (result.affectedRows > 0) {
+        res.status(200).json({
+          success: true,
+          message: 'Update successful',
+          data: {
+            id,
+            board_title,
+            board_content,
+            board_user_id,
+            board_img,
+            createdAt,
+          },
+        });
+      } else {
+        res.status(500).json({ success: false, message: 'Server error' });
+      }
     } else {
-      res.status(500).json({ success: false, message: 'Server error' });
+      res.status(404).json({ success: false, message: 'Board not found' });
     }
   } catch (err) {
     console.error('Database error:', err);

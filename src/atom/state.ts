@@ -5,9 +5,10 @@ export const selectedPost = atom<BoardType>({
   key: 'selectedPost',
   default: {
     id: 0,
+    board_title: '',
     board_user_id: '',
     board_content: '',
     board_img: '',
-    createAt: '',
+    createdAt: '',
   },
 });

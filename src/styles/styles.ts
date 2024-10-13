@@ -24,6 +24,7 @@ export const Container = styled.div`
 
   .date {
     margin-bottom: 0.2rem;
+    font-family: 'GmarketSansMedium';
   }
 
   .content {
@@ -31,6 +32,7 @@ export const Container = styled.div`
     height: 40vh;
     overflow-y: scroll;
     margin-right: 0.3rem;
+    font-family: 'GmarketSansLight';
   }
 
   .content::-webkit-scrollbar {
@@ -87,6 +89,22 @@ export const Container = styled.div`
     }
   }
 
+  .boardContent2 {
+    display: flex;
+    width: 90%;
+    min-height: 30vh;
+    font-family: 'GmarketSansLight';
+    font-weight: 600;
+    padding: 0.5rem;
+    border: 1px solid #dddddd;
+    border-radius: 0.2rem;
+
+    outline: none;
+
+    &:focus {
+      border: 1px solid ${theme.primary};
+    }
+  }
   .boardWriteFile {
     width: 100%;
     display: flex;
@@ -283,6 +301,25 @@ export const WriteBtn = styled.button`
 `;
 
 export const DeleteBtn = styled.button`
+  border-radius: 0.2rem;
+  outline: none;
+  border: 1px solid ${theme.secondary};
+  padding: 5px;
+
+  cursor: pointer;
+  font-family: 'GmarketSansMedium';
+  font-weight: 400;
+  background-color: ${theme.secondary};
+  color: white;
+
+  &:hover {
+    background-color: white;
+    color: ${theme.secondary};
+    border: 1px solid ${theme.secondary};
+  }
+`;
+
+export const ModifyBtn = styled.button`
   border-radius: 0.2rem;
   outline: none;
   border: 1px solid ${theme.secondary};
