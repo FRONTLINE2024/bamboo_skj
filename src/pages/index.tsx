@@ -131,8 +131,6 @@ const Home = () => {
     mutationKey: ['boardWrite'],
     mutationFn: async () => {
       const response = await postBoardData(formData);
-
-      console.log(response);
     },
     onSuccess: () => {
       closeModalBoard();

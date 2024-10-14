@@ -3,7 +3,7 @@ export interface BoardType {
   board_title: string;
   board_content: string;
   board_user_id: string;
-  board_img: File | string;
+  board_img: File | string | null;
   createdAt: string;
 }
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 export interface FormDataType {
-  [key: string]: string | File | null; // 키는 문자열, 값은 문자열 또는 파일
+  [key: string]: string | File | null;
 }
 
 const useFormData = (data: FormDataType) => {
@@ -10,12 +10,21 @@ const useFormData = (data: FormDataType) => {
 
     for (const key in data) {
       if (data[key] !== null) {
-        formData.append(key, `${data[key]}`); // null 체크 후 FormData에 추가
+        // 'board_img' 키일 경우 확인
+        if (key === 'board_img') {
+          // board_img가 null이 아닌 경우에만 formData에 추가
+          if (data.board_img) {
+            formData.append(key, data.board_img);
+          }
+        } else {
+          // 다른 키들은 null이 아니면 formData에 추가
+          formData.append(key, `${data[key]}`);
+        }
       }
     }
 
     console.log('useFormData:', data);
-    return formData; // FormData 객체 반환
+    return formData;
   }, [data]);
 };
 

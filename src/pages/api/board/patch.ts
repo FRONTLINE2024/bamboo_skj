@@ -45,7 +45,7 @@ export default async function handler(
   try {
     const { id, board_title, board_content, board_user_id, createdAt } =
       req.body;
-    console.log(req.body);
+    console.log('req.body', req.body);
 
     if (!req.file) {
       return res
@@ -72,7 +72,7 @@ export default async function handler(
         'UPDATE board SET board_title = ?, board_content = ?, board_user_id = ?, board_img = ? WHERE id = ?',
         [board_title, board_content, board_user_id, board_img, id]
       );
-      console.log(result);
+      console.log('patch result', result);
 
       if (result.affectedRows > 0) {
         res.status(200).json({
