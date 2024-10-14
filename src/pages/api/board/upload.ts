@@ -43,12 +43,15 @@ export default async function handler(
 
   try {
     const { board_title, board_content, board_user_id, createdAt } = req.body;
-    console.log(req.body);
 
     if (!req.file) {
       return res
         .status(400)
         .json({ success: false, message: 'No file uploaded' });
+    }
+
+    if (!board_title || !board_content || !board_user_id || !createdAt) {
+      return res.status(404).json({ message: 'Missing post data!' });
     }
 
     const board_img = `/uploads/${req.file.filename}`;

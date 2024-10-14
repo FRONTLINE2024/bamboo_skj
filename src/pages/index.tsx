@@ -40,6 +40,9 @@ import ModalBoard from '@/components/home/ModalBoard';
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
 import { useSocket } from '@/components/provider/SocketWrapper';
+import useFormData from '@/hooks/home/useFormData';
+import useFileInput from '@/hooks/home/useGetImg';
+import useSetDate from '@/hooks/home/useSetDate';
 
 // apis
 import {
@@ -52,7 +55,6 @@ import {
   patchBoardData,
   postBoardData,
 } from './api/clients/home';
-import useFormData, { FormDataType } from '@/hooks/home/useFormData';
 
 const Home = () => {
   const router = useRouter();
@@ -143,57 +145,29 @@ const Home = () => {
 
   // 게시글 post 실행 함수
   function writeBoard() {
-    const time = new Date();
-
-    const year = time.getFullYear();
-    const month = time.getMonth() + 1;
-    const date = time.getDate();
-
-    const times = time.toLocaleString('ko-KR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    });
-
-    const createdAt = `${year}-${month}-${date} ${times}`;
-    console.log('createdAt: ', createdAt);
-
+    const createdAt = useSetDate();
     setBoardData((prev) => ({
       ...prev,
       createdAt,
     }));
-    if (
-      board_title.length > 0 &&
-      board_content.length > 0 &&
-      createdAt.length > 0
-    ) {
-      boardWrite.mutate();
-    } else {
-      // 셋 중 하나라도 없으면 modal 띄우기 로직 작성
-    }
+    boardWrite.mutate();
   }
 
   // 이미지 가져오는 함수
-  function getImg(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.currentTarget.files?.[0] || null; // 파일 또는 null
-    if (file) {
-      setBoardData((prev) => ({
-        ...prev,
-        board_img: file, // Blob 타입을 사용
-      }));
-    }
-  }
-  // 게시글
-  function getImgs(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.currentTarget.files?.[0] || null; // 파일 또는 null
-    if (file) {
-      setSelected((prev) => ({
-        ...prev,
-        board_img: file, // Blob 타입을 사용
-      }));
-    }
-  }
+  const handleBoardImg = useFileInput((file) =>
+    setBoardData((prev) => ({
+      ...prev,
+      board_img: file,
+    }))
+  );
+
+  // 게시글 이미지 get
+  const handleSelectedImg = useFileInput((file) =>
+    setSelected((prev) => ({
+      ...prev,
+      board_img: file, // Blob 타입을 사용
+    }))
+  );
 
   // 수정 버튼 변환
   function modifyChange() {
@@ -242,7 +216,6 @@ const Home = () => {
     queryKey: ['getSpecificBoardData', selected.id],
     queryFn: async () => {
       const response = await getSpecificBoard(selected.id);
-      console.log(response);
       return response.data;
     },
     enabled: false, // 기본적으로 비활성화하여 자동 실행을 막음
@@ -269,9 +242,6 @@ const Home = () => {
     mutationKey: ['patchBoard'],
     mutationFn: async () => {
       const response = await patchBoardData(formPatchData);
-
-      console.log(response);
-
       return response.data;
     },
     onSuccess: () => {
@@ -285,14 +255,10 @@ const Home = () => {
     mutationKey: ['deleteBoard'],
     mutationFn: async (id: number) => {
       const board_user_id = Cookie.get('user_index');
-      console.log(typeof board_user_id);
       const body = {
         data: { id, board_user_id },
       };
       const response = await deleteBoardData(body);
-
-      console.log(response);
-
       return response.data;
     },
     onSuccess: () => {
@@ -317,8 +283,6 @@ const Home = () => {
     queryFn: async () => {
       const response = await AllData();
 
-      console.log(response);
-
       if (response.status === 200) {
         setData(response.data);
       }
@@ -332,12 +296,10 @@ const Home = () => {
     mutationKey: ['DateAscendData'],
     mutationFn: async () => {
       const response = await AscendData();
-
-      if (response.status === 200) {
-        setData(response.data.data);
-      }
-
       return response.data;
+    },
+    onSuccess: (data) => {
+      setData(data.data);
     },
     onError(err) {
       console.log(err);
@@ -349,12 +311,10 @@ const Home = () => {
     mutationKey: ['DateDescendData'],
     mutationFn: async () => {
       const response = await DescendData();
-
-      if (response.status === 200) {
-        setData(response.data.data);
-      }
-
       return response.data;
+    },
+    onSuccess: (data) => {
+      setData(data.data);
     },
     onError(err) {
       console.log(err);
@@ -366,12 +326,10 @@ const Home = () => {
     mutationKey: ['ContentAscendData'],
     mutationFn: async () => {
       const response = await ContentAscendData();
-
-      if (response.status === 200) {
-        setData(response.data.data);
-      }
-
       return response.data;
+    },
+    onSuccess: (data) => {
+      setData(data.data);
     },
     onError(err) {
       console.log(err);
@@ -496,7 +454,7 @@ const Home = () => {
                       type="file"
                       name="file"
                       id="file"
-                      onChange={(e) => getImg(e)}
+                      onChange={(e) => handleBoardImg(e)}
                     />
                     <WriteBtn onClick={writeBoard}>작성 완료</WriteBtn>
                   </div>
@@ -637,10 +595,7 @@ const Home = () => {
                     ref={fileInputRef} // useRef로 파일 입력 참조 연결
                     style={{ display: 'none' }} // 파일 입력은 화면에서는 보이지 않음
                     onChange={(e) => {
-                      const file = e.currentTarget.files?.[0];
-                      if (file) {
-                        getImgs(e);
-                      }
+                      handleSelectedImg(e);
                     }}
                   />
                 )}
