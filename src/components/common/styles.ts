@@ -16,7 +16,7 @@ export const ModalContainer = styled.div<{ modal: boolean }>`
   height: 70vh;
   background-color: white;
   border-radius: 0.2rem;
-  position: absolute;
+  position: fixed;
   top: 15%;
   right: 25%;
   z-index: 500;

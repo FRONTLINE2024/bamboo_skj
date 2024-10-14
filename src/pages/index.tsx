@@ -1,23 +1,8 @@
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // styles
-import {
-  Container,
-  DeleteBtn,
-  HomeHeader,
-  HomeInput,
-  Main,
-  ModifyBtn,
-  Nav,
-  WriteBtn,
-} from '@/styles/styles';
-import { Flex } from '@/styles/common/direction';
-
-// icons
-import { IoSearch } from 'react-icons/io5';
-import { FaUserCircle } from 'react-icons/fa';
+import { Container } from '@/styles/styles';
 
 // libraries
 import axios from 'axios';
@@ -35,7 +20,10 @@ import { selectedPost } from '@/atom/state';
 
 // compnents
 import Modal from '@/components/common/Modal';
-import ModalBoard from '@/components/home/ModalBoard';
+import Header from '@/components/home/Header';
+import NavBar from '@/components/home/NavBar';
+import MainContent from '@/components/home/MainContent';
+import BoardInfo from '@/components/home/BoardInfo';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
@@ -56,9 +44,12 @@ import {
   postBoardData,
 } from './api/clients/home';
 
-const Home = () => {
-  const router = useRouter();
+// context
+import { navContext } from '@/context/homeContext';
 
+const Home = () => {
+  // 라우터
+  const router = useRouter();
   // 채팅
   const { socket } = useSocket();
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -93,8 +84,26 @@ const Home = () => {
     board_user_id: 0,
     createdAt: '',
   });
-
   const { board_title, board_content, board_img, createdAt } = boardData;
+
+  // FormData 생성
+  const formData = useFormData({
+    board_title,
+    board_content,
+    board_user_id: `${Cookie.get('user_index')}`,
+    createdAt,
+    board_img,
+  });
+
+  // hook을 통해 FormData 생성
+  const formPatchData = useFormData({
+    id: `${selected.id}`,
+    board_title: selected.board_title,
+    board_content: selected.board_content,
+    board_user_id: `${Cookie.get('user_index')}`,
+    createdAt: selected.createdAt,
+    board_img: selected.board_img, // 필요한 데이터 포함
+  });
 
   // 이미지 수정
   const handleImageClick = () => {
@@ -118,15 +127,6 @@ const Home = () => {
       [sort]: value,
     }));
   }
-
-  // FormData 생성
-  const formData = useFormData({
-    board_title,
-    board_content,
-    board_user_id: `${Cookie.get('user_index')}`,
-    createdAt,
-    board_img,
-  });
 
   // 게시글 저장
   const boardWrite = useMutation({
@@ -226,16 +226,6 @@ const Home = () => {
       setSelected(getSpecificBoardData.data.data);
     }
   }, [getSpecificBoardData.isSuccess, getSpecificBoardData.data]);
-
-  // hook을 통해 FormData 생성
-  const formPatchData = useFormData({
-    id: `${selected.id}`,
-    board_title: selected.board_title,
-    board_content: selected.board_content,
-    board_user_id: `${Cookie.get('user_index')}`,
-    createdAt: selected.createdAt,
-    board_img: selected.board_img, // 필요한 데이터 포함
-  });
 
   // 게시글 수정
   const patchBoard = useMutation({
@@ -389,10 +379,7 @@ const Home = () => {
     console.log('selected: ', selected);
   }, [boardData, selected]);
 
-  // if (getData.isLoading) return <div>Loading...</div>;
-
   return (
-    // <h1>Home</h1>
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
@@ -406,13 +393,7 @@ const Home = () => {
           {' '}
         </div>
       )}
-      <HomeHeader>
-        <span className="projectTitle">FrontLine▹</span>
-        <HomeInput />
-        <div className="headerContainer">
-          <FaUserCircle size={25} className="user" />
-        </div>
-      </HomeHeader>
+      <Header />
       <div
         style={{
           width: '70%',
@@ -420,202 +401,37 @@ const Home = () => {
           flexGrow: 1,
         }}
       >
-        <Nav>
-          <div></div>
-          <div></div>
-          <div
-            style={{ ...Flex, width: '10vw', justifyContent: 'space-between' }}
-          >
-            <WriteBtn onClick={() => setIsBoardOpened(true)}>작성</WriteBtn>
-            {isBoardOpened && (
-              <ModalBoard modal={isBoardOpened} openModal={openModalBoard}>
-                <div className="boardWriteContainer">
-                  <div className="boardWriteTitle">
-                    <input
-                      className="boardTitleInput"
-                      placeholder="제목"
-                      onChange={(e) =>
-                        inputBoardData('board_title', e.target.value)
-                      }
-                    />
-                  </div>
-                  <textarea
-                    className="boardContent"
-                    placeholder="글 내용 작성"
-                    onChange={(e) =>
-                      inputBoardData('board_content', e.target.value)
-                    }
-                  />
-                  <div className="boardWriteFile">
-                    <label htmlFor="file">
-                      <div className="btnUpload">이미지 업로드</div>
-                    </label>
-                    <input
-                      type="file"
-                      name="file"
-                      id="file"
-                      onChange={(e) => handleBoardImg(e)}
-                    />
-                    <WriteBtn onClick={writeBoard}>작성 완료</WriteBtn>
-                  </div>
-                </div>
-              </ModalBoard>
-            )}
-            <select
-              name="sortValue"
-              id="sortValue"
-              onChange={(e) => sortingBoards(e.target.value)}
-            >
-              {sortValues.map((v, i) => (
-                <option className="sortButton" key={i} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Nav>
-        <Main>
-          {data.map((d, i) => (
-            <div
-              className="boardContainer"
-              key={i}
-              onClick={() => getSelectedData(d)}
-            >
-              <div className="boardColumn">
-                <div className="boardHeader">&nbsp;</div>
-                <div className="boardRow">
-                  <div className="boardStructure">
-                    <div className="boardTitle">{d.board_title}</div>
-                    <span className="boardCreateAt">{d.createdAt}</span>
-                  </div>
-                  {typeof d.board_img === 'string' && (
-                    <Image
-                      src={d.board_img}
-                      alt="게시글 이미지"
-                      width={50}
-                      height={50}
-                    />
-                  )}
-                </div>
-                <div
-                  style={{
-                    ...Flex,
-                    justifyContent: 'flex-end',
-                    alignItems: 'flex-end',
-                    padding: '4px',
-                    height: '80%',
-                  }}
-                >
-                  {Cookie.get('user_index') === String(d.board_user_id) && (
-                    <DeleteBtn
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        boardDelete(d.id, e);
-                      }}
-                    >
-                      삭제
-                    </DeleteBtn>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </Main>
+        <navContext.Provider
+          value={{
+            isBoardOpened,
+            setIsBoardOpened,
+            openModalBoard,
+            inputBoardData,
+            writeBoard,
+            sortingBoards,
+            handleBoardImg,
+            sortValues,
+          }}
+        >
+          <NavBar />
+        </navContext.Provider>
+        <MainContent
+          data={data}
+          getSelectedData={getSelectedData}
+          boardDelete={boardDelete}
+        />
         {isOpened === true && (
           <Modal openModal={openModal} modal={isOpened}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '10px',
-                gap: '5px',
-              }}
-            >
-              <div className="publisher">
-                {boardModify ? (
-                  <input
-                    className="boardTitleInput"
-                    value={selected.board_title}
-                    onChange={(e) =>
-                      inputSelectedBoardData('board_title', e.target.value)
-                    }
-                  />
-                ) : (
-                  selected.board_title
-                )}
-              </div>
-              <div className="date">
-                {' '}
-                {boardModify ? (
-                  <input
-                    className="boardTitleInput"
-                    value={selected.createdAt}
-                    onChange={(e) =>
-                      inputSelectedBoardData('createdAt', e.target.value)
-                    }
-                  />
-                ) : (
-                  selected.createdAt
-                )}
-              </div>
-              <div className="row">
-                <div className="content">
-                  {boardModify ? (
-                    <textarea
-                      className="boardContent2"
-                      value={selected.board_content}
-                      style={{ height: '20vh' }}
-                      onChange={(e) =>
-                        inputSelectedBoardData('board_content', e.target.value)
-                      }
-                    />
-                  ) : (
-                    selected.board_content
-                  )}
-                </div>
-
-                {typeof selected.board_img === 'string' && (
-                  <Image
-                    src={selected.board_img}
-                    style={{
-                      borderRadius: '5px',
-                      boxShadow: '0px 1px 3px 1px gray',
-                      cursor: 'pointer', // 이미지에 커서 포인터 추가
-                    }}
-                    alt="이미지"
-                    width={200}
-                    height={200}
-                    unoptimized={true}
-                    onClick={handleImageClick} // 이미지를 클릭했을 때 파일 입력 클릭
-                  />
-                )}
-                {boardModify && (
-                  <input
-                    type="file"
-                    ref={fileInputRef} // useRef로 파일 입력 참조 연결
-                    style={{ display: 'none' }} // 파일 입력은 화면에서는 보이지 않음
-                    onChange={(e) => {
-                      handleSelectedImg(e);
-                    }}
-                  />
-                )}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-end',
-                  height: '12vh',
-                }}
-              >
-                {Cookie.get('user_index') === String(selected.board_user_id) &&
-                  (boardModify ? (
-                    <ModifyBtn onClick={() => PatchBoardData()}>확인</ModifyBtn>
-                  ) : (
-                    <ModifyBtn onClick={() => modifyChange()}>수정</ModifyBtn>
-                  ))}
-              </div>
-            </div>
+            <BoardInfo
+              selected={selected}
+              boardModify={boardModify}
+              inputSelectedBoardData={inputSelectedBoardData}
+              handleImageClick={handleImageClick}
+              handleSelectedImg={handleSelectedImg}
+              fileInputRef={fileInputRef}
+              PatchBoardData={PatchBoardData}
+              modifyChange={modifyChange}
+            />
           </Modal>
         )}
       </div>
