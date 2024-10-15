@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { MutableRefObject, useState } from 'react';
 
 // styles
 import { ModifyBtn } from '@/styles/styles';
@@ -6,7 +7,7 @@ import { ModifyBtn } from '@/styles/styles';
 // libraries
 import Cookie from 'js-cookie';
 import { BoardType } from '@/types/home';
-import { MutableRefObject } from 'react';
+
 interface BoardInfoType {
   selected: BoardType;
   boardModify: boolean;
@@ -28,6 +29,23 @@ const BoardInfo = ({
   PatchBoardData,
   modifyChange,
 }: BoardInfoType) => {
+  const [previewImage, setPreviewImage] = useState(selected.board_img);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // 선택된 파일의 URL 생성
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl); // 미리보기 이미지 설정
+
+      // handleSelectedImg가 선택된 파일 처리
+      handleSelectedImg(e);
+
+      // 파일 URL 해제(메모리 누수 방지)
+      return () => URL.revokeObjectURL(imageUrl);
+    }
+  };
+
   return (
     <div
       style={{
@@ -80,28 +98,28 @@ const BoardInfo = ({
           )}
         </div>
 
-        {typeof selected.board_img === 'string' && (
+        {previewImage && typeof previewImage === 'string' && (
           <Image
-            src={selected.board_img}
+            src={previewImage}
             style={{
               borderRadius: '5px',
               boxShadow: '0px 1px 3px 1px gray',
-              cursor: 'pointer', // 이미지에 커서 포인터 추가
+              cursor: 'pointer',
             }}
             alt="이미지"
             width={200}
             height={200}
             unoptimized={true}
-            onClick={handleImageClick} // 이미지를 클릭했을 때 파일 입력 클릭
+            onClick={handleImageClick}
           />
         )}
         {boardModify && (
           <input
             type="file"
-            ref={fileInputRef} // useRef로 파일 입력 참조 연결
-            style={{ display: 'none' }} // 파일 입력은 화면에서는 보이지 않음
+            ref={fileInputRef}
+            style={{ display: 'none' }}
             onChange={(e) => {
-              handleSelectedImg(e);
+              handleFileChange(e);
             }}
           />
         )}

@@ -7,7 +7,7 @@ import { Container } from '@/styles/styles';
 // libraries
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
@@ -33,19 +33,18 @@ import useFileInput from '@/hooks/home/useGetImg';
 import useSetDate from '@/hooks/home/useSetDate';
 
 // apis
-import {
-  AllData,
-  AscendData,
-  ContentAscendData,
-  DescendData,
-  deleteBoardData,
-  getSpecificBoard,
-  patchBoardData,
-  postBoardData,
-} from './api/clients/home';
+import { patchBoardData, postBoardData } from './api/clients/home';
 
 // context
 import { navContext } from '@/context/homeContext';
+import useGetDateAscendData from '@/hooks/home/api/useGetDateAscendData';
+import useGetDateDescendData from '@/hooks/home/api/useGetDateDescendData';
+import useGetContentAscendData from '@/hooks/home/api/useGetContentAscendData';
+import useGetAllData from '@/hooks/home/api/useGetAllData';
+import useDeleteBoard from '@/hooks/home/api/useDeleteBoard';
+import useGetSpecificBoardData from '@/hooks/home/api/useGetSpecificBoardData';
+import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
+import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 
 const Home = () => {
   // 라우터
@@ -102,7 +101,7 @@ const Home = () => {
     board_content: selected.board_content,
     board_user_id: `${Cookie.get('user_index')}`,
     createdAt: selected.createdAt,
-    board_img: selected.board_img, // 필요한 데이터 포함
+    board_img: selected.board_img,
   });
 
   // 이미지 수정
@@ -128,31 +127,6 @@ const Home = () => {
     }));
   }
 
-  // 게시글 저장
-  const boardWrite = useMutation({
-    mutationKey: ['boardWrite'],
-    mutationFn: async () => {
-      const response = await postBoardData(formData);
-    },
-    onSuccess: () => {
-      closeModalBoard();
-      getData.refetch();
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-
-  // 게시글 post 실행 함수
-  function writeBoard() {
-    const createdAt = useSetDate();
-    setBoardData((prev) => ({
-      ...prev,
-      createdAt,
-    }));
-    boardWrite.mutate();
-  }
-
   // 이미지 가져오는 함수
   const handleBoardImg = useFileInput((file) =>
     setBoardData((prev) => ({
@@ -165,7 +139,7 @@ const Home = () => {
   const handleSelectedImg = useFileInput((file) =>
     setSelected((prev) => ({
       ...prev,
-      board_img: file, // Blob 타입을 사용
+      board_img: file,
     }))
   );
 
@@ -176,8 +150,8 @@ const Home = () => {
 
   // 게시글 수정
   function PatchBoardData() {
+    patchBoards();
     setBoardModify(false);
-    patchBoard.mutate();
   }
 
   // 게시글 선택
@@ -211,131 +185,84 @@ const Home = () => {
     setIsBoardOpened(false);
   }
 
-  // 특정 게시글 데이터 가져오기
-  const getSpecificBoardData = useQuery({
-    queryKey: ['getSpecificBoardData', selected.id],
-    queryFn: async () => {
-      const response = await getSpecificBoard(selected.id);
-      return response.data;
-    },
-    enabled: false, // 기본적으로 비활성화하여 자동 실행을 막음
-  });
+  // React Query
+  const { refetch: refetchAllData } = useGetAllData({ setData }); // 모든 데이터 GET
+
+  const {
+    data: getSpecificData,
+    refetch: refetchSpecificData,
+    isSuccess,
+  } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
+
+  const { mutate: postBoard } = usePostBoardWrite({
+    closeModalBoard,
+    refetchAllData,
+    formData,
+  }); // 게시글 POST
+
+  const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
+
+  const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
+
+  const { mutate: fetchContentAscendData } = useGetContentAscendData({
+    setData,
+  }); // 이름 순
+
+  const { mutate: patchBoards } = usePatchBoard({
+    formPatchData,
+    refetchSpecificData,
+    refetchAllData,
+  }); // 게시글 Patch
+
+  const { mutate: deleteBoards } = useDeleteBoard({ refetchAllData }); // 게시글 Delete
 
   useEffect(() => {
-    if (getSpecificBoardData.isSuccess) {
-      setSelected(getSpecificBoardData.data.data);
+    if (isSuccess) {
+      setSelected(getSpecificData.data);
     }
-  }, [getSpecificBoardData.isSuccess, getSpecificBoardData.data]);
+  }, [isSuccess, getSpecificData]);
 
-  // 게시글 수정
-  const patchBoard = useMutation({
-    mutationKey: ['patchBoard'],
-    mutationFn: async () => {
-      const response = await patchBoardData(formPatchData);
-      return response.data;
-    },
-    onSuccess: () => {
-      getSpecificBoardData.refetch();
-      getData.refetch();
-    },
-  });
-
-  // 게시글 삭제
-  const deleteBoard = useMutation({
-    mutationKey: ['deleteBoard'],
-    mutationFn: async (id: number) => {
-      const board_user_id = Cookie.get('user_index');
-      const body = {
-        data: { id, board_user_id },
-      };
-      const response = await deleteBoardData(body);
-      return response.data;
-    },
-    onSuccess: () => {
-      getData.refetch();
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-
-  // 게시글 삭제 함수
-  function boardDelete(
-    id: number,
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    deleteBoard.mutate(id);
+  // 게시글 post 실행 함수
+  function writeBoard() {
+    const createdAt = useSetDate();
+    setBoardData((prev) => ({
+      ...prev,
+      createdAt,
+    }));
+    // boardWrite.mutate();
+    postBoard();
   }
 
-  // 전체 데이터
-  const getData = useQuery({
-    queryKey: ['getData'],
-    queryFn: async () => {
-      const response = await AllData();
-
-      if (response.status === 200) {
-        setData(response.data);
-      }
-
-      return response.data;
-    },
-  });
+  // 게시글 삭제 함수
+  function boardDelete(id: number) {
+    deleteBoards(id);
+  }
 
   // 오래된 순
-  const getDateAscendData = useMutation({
-    mutationKey: ['DateAscendData'],
-    mutationFn: async () => {
-      const response = await AscendData();
-      return response.data;
-    },
-    onSuccess: (data) => {
-      setData(data.data);
-    },
-    onError(err) {
-      console.log(err);
-    },
-  });
+  const getDateAscendDataFunc = () => {
+    fetchAscendData();
+  };
 
-  // 최신순
-  const getDateDescendData = useMutation({
-    mutationKey: ['DateDescendData'],
-    mutationFn: async () => {
-      const response = await DescendData();
-      return response.data;
-    },
-    onSuccess: (data) => {
-      setData(data.data);
-    },
-    onError(err) {
-      console.log(err);
-    },
-  });
+  // 최신 순
+  const getDateDescendDataFunc = () => {
+    fetchDescendData();
+  };
 
-  // 이름순
-  const getContentAscendData = useMutation({
-    mutationKey: ['ContentAscendData'],
-    mutationFn: async () => {
-      const response = await ContentAscendData();
-      return response.data;
-    },
-    onSuccess: (data) => {
-      setData(data.data);
-    },
-    onError(err) {
-      console.log(err);
-    },
-  });
+  // 게시글 이름 순
+  const getContentAscendDataFuncs = () => {
+    fetchContentAscendData();
+  };
 
   function sortingBoards(value: string) {
     switch (value) {
       case '최신순':
-        getDateDescendData.mutate();
+        getDateDescendDataFunc();
         break;
       case '오래된 순':
-        getDateAscendData.mutate();
+        getDateAscendDataFunc();
         break;
       case '이름순':
-        getContentAscendData.mutate();
+        getContentAscendDataFuncs();
         break;
     }
   }
