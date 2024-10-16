@@ -32,11 +32,10 @@ import useFormData from '@/hooks/home/useFormData';
 import useFileInput from '@/hooks/home/useGetImg';
 import useSetDate from '@/hooks/home/useSetDate';
 
-// apis
-import { patchBoardData, postBoardData } from './api/clients/home';
-
 // context
 import { navContext } from '@/context/homeContext';
+
+// hooks
 import useGetDateAscendData from '@/hooks/home/api/useGetDateAscendData';
 import useGetDateDescendData from '@/hooks/home/api/useGetDateDescendData';
 import useGetContentAscendData from '@/hooks/home/api/useGetContentAscendData';
@@ -45,6 +44,7 @@ import useDeleteBoard from '@/hooks/home/api/useDeleteBoard';
 import useGetSpecificBoardData from '@/hooks/home/api/useGetSpecificBoardData';
 import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
+import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
 
 const Home = () => {
   // 라우터
@@ -200,6 +200,11 @@ const Home = () => {
     formData,
   }); // 게시글 POST
 
+  const { mutate: sendMessages } = usePostSendMessage({
+    currentMessage,
+    setCurrentMessage,
+  });
+
   const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
 
   const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
@@ -269,21 +274,18 @@ const Home = () => {
 
   // 메세지 보내기
   const sendMessage = async () => {
-    if (currentMessage) {
-      // const res = await fetch('/api/chat', {
-      //   method: 'POST',
-      //   body: JSON.stringify({
-      //     user: username,
-      //     content: currentMessage,
-      //   }),
-      // });
-      // if (res.ok) setCurrentMessage('');
-      const res = await axios.post('/api/chat', {
-        user: 'test',
-        content: currentMessage,
-      });
+    if (currentMessage.trim()) {
+      try {
+        const res = await axios.post('/api/chat', {
+          chat_user_id: Cookie.get('user_index'),
+          chat_content: currentMessage,
+        });
+        setCurrentMessage('');
 
-      console.log(res);
+        console.log(res);
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   };
 
@@ -328,6 +330,24 @@ const Home = () => {
           flexGrow: 1,
         }}
       >
+        <input
+          onKeyDown={(e) => {
+            if (e.code === 'Enter') {
+              e.preventDefault();
+              sendMessages();
+            }
+          }}
+          placeholder="채팅 예시"
+          value={currentMessage}
+          onChange={(e) => setCurrentMessage(e.target.value)}
+        />
+        {messages.map((m, i) => {
+          return (
+            <div key={i}>
+              {m.chat_user_id} {m.chat_content}
+            </div>
+          ); // 명시적으로 return 추가
+        })}
         <navContext.Provider
           value={{
             isBoardOpened,
@@ -338,6 +358,7 @@ const Home = () => {
             sortingBoards,
             handleBoardImg,
             sortValues,
+            // sendMessage,
           }}
         >
           <NavBar />

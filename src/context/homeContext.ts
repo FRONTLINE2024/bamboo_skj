@@ -10,6 +10,7 @@ export interface NavContextType {
   sortingBoards: (value: string) => void;
   handleBoardImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   sortValues: string[];
+  // sendMessage: () => Promise<void>;
 }
 
 // Context 생성 및 초기값 설정
@@ -22,4 +23,5 @@ export const navContext = createContext<NavContextType>({
   sortingBoards: (value) => {},
   handleBoardImg: () => {},
   sortValues: [],
+  // sendMessage: () => {},
 });
