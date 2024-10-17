@@ -7,7 +7,6 @@ import { Container } from '@/styles/styles';
 // libraries
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { useMutation } from '@tanstack/react-query';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
@@ -45,6 +44,13 @@ import useGetSpecificBoardData from '@/hooks/home/api/useGetSpecificBoardData';
 import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
+
+// icons
+import {
+  IoChatbubbleEllipsesOutline,
+  IoChatbubbleEllipsesSharp,
+} from 'react-icons/io5';
+import ChatModal from '@/components/home/ChattModal';
 
 const Home = () => {
   // 라우터
@@ -85,6 +91,9 @@ const Home = () => {
   });
   const { board_title, board_content, board_img, createdAt } = boardData;
 
+  const [chattingModalBoolean, setChattingModalBoolean] =
+    useState<boolean>(false);
+
   // FormData 생성
   const formData = useFormData({
     board_title,
@@ -103,6 +112,9 @@ const Home = () => {
     createdAt: selected.createdAt,
     board_img: selected.board_img,
   });
+
+  // 채팅 모달
+  const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
 
   // 이미지 수정
   const handleImageClick = () => {
@@ -183,6 +195,11 @@ const Home = () => {
   // 게시글 작성 모달 닫기
   function closeModalBoard() {
     setIsBoardOpened(false);
+  }
+
+  // 게시글 작성 모달 닫기
+  function closeModalChat() {
+    setChattingModalBoolean(false);
   }
 
   // React Query
@@ -291,7 +308,7 @@ const Home = () => {
 
   useEffect(() => {
     socket?.on('message', (message: IMessage) => {
-      console.log(message);
+      // console.log(message);
       setMessages((prev) => [...prev, message]);
     });
   }, [socket]);
@@ -312,6 +329,7 @@ const Home = () => {
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
+      <div id="modal-chat"></div>
       {isOpened && (
         <div className="background" onClick={closeModal}>
           {' '}
@@ -319,6 +337,11 @@ const Home = () => {
       )}
       {isBoardOpened && (
         <div className="background" onClick={closeModalBoard}>
+          {' '}
+        </div>
+      )}
+      {chattingModalBoolean && (
+        <div className="background" onClick={closeModalChat}>
           {' '}
         </div>
       )}
@@ -383,6 +406,16 @@ const Home = () => {
           </Modal>
         )}
       </div>
+      <div className="chatSpinner" onClick={handleChatModal}>
+        <IoChatbubbleEllipsesOutline />
+      </div>
+      {chattingModalBoolean && (
+        <ChatModal openModal={handleChatModal}>
+          <div>
+            안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요
+          </div>
+        </ChatModal>
+      )}
     </Container>
   );
 };

@@ -136,6 +136,27 @@ export const Container = styled.div`
   #file {
     display: none;
   }
+
+  .chatSpinner {
+    position: fixed;
+    bottom: 0.5rem;
+    right: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px;
+    color: ${theme.secondary};
+    border: 2px solid ${theme.secondary};
+
+    &:hover {
+      transition: 0.5s transform;
+      transform: scale(1.1);
+    }
+
+    * {
+      width: 36px;
+      height: 36px;
+    }
+  }
 `;
 
 export const HomeHeader = styled.header`
