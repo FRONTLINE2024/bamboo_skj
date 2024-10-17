@@ -1,5 +1,10 @@
 // libraries
-import { useMutation } from '@tanstack/react-query';
+import { ChattingDataType } from '@/types/chat';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from '@tanstack/react-query';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { SetStateAction } from 'react';
@@ -7,11 +12,15 @@ import { SetStateAction } from 'react';
 interface usePostSendMessageType {
   currentMessage: string;
   setCurrentMessage: React.Dispatch<SetStateAction<string>>;
+  refetchChattingData: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<ChattingDataType[], Error>>;
 }
 
 const usePostSendMessage = ({
   currentMessage,
   setCurrentMessage,
+  refetchChattingData,
 }: usePostSendMessageType) => {
   return useMutation({
     mutationKey: ['sendMessage'],
@@ -23,6 +32,9 @@ const usePostSendMessage = ({
       setCurrentMessage('');
 
       console.log(res);
+    },
+    onSuccess: () => {
+      refetchChattingData();
     },
   });
 };

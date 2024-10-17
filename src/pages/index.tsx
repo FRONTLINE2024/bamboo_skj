@@ -51,6 +51,10 @@ import {
   IoChatbubbleEllipsesSharp,
 } from 'react-icons/io5';
 import ChatModal from '@/components/home/ChattModal';
+import useGetChattingData from '@/hooks/home/api/useGetChattingData';
+import { ChatData } from '@/components/home/styles';
+import { Flex } from '@/styles/common/direction';
+import Chat from '@/components/home/ChatModal/Chat';
 
 const Home = () => {
   // 라우터
@@ -91,6 +95,7 @@ const Home = () => {
   });
   const { board_title, board_content, board_img, createdAt } = boardData;
 
+  // chat modal boolean
   const [chattingModalBoolean, setChattingModalBoolean] =
     useState<boolean>(false);
 
@@ -112,6 +117,54 @@ const Home = () => {
     createdAt: selected.createdAt,
     board_img: selected.board_img,
   });
+
+  // React Query
+  const { refetch: refetchAllData } = useGetAllData({ setData }); // 모든 데이터 GET
+
+  const {
+    data: getSpecificData,
+    refetch: refetchSpecificData,
+    isSuccess: specificDataSuccess,
+  } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
+
+  const { data: chattingData, refetch: refetchChattingData } =
+    useGetChattingData(); // 채팅 GET
+
+  const { mutate: postBoard } = usePostBoardWrite({
+    closeModalBoard,
+    refetchAllData,
+    formData,
+  }); // 게시글 POST
+
+  const { mutate: sendMessages } = usePostSendMessage({
+    currentMessage,
+    setCurrentMessage,
+    refetchChattingData,
+  }); // 채팅 메세지 보내기
+
+  const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
+
+  const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
+
+  const { mutate: fetchContentAscendData } = useGetContentAscendData({
+    setData,
+  }); // 이름 순
+
+  const { mutate: patchBoards } = usePatchBoard({
+    formPatchData,
+    refetchSpecificData,
+    refetchAllData,
+  }); // 게시글 Patch
+
+  const { mutate: deleteBoards } = useDeleteBoard({ refetchAllData }); // 게시글 Delete
+
+  useEffect(() => {
+    if (specificDataSuccess) {
+      setSelected(getSpecificData.data);
+    }
+  }, [specificDataSuccess, getSpecificData]);
+
+  useEffect(() => {}, []);
 
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
@@ -202,48 +255,6 @@ const Home = () => {
     setChattingModalBoolean(false);
   }
 
-  // React Query
-  const { refetch: refetchAllData } = useGetAllData({ setData }); // 모든 데이터 GET
-
-  const {
-    data: getSpecificData,
-    refetch: refetchSpecificData,
-    isSuccess,
-  } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
-
-  const { mutate: postBoard } = usePostBoardWrite({
-    closeModalBoard,
-    refetchAllData,
-    formData,
-  }); // 게시글 POST
-
-  const { mutate: sendMessages } = usePostSendMessage({
-    currentMessage,
-    setCurrentMessage,
-  });
-
-  const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
-
-  const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
-
-  const { mutate: fetchContentAscendData } = useGetContentAscendData({
-    setData,
-  }); // 이름 순
-
-  const { mutate: patchBoards } = usePatchBoard({
-    formPatchData,
-    refetchSpecificData,
-    refetchAllData,
-  }); // 게시글 Patch
-
-  const { mutate: deleteBoards } = useDeleteBoard({ refetchAllData }); // 게시글 Delete
-
-  useEffect(() => {
-    if (isSuccess) {
-      setSelected(getSpecificData.data);
-    }
-  }, [isSuccess, getSpecificData]);
-
   // 게시글 post 실행 함수
   function writeBoard() {
     const createdAt = useSetDate();
@@ -288,23 +299,6 @@ const Home = () => {
         break;
     }
   }
-
-  // 메세지 보내기
-  const sendMessage = async () => {
-    if (currentMessage.trim()) {
-      try {
-        const res = await axios.post('/api/chat', {
-          chat_user_id: Cookie.get('user_index'),
-          chat_content: currentMessage,
-        });
-        setCurrentMessage('');
-
-        console.log(res);
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
-  };
 
   useEffect(() => {
     socket?.on('message', (message: IMessage) => {
@@ -353,24 +347,6 @@ const Home = () => {
           flexGrow: 1,
         }}
       >
-        <input
-          onKeyDown={(e) => {
-            if (e.code === 'Enter') {
-              e.preventDefault();
-              sendMessages();
-            }
-          }}
-          placeholder="채팅 예시"
-          value={currentMessage}
-          onChange={(e) => setCurrentMessage(e.target.value)}
-        />
-        {messages.map((m, i) => {
-          return (
-            <div key={i}>
-              {m.chat_user_id} {m.chat_content}
-            </div>
-          ); // 명시적으로 return 추가
-        })}
         <navContext.Provider
           value={{
             isBoardOpened,
@@ -381,7 +357,6 @@ const Home = () => {
             sortingBoards,
             handleBoardImg,
             sortValues,
-            // sendMessage,
           }}
         >
           <NavBar />
@@ -410,10 +385,13 @@ const Home = () => {
         <IoChatbubbleEllipsesOutline />
       </div>
       {chattingModalBoolean && (
-        <ChatModal openModal={handleChatModal}>
-          <div>
-            안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요
-          </div>
+        <ChatModal
+          openModal={handleChatModal}
+          sendMessages={sendMessages}
+          currentMessage={currentMessage}
+          setCurrentMessage={setCurrentMessage}
+        >
+          <Chat chattingData={chattingData} />
         </ChatModal>
       )}
     </Container>

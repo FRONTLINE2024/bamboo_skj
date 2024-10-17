@@ -31,3 +31,7 @@ export const patchBoardData = (body: {}) => {
 export const getSpecificBoard = (id: number) => {
   return basicClient.get(`/board/${id}`);
 };
+
+export const getAllChattingData = () => {
+  return basicClient.get('/chat');
+};

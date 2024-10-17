@@ -193,7 +193,7 @@ export const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   margin-top: 1rem;
 
   select {

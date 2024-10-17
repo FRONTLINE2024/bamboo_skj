@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ChattingContainer } from './styles';
 import { IoClose } from 'react-icons/io5';
+import { UseMutateFunction } from '@tanstack/react-query';
 
 interface ChatModalType {
   children: React.ReactNode;
   openModal: () => void;
+  sendMessages: UseMutateFunction<void, Error, void, unknown>;
+  currentMessage: string;
+  setCurrentMessage: React.Dispatch<SetStateAction<string>>;
 }
 
-const ChatModal = ({ children, openModal }: ChatModalType) => {
+const ChatModal = ({
+  children,
+  openModal,
+  sendMessages,
+  currentMessage,
+  setCurrentMessage,
+}: ChatModalType) => {
   const [chatRoot, setChatRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -17,6 +27,13 @@ const ChatModal = ({ children, openModal }: ChatModalType) => {
   }, []);
 
   if (!chatRoot) return null;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.code === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // 줄 바꿈을 방지
+      sendMessages();
+    }
+  };
 
   return ReactDOM.createPortal(
     <ChattingContainer>
@@ -34,6 +51,14 @@ const ChatModal = ({ children, openModal }: ChatModalType) => {
         </div>
       </div>
       {children}
+      <div className="footer">
+        <textarea
+          onKeyDown={(e) => handleKeyDown(e)}
+          placeholder="채팅 예시"
+          value={currentMessage}
+          onChange={(e) => setCurrentMessage(e.target.value)}
+        />
+      </div>
     </ChattingContainer>,
     chatRoot
   );

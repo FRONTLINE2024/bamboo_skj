@@ -9,8 +9,9 @@ const chatHandler = async (
   res: NextApiResponseServerIO
 ) => {
   const connection = await createConnection();
-  if (req.method === 'POST') {
-    try {
+
+  try {
+    if (req.method === 'POST') {
       const { chat_content, chat_user_id } = req.body;
       const message = req.body as IMessage;
 
@@ -42,11 +43,35 @@ const chatHandler = async (
       } else {
         res.status(404).json({ message: 'Invaild Chat Data!' });
       }
-    } catch (err) {
-      res.status(500).json({ message: 'Server error', err });
-    } finally {
-      connection.end();
+    } else if (req.method === 'GET') {
+      const [row, field] =
+        await connection.execute<RowDataPacket[]>('SELECT * FROM chat');
+
+      const [userRow, userField] =
+        await connection.execute<RowDataPacket[]>('SELECT * FROM user');
+
+      // console.log('userRow:', userRow);
+      // console.log('row: ', row);
+
+      const inputUserId = row.map((d) => {
+        const addUserId = userRow.filter((u) => {
+          if (u.user_index === d.chat_user_id) {
+            return u.user_id;
+          }
+        });
+        return { ...d, chat_user_nickname: addUserId[0].user_id };
+      });
+
+      if (row.length > 0) {
+        res.status(200).json(inputUserId);
+      } else {
+        res.status(404).json({ message: 'Not Found Chat Data!' });
+      }
     }
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', err });
+  } finally {
+    connection.end();
   }
 };
 
