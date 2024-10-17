@@ -159,7 +159,7 @@ export const Container = styled.div`
   }
 `;
 
-export const HomeHeader = styled.header`
+export const HomeHeader = styled.header<{ dropdownBoolean: boolean }>`
   z-index: 1;
   width: 100%;
   height: 55px;
@@ -176,9 +176,11 @@ export const HomeHeader = styled.header`
   }
 
   .headerContainer {
-    width: 6%;
+    height: 100px;
     display: flex;
     flex-direction: row;
+    position: relative;
+    padding: 5px;
   }
   .search {
     cursor: pointer;
@@ -186,6 +188,21 @@ export const HomeHeader = styled.header`
 
   .user {
     cursor: pointer;
+    box-shadow: ${({ dropdownBoolean }) =>
+      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    border-radius: 50%;
+  }
+
+  .logoutIcon {
+    cursor: pointer;
+    position: absolute;
+    margin-top: 4rem;
+
+    background-color: white;
+    box-shadow: ${({ dropdownBoolean }) =>
+      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    border-radius: 50%;
+    padding: 5px;
   }
 `;
 

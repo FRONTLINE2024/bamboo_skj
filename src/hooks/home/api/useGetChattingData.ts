@@ -7,7 +7,6 @@ const useGetChattingData = () => {
     queryKey: ['getChattingData'],
     queryFn: async () => {
       const response = await getAllChattingData();
-      console.log(response);
 
       return response.data;
     },

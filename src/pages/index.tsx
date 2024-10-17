@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Container } from '@/styles/styles';
 
 // libraries
-import axios from 'axios';
 import Cookie from 'js-cookie';
 
 // types
@@ -23,6 +22,8 @@ import Header from '@/components/home/Header';
 import NavBar from '@/components/home/NavBar';
 import MainContent from '@/components/home/MainContent';
 import BoardInfo from '@/components/home/BoardInfo';
+import ChatModal from '@/components/home/ChattModal';
+import Chat from '@/components/home/ChatModal/Chat';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
@@ -31,10 +32,7 @@ import useFormData from '@/hooks/home/useFormData';
 import useFileInput from '@/hooks/home/useGetImg';
 import useSetDate from '@/hooks/home/useSetDate';
 
-// context
-import { navContext } from '@/context/homeContext';
-
-// hooks
+// apis
 import useGetDateAscendData from '@/hooks/home/api/useGetDateAscendData';
 import useGetDateDescendData from '@/hooks/home/api/useGetDateDescendData';
 import useGetContentAscendData from '@/hooks/home/api/useGetContentAscendData';
@@ -44,24 +42,20 @@ import useGetSpecificBoardData from '@/hooks/home/api/useGetSpecificBoardData';
 import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
+import useGetChattingData from '@/hooks/home/api/useGetChattingData';
+
+// context
+import { navContext } from '@/context/homeContext';
 
 // icons
-import {
-  IoChatbubbleEllipsesOutline,
-  IoChatbubbleEllipsesSharp,
-} from 'react-icons/io5';
-import ChatModal from '@/components/home/ChattModal';
-import useGetChattingData from '@/hooks/home/api/useGetChattingData';
-import { ChatData } from '@/components/home/styles';
-import { Flex } from '@/styles/common/direction';
-import Chat from '@/components/home/ChatModal/Chat';
+import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 const Home = () => {
   // 라우터
   const router = useRouter();
   // 채팅
   const { socket } = useSocket();
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>('');
 
   // 컴포넌트 내에서
@@ -98,6 +92,9 @@ const Home = () => {
   // chat modal boolean
   const [chattingModalBoolean, setChattingModalBoolean] =
     useState<boolean>(false);
+
+  // dropdown boolean
+  const [dropdownBoolean, setDropdownBoolean] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -164,7 +161,7 @@ const Home = () => {
     }
   }, [specificDataSuccess, getSpecificData]);
 
-  useEffect(() => {}, []);
+  const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
 
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
@@ -307,12 +304,12 @@ const Home = () => {
     });
   }, [socket]);
 
-  // 토큰 없으면 로그인 페이지로 이동
   useEffect(() => {
-    if (Cookie.get('token') === undefined) {
-      router.push('/login');
+    const token = Cookie.get('token');
+    if (!token) {
+      router.replace('/login'); // 일반적으로 router.replace 사용
     }
-  }, []);
+  }, []); // 종속성 배열을 비워 초기 렌더링에서만 실행
 
   useEffect(() => {
     console.log('boardData: ', boardData);
@@ -339,7 +336,10 @@ const Home = () => {
           {' '}
         </div>
       )}
-      <Header />
+      <Header
+        handleDropdown={handleDropdown}
+        dropdownBoolean={dropdownBoolean}
+      />
       <div
         style={{
           width: '70%',
