@@ -53,6 +53,7 @@ import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 const Home = () => {
   // 라우터
   const router = useRouter();
+
   // 채팅
   const { socket } = useSocket();
   const [, setMessages] = useState<IMessage[]>([]);
@@ -297,12 +298,12 @@ const Home = () => {
     }
   }
 
-  useEffect(() => {
-    socket?.on('message', (message: IMessage) => {
-      // console.log(message);
-      setMessages((prev) => [...prev, message]);
-    });
-  }, [socket]);
+  // useEffect(() => {
+  //   socket?.on('message', (message: IMessage) => {
+  //     // console.log(message);
+  //     setMessages((prev) => [...prev, message]);
+  //   });
+  // }, [socket]);
 
   useEffect(() => {
     const token = Cookie.get('token');

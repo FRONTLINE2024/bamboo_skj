@@ -35,3 +35,7 @@ export const getSpecificBoard = (id: number) => {
 export const getAllChattingData = () => {
   return basicClient.get('/chat');
 };
+
+export const postChatMessage = (body: {}) => {
+  return basicClient.post('/chat', body);
+};

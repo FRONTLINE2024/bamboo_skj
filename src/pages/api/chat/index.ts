@@ -4,6 +4,11 @@ import { NextApiResponseServerIO } from '@/pages/api/socket/io';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
+function checkKorean(str: string) {
+  const regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+  return regex.test(str);
+}
+
 const chatHandler = async (
   req: NextApiRequest,
   res: NextApiResponseServerIO
@@ -15,24 +20,23 @@ const chatHandler = async (
       const { chat_content, chat_user_id } = req.body;
       const message = req.body as IMessage;
 
-      // console.log('content: ', chat_content);
-      // console.log('message: ', message);
+      console.log('message: ', message);
 
       const [rows, fields] = await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_index = ? `,
         [chat_user_id]
       );
 
-      // console.log('rows: ', rows);
-
       const chat = await connection.execute<ResultSetHeader>(
         `INSERT INTO chat (chat_user_id, chat_content) VALUES (?, ?)`,
         [chat_user_id, chat_content]
       );
 
-      res.socket.server.io.emit('message', message);
-
-      // console.log('attempt chat: ', chat);
+      let isKoreanEmitted = false;
+      if (checkKorean(chat_content) === true && !isKoreanEmitted) {
+        res.socket.server.emit('message', message);
+        isKoreanEmitted = true;
+      }
 
       if (chat[0].affectedRows > 0) {
         const Data = {

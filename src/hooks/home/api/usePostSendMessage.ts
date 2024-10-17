@@ -1,4 +1,5 @@
 // libraries
+import { postChatMessage } from '@/pages/api/clients/home';
 import { ChattingDataType } from '@/types/chat';
 import {
   QueryObserverResult,
@@ -25,10 +26,12 @@ const usePostSendMessage = ({
   return useMutation({
     mutationKey: ['sendMessage'],
     mutationFn: async () => {
-      const res = await axios.post('/api/chat', {
+      const data = {
         chat_user_id: Cookie.get('user_index'),
         chat_content: currentMessage,
-      });
+      };
+
+      const res = await postChatMessage(data);
       setCurrentMessage('');
 
       console.log(res);
