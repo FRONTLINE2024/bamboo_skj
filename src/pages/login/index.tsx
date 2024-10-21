@@ -68,6 +68,7 @@ const Login = () => {
     }));
   }
 
+  // 로그인 함수
   function doLogin() {
     if (user_id.length > 0 && user_password.length > 0) {
       userLogin.mutate();
@@ -79,7 +80,7 @@ const Login = () => {
     mutationFn: async () => {
       const response = await login(loginData);
 
-      console.log(response);
+      // console.log(response.data);
 
       if (response.status === 200) {
         Cookie.set('token', response.data.token);
@@ -92,7 +93,7 @@ const Login = () => {
 
     // 타입 지정 알아보기
     onError(err: any) {
-      console.log(err);
+      // console.log(err);
       setToastState((prev) => ({
         ...prev,
         stateText: `${err.response.data.message}`,
@@ -104,8 +105,8 @@ const Login = () => {
   });
 
   useEffect(() => {
-    console.log('loginData: ', loginData);
-    console.log('toastState: ', toastState);
+    // console.log('loginData: ', loginData);
+    // console.log('toastState: ', toastState);
   }, [loginData, toastState]);
   return (
     <>
@@ -171,7 +172,7 @@ const Login = () => {
             }}
           >
             <LoginButton onClick={() => userLogin.mutate()}>로그인</LoginButton>
-            <Link href={'/signup'}>
+            <Link data-testid="signup-link" href={'/signup'}>
               <SignupButton>회원가입</SignupButton>
             </Link>
           </div>

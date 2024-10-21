@@ -318,6 +318,7 @@ const Home = () => {
   }, [boardData, selected]);
 
   return (
+    // <h1>안녕</h1>
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
