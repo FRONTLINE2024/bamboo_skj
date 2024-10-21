@@ -54,7 +54,7 @@ const Signup = () => {
     }));
   }
 
-  const doSingup = useMutation({
+  const doSignup = useMutation({
     mutationKey: ['signup'],
     mutationFn: async () => {
       const body = {
@@ -93,21 +93,20 @@ const Signup = () => {
   });
 
   function signups() {
-    if (user_id.length <= 5 && user_password === passwordConfirm) {
-      doSingup.mutate();
-    } else if (user_id.length > 5) {
+    if (user_id.length < 5) {
       setToastState((prev) => ({
         ...prev,
-        stateText: '아이디는 4자리 이상 설정해주세요!',
+        stateText: '아이디는 4자리 이상으로 설정해주세요!',
       }));
-    } else {
+    } else if (user_password !== passwordConfirm) {
       setToastState((prev) => ({
         ...prev,
         stateText: '비밀번호가 다릅니다!',
       }));
-
-      handleToast();
+    } else {
+      doSignup.mutate(); // 비밀번호가 일치하는 경우 회원가입을 시도합니다.
     }
+    handleToast();
   }
 
   function handleToast() {
@@ -125,7 +124,8 @@ const Signup = () => {
 
   useEffect(() => {
     console.log('toastState: ', toastState);
-  }, [toastState]);
+    console.log('singupData:', signupData);
+  }, [toastState, signupData]);
 
   return (
     <>
@@ -154,6 +154,7 @@ const Signup = () => {
               <input
                 type="text"
                 placeholder="아이디 입력"
+                value={user_id}
                 onChange={(e) => handleLoginDate('user_id', e.target.value)}
               />
             </div>
@@ -162,6 +163,7 @@ const Signup = () => {
               <input
                 type={isShowed ? 'text' : 'password'}
                 placeholder="비밀번호 입력"
+                value={user_password}
                 onChange={(e) =>
                   handleLoginDate('user_password', e.target.value)
                 }
@@ -181,6 +183,7 @@ const Signup = () => {
               <input
                 type={isShowed ? 'text' : 'password'}
                 placeholder="비밀번호 확인"
+                value={passwordConfirm}
                 onChange={(e) =>
                   handleLoginDate('passwordConfirm', e.target.value)
                 }

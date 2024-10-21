@@ -29,9 +29,23 @@ jest.mock('next/navigation', () => ({
   })),
 }));
 
+export function repeatInput(inputs: { element: HTMLElement; value: string }[]) {
+  inputs.forEach(({ element, value }) => {
+    fireEvent.change(element, { target: { value } });
+  });
+}
+
 describe('Login Page', () => {
   const mockPush = jest.fn(); // push 메서드 mock
   const queryClient = new QueryClient();
+  let inputElement: HTMLInputElement;
+  let pwdElement: HTMLInputElement;
+  let btnElement: HTMLButtonElement;
+
+  async function returnToastText(text: string) {
+    return await waitFor(() => screen.getByText(text));
+  }
+
   beforeEach(() => {
     render(
       <RecoilRoot>
@@ -46,32 +60,37 @@ describe('Login Page', () => {
       replace: jest.fn(),
       prefetch: jest.fn(),
     }));
+
+    inputElement = screen.getByPlaceholderText('ID');
+    pwdElement = screen.getByPlaceholderText('Password');
+    btnElement = screen.getByText('로그인');
   });
 
   it('첫 화면에 input 요소가 비워져있는지 확인', () => {
-    const inputElement = screen.getByPlaceholderText('ID');
     expect(inputElement).toBeInTheDocument();
     expect(inputElement).toHaveValue('');
   });
 
   it('문자 입력 후 내용이 표시되는지 테스트', () => {
     const testInput = '라랄라랄';
-    const inputElement = screen.getByPlaceholderText('ID');
 
-    fireEvent.change(inputElement, { target: { value: testInput } });
+    repeatInput([{ element: inputElement, value: testInput }]);
 
     expect(inputElement).toHaveValue(testInput);
   });
 
   it('로그인 테스트', async () => {
-    const inputElement = screen.getByPlaceholderText('ID');
-    const pwdElement = screen.getByPlaceholderText('Password');
-
-    fireEvent.change(inputElement, { target: { value: 'testUser' } });
-    fireEvent.change(pwdElement, { target: { value: 'test1' } });
-
-    const loginButton = screen.getByText('로그인');
-    fireEvent.click(loginButton);
+    repeatInput([
+      {
+        element: inputElement,
+        value: 'testUser',
+      },
+      {
+        element: pwdElement,
+        value: 'test1',
+      },
+    ]);
+    fireEvent.click(btnElement);
 
     const loginData = { user_id: 'testUser', user_password: 'test1' };
 
@@ -95,27 +114,27 @@ describe('Login Page', () => {
       })
     );
 
-    const inputElement = screen.getByPlaceholderText('ID');
-    const pwdElement = screen.getByPlaceholderText('Password');
-
     await act(async () => {
-      fireEvent.change(inputElement, { target: { value: 'notUser' } });
-      fireEvent.change(pwdElement, { target: { value: 'password123' } });
-
-      const loginButton = screen.getByText('로그인');
-      fireEvent.click(loginButton);
+      repeatInput([
+        {
+          element: inputElement,
+          value: 'notUser',
+        },
+        {
+          element: pwdElement,
+          value: 'password123',
+        },
+      ]);
+      fireEvent.click(btnElement);
     });
 
-    // 토스트 메시지가 발생할 때까지 기다립니다.
-    const toastMessage = await waitFor(
-      () => screen.getByText(/유저 아이디가 존재하지 않습니다!/i) // 정확한 메시지 내용
-    );
+    const toastMessage =
+      await returnToastText('유저 아이디가 존재하지 않습니다!');
 
-    expect(toastMessage).toBeInTheDocument(); // 메시지가 문서에 존재하는지 확인
+    expect(toastMessage).toBeInTheDocument();
   });
 
   it('로그인 실패: 비밀번호가 틀릴 때', async () => {
-    // 로그인 API가 비밀번호가 틀린 경우 설정
     (login as jest.Mock).mockImplementation(() =>
       Promise.reject({
         response: {
@@ -126,35 +145,38 @@ describe('Login Page', () => {
         status: 401,
       })
     );
-
-    const inputElement = screen.getByPlaceholderText('ID');
-    const pwdElement = screen.getByPlaceholderText('Password');
     await act(() => {
-      fireEvent.change(inputElement, { target: { value: 'testUser' } });
-      fireEvent.change(pwdElement, { target: { value: 'wrongPassword' } });
-
-      const loginButton = screen.getByText('로그인');
-      fireEvent.click(loginButton);
+      repeatInput([
+        {
+          element: inputElement,
+          value: 'testUser',
+        },
+        {
+          element: pwdElement,
+          value: 'wrongPassword',
+        },
+      ]);
+      fireEvent.click(btnElement);
     });
 
-    // 토스트 메시지가 발생할 때까지 기다립니다.
-    const toastMessage = await waitFor(
-      () => screen.getByText(/비밀번호가 틀립니다!/i) // 정확한 메시지 내용
-    );
+    const toastMessage = await returnToastText('비밀번호가 틀립니다!');
 
-    expect(toastMessage).toBeInTheDocument(); // 메시지가 문서에 존재하는지 확인
+    expect(toastMessage).toBeInTheDocument();
   });
 
   it('실제 api 로그인 테스트', async () => {
-    const inputElement = screen.getByPlaceholderText('ID');
-    const pwdElement = screen.getByPlaceholderText('Password');
-
     await act(async () => {
-      fireEvent.change(inputElement, { target: { value: 'testUser' } });
-      fireEvent.change(pwdElement, { target: { value: 'test1' } });
-
-      const loginButton = screen.getByText('로그인');
-      fireEvent.click(loginButton);
+      repeatInput([
+        {
+          element: inputElement,
+          value: 'testUser',
+        },
+        {
+          element: pwdElement,
+          value: 'test1',
+        },
+      ]);
+      fireEvent.click(btnElement);
     });
   });
 });
