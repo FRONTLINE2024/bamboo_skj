@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { signup } from '../api/clients/signup'; // API 호출 경로를 수정하세요
 import { user } from '@/mocks/api/userData';
-import { repeatInput } from '../login/login.test';
+import { changeMessage, repeatInput } from '@/hooks/test';
 
 jest.mock('../api/clients/signup');
 
@@ -23,10 +23,6 @@ describe('Signup', () => {
   let pwdInput: HTMLInputElement;
   let confirmPwdInput: HTMLInputElement;
   let signupBtn: HTMLButtonElement;
-
-  const changeToastMessage = (message: string) => {
-    return screen.findByText(message);
-  };
 
   beforeEach(() => {
     render(
@@ -65,7 +61,7 @@ describe('Signup', () => {
 
     fireEvent.click(signupBtn);
 
-    const toastMessage = await changeToastMessage('회원가입 성공!');
+    const toastMessage = await changeMessage('회원가입 성공!');
 
     expect(toastMessage).toBeInTheDocument();
   });
@@ -96,8 +92,7 @@ describe('Signup', () => {
     if (checkUserData.length > 0) {
       fireEvent.click(signupBtn);
 
-      const toastMessage =
-        await changeToastMessage('이미 존재하는 아이디입니다!');
+      const toastMessage = await changeMessage('이미 존재하는 아이디입니다!');
 
       expect(toastMessage).toBeInTheDocument();
     }
@@ -123,7 +118,7 @@ describe('Signup', () => {
     if (idInput.value.length < 5) {
       fireEvent.click(signupBtn);
 
-      const toastMessage = await changeToastMessage(
+      const toastMessage = await changeMessage(
         '아이디는 4자리 이상으로 설정해주세요!'
       );
 
@@ -151,7 +146,7 @@ describe('Signup', () => {
     if (pwdInput.value !== confirmPwdInput.value) {
       fireEvent.click(signupBtn);
 
-      const toastMessage = await changeToastMessage('비밀번호가 다릅니다!');
+      const toastMessage = await changeMessage('비밀번호가 다릅니다!');
       expect(toastMessage).toBeInTheDocument();
     }
   });

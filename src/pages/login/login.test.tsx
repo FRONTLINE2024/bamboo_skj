@@ -7,6 +7,7 @@ import { userType } from '@/types/login';
 import { useRouter } from 'next/navigation';
 import { login } from '../api/clients/login'; // API 호출 경로를 수정하세요
 import { act } from 'react';
+import { changeMessage, repeatInput } from '@/hooks/test';
 
 jest.mock('../api/clients/login'); // 로그인 API 모킹
 
@@ -29,22 +30,12 @@ jest.mock('next/navigation', () => ({
   })),
 }));
 
-export function repeatInput(inputs: { element: HTMLElement; value: string }[]) {
-  inputs.forEach(({ element, value }) => {
-    fireEvent.change(element, { target: { value } });
-  });
-}
-
 describe('Login Page', () => {
-  const mockPush = jest.fn(); // push 메서드 mock
   const queryClient = new QueryClient();
+
   let inputElement: HTMLInputElement;
   let pwdElement: HTMLInputElement;
   let btnElement: HTMLButtonElement;
-
-  async function returnToastText(text: string) {
-    return await waitFor(() => screen.getByText(text));
-  }
 
   beforeEach(() => {
     render(
@@ -129,7 +120,7 @@ describe('Login Page', () => {
     });
 
     const toastMessage =
-      await returnToastText('유저 아이디가 존재하지 않습니다!');
+      await changeMessage('유저 아이디가 존재하지 않습니다!');
 
     expect(toastMessage).toBeInTheDocument();
   });
@@ -159,7 +150,7 @@ describe('Login Page', () => {
       fireEvent.click(btnElement);
     });
 
-    const toastMessage = await returnToastText('비밀번호가 틀립니다!');
+    const toastMessage = await changeMessage('비밀번호가 틀립니다!');
 
     expect(toastMessage).toBeInTheDocument();
   });
