@@ -11,7 +11,7 @@ const showModal = keyframes`
   }
 `;
 
-export const ModalContainer = styled.div<{ modal: boolean }>`
+export const ModalContainer = styled.div`
   width: 50vw;
   height: 70vh;
   background-color: white;

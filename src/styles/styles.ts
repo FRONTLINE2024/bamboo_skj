@@ -159,7 +159,7 @@ export const Container = styled.div`
   }
 `;
 
-export const HomeHeader = styled.header<{ dropdownBoolean: boolean }>`
+export const HomeHeader = styled.header<{ $dropdownboolean: string }>`
   z-index: 1;
   width: 100%;
   height: 55px;
@@ -188,8 +188,8 @@ export const HomeHeader = styled.header<{ dropdownBoolean: boolean }>`
 
   .user {
     cursor: pointer;
-    box-shadow: ${({ dropdownBoolean }) =>
-      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    box-shadow: ${(props) =>
+      props.$dropdownboolean === 'true' ? '0px 1px 2px 1px gray' : null};
     border-radius: 50%;
   }
 
@@ -199,8 +199,8 @@ export const HomeHeader = styled.header<{ dropdownBoolean: boolean }>`
     margin-top: 4rem;
 
     background-color: white;
-    box-shadow: ${({ dropdownBoolean }) =>
-      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    box-shadow: ${(props) =>
+      props.$dropdownboolean === 'true' ? '0px 1px 2px 1px gray' : null};
     border-radius: 50%;
     padding: 5px;
   }

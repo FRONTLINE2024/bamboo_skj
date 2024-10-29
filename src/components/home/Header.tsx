@@ -32,7 +32,7 @@ const Header = ({ handleDropdown, dropdownBoolean }: HeaderType) => {
   }
 
   return (
-    <HomeHeader dropdownBoolean={dropdownBoolean}>
+    <HomeHeader $dropdownboolean={dropdownBoolean.toString()}>
       <span className="projectTitle">FrontLine▹</span>
       <HomeInput />
       <div className="headerContainer">

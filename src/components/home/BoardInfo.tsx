@@ -63,6 +63,7 @@ const BoardInfo = ({
             onChange={(e) =>
               inputSelectedBoardData('board_title', e.target.value)
             }
+            aria-label="게시글 제목"
           />
         ) : (
           selected.board_title
@@ -77,6 +78,7 @@ const BoardInfo = ({
             onChange={(e) =>
               inputSelectedBoardData('createdAt', e.target.value)
             }
+            aria-label="게시글 생성일"
           />
         ) : (
           selected.createdAt
@@ -92,6 +94,7 @@ const BoardInfo = ({
               onChange={(e) =>
                 inputSelectedBoardData('board_content', e.target.value)
               }
+              aria-label="게시글 내용"
             />
           ) : (
             selected.board_content
@@ -121,6 +124,7 @@ const BoardInfo = ({
             onChange={(e) => {
               handleFileChange(e);
             }}
+            aria-label="이미지 업로드"
           />
         )}
       </div>
@@ -134,9 +138,16 @@ const BoardInfo = ({
       >
         {Cookie.get('user_index') === String(selected.board_user_id) &&
           (boardModify ? (
-            <ModifyBtn onClick={() => PatchBoardData()}>확인</ModifyBtn>
+            <ModifyBtn
+              aria-label="게시글수정확인"
+              onClick={() => PatchBoardData()}
+            >
+              확인
+            </ModifyBtn>
           ) : (
-            <ModifyBtn onClick={() => modifyChange()}>수정</ModifyBtn>
+            <ModifyBtn aria-label="게시글수정" onClick={() => modifyChange()}>
+              수정
+            </ModifyBtn>
           ))}
       </div>
     </div>

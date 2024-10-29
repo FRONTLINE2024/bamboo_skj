@@ -298,13 +298,6 @@ const Home = () => {
     }
   }
 
-  // useEffect(() => {
-  //   socket?.on('message', (message: IMessage) => {
-  //     // console.log(message);
-  //     setMessages((prev) => [...prev, message]);
-  //   });
-  // }, [socket]);
-
   useEffect(() => {
     const token = Cookie.get('token');
     if (!token) {
@@ -368,7 +361,7 @@ const Home = () => {
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
         />
-        {isOpened === true && (
+        {isOpened && (
           <Modal openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}

@@ -25,12 +25,13 @@ const MainContent = ({
   boardDelete,
 }: MainContentType) => {
   return (
-    <Main>
+    <Main aria-label="전체데이터">
       {data.map((d, i) => (
         <div
           className="boardContainer"
           key={i}
           onClick={() => getSelectedData(d)}
+          aria-label="게시글선택"
         >
           <div className="boardColumn">
             <div className="boardHeader">&nbsp;</div>
@@ -39,7 +40,7 @@ const MainContent = ({
                 <div className="boardTitle">{d.board_title}</div>
                 <span className="boardCreateAt">{d.createdAt}</span>
               </div>
-              {typeof d.board_img === 'string' && (
+              {d.board_img && typeof d.board_img === 'string' && (
                 <Image
                   src={d.board_img}
                   alt="게시글 이미지"
