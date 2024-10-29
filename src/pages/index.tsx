@@ -299,7 +299,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const token = Cookie.get('token');
+    const token = Cookie.get('accessToken');
     if (!token) {
       router.replace('/login'); // 일반적으로 router.replace 사용
     }

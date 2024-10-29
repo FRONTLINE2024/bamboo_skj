@@ -27,7 +27,7 @@ const Header = ({ handleDropdown, dropdownBoolean }: HeaderType) => {
   }, []);
 
   function logOut() {
-    Cookie.remove('token');
+    Cookie.remove('accessToken');
     router.replace('/login');
   }
 

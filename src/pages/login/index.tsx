@@ -23,8 +23,11 @@ import Toast from '@/components/common/Toast';
 // libraries
 import Cookie from 'js-cookie';
 import { ToastStateType } from '@/types/home';
+import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
+import useGetFindUser from '@/hooks/login/api/useGetFindUser';
 
 const Login = () => {
+  const [isClient, setIsClient] = useState<boolean>(false);
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
     state: false,
@@ -41,6 +44,12 @@ const Login = () => {
     user_id: '',
     user_password: '',
   });
+
+  const userIndex = isClient && localStorage.getItem('user_index');
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const { user_id, user_password } = loginData;
 
@@ -71,43 +80,34 @@ const Login = () => {
   // 로그인 함수
   function doLogin() {
     if (user_id.length > 0 && user_password.length > 0) {
-      userLogin.mutate();
+      userLogins();
     }
   }
 
-  const userLogin = useMutation({
-    mutationKey: ['login'],
-    mutationFn: async () => {
-      const response = await login(loginData);
+  // React Query
+  const { mutate: userLogins } = usePostUserLogin({
+    loginData,
+    setToastState,
+    handleToast,
+  }); // 로그인
 
-      // console.log(response.data);
+  const { refetch: findUser, data: existUser } = useGetFindUser({ userIndex }); // 유저 데이터 가져오기
 
-      if (response.status === 200) {
-        Cookie.set('token', response.data.token);
-        Cookie.set('user_index', response.data.data.user_index);
-        router.push('/');
-      }
+  // 카카오 로그인
+  function kakaoLogin() {
+    findUser();
 
-      return response.data;
-    },
+    if (existUser) {
+      Cookie.set(`accessToken`, existUser.data.accessToken);
+      Cookie.set(`user_nickname`, existUser.data.user_nickname);
+      Cookie.set(`profile_image`, existUser.data.profile_image);
+      router.push('/');
+    } else {
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIREACT_URI}&response_type=code`;
+      window.location.href = kakaoURL;
+    }
+  }
 
-    // 타입 지정 알아보기
-    onError(err: any) {
-      // console.log(err);
-      setToastState((prev) => ({
-        ...prev,
-        stateText: `${err.response.data.message}`,
-        stateCode: `${err.status}`,
-      }));
-
-      handleToast();
-    },
-  });
-
-  useEffect(() => {
-    // console.log('loginData: ', loginData);
-    // console.log('toastState: ', toastState);
-  }, [loginData, toastState]);
   return (
     <>
       <div id="toast_message"></div>
@@ -171,13 +171,13 @@ const Login = () => {
               gap: '8px',
             }}
           >
-            <LoginButton onClick={() => userLogin.mutate()}>로그인</LoginButton>
+            <LoginButton onClick={() => userLogins()}>로그인</LoginButton>
             <Link data-testid="signup-link" href={'/signup'}>
               <SignupButton>회원가입</SignupButton>
             </Link>
           </div>
         </div>
-        <KakaoButton>
+        <KakaoButton onClick={kakaoLogin}>
           <div className="btn">
             <RiKakaoTalkFill size={36} fill="#000000" />
           </div>
