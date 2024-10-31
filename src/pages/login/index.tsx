@@ -11,7 +11,6 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 
 // types
 import { userType } from '@/types/login';
-import { useMutation } from '@tanstack/react-query';
 
 // apis
 import { login } from '../api/clients/login';
@@ -25,6 +24,17 @@ import Cookie from 'js-cookie';
 import { ToastStateType } from '@/types/home';
 import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
 import useGetFindUser from '@/hooks/login/api/useGetFindUser';
+
+interface dataType {
+  data: {
+    accessToken: string;
+    profile_image: string;
+    user_id: string;
+    user_index: number;
+    user_nickname: string;
+  };
+  sucess: boolean;
+}
 
 const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -91,21 +101,11 @@ const Login = () => {
     handleToast,
   }); // 로그인
 
-  const { refetch: findUser, data: existUser } = useGetFindUser({ userIndex }); // 유저 데이터 가져오기
+  const { mutate: findUser } = useGetFindUser({ userIndex }); // 유저 데이터 가져오기
 
   // 카카오 로그인
-  function kakaoLogin() {
+  async function kakaoLogin() {
     findUser();
-
-    if (existUser) {
-      Cookie.set(`accessToken`, existUser.data.accessToken);
-      Cookie.set(`user_nickname`, existUser.data.user_nickname);
-      Cookie.set(`profile_image`, existUser.data.profile_image);
-      router.push('/');
-    } else {
-      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIREACT_URI}&response_type=code`;
-      window.location.href = kakaoURL;
-    }
   }
 
   return (

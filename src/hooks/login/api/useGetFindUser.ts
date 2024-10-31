@@ -1,21 +1,34 @@
 import { findUser } from '@/pages/api/clients/login';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import Cookie from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface useGetFindUserType {
   userIndex: string | false | null;
 }
 
 const useGetFindUser = ({ userIndex }: useGetFindUserType) => {
-  return useQuery({
-    queryKey: ['findUser', userIndex],
-    queryFn: async () => {
+  const router = useRouter();
+  return useMutation({
+    mutationKey: ['findUser', userIndex],
+    mutationFn: async () => {
       const response = await findUser(Number(userIndex));
 
-      console.log(response);
+      // console.log(response);
       return response.data;
     },
-
-    enabled: false,
+    onSuccess: (data) => {
+      router.push('/');
+      const { accessToken, user_nickname, profile_image } = data.data;
+      Cookie.set('accessToken', accessToken);
+      Cookie.set('user_nickname', user_nickname);
+      Cookie.set('profile_image', profile_image);
+    },
+    onError: (err) => {
+      console.log(err);
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIREACT_URI}&response_type=code`;
+      window.location.href = kakaoURL;
+    },
   });
 };
 

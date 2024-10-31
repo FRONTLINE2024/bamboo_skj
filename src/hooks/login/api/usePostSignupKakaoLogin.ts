@@ -2,6 +2,7 @@ import { postUserData } from '@/pages/api/clients/login';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import Cookie from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface usePostSignupKakoLoginType {
   kakaoData: AxiosResponse<any, any> | undefined;
@@ -16,6 +17,7 @@ const usePostSignupKakoLogin = ({
   kakaoData,
   accessToken,
 }: usePostSignupKakoLoginType) => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['postSignupKakao'],
     mutationFn: async () => {
@@ -27,7 +29,7 @@ const usePostSignupKakoLogin = ({
       };
       const response = await postUserData(body);
 
-      console.log(response);
+      // console.log(response);
 
       return response.data;
     },
@@ -36,6 +38,7 @@ const usePostSignupKakoLogin = ({
         Cookie.set(`${key}`, data[key]);
       }
       localStorage.setItem('user_index', data.user_index);
+      router.push('/');
     },
 
     onError: (err) => {
