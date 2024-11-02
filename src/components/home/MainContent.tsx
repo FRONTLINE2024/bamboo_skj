@@ -46,6 +46,7 @@ const MainContent = ({
                   alt="게시글 이미지"
                   width={50}
                   height={50}
+                  priority
                 />
               )}
             </div>

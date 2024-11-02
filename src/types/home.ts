@@ -33,3 +33,8 @@ export interface NavContextType {
   handleBoardImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   sortValues: string[];
 }
+
+export interface pagingType {
+  offset: number;
+  limit: number;
+}

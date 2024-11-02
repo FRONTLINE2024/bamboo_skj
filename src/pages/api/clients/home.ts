@@ -1,3 +1,4 @@
+import { pagingType } from '@/types/home';
 import basicClient from './basicClient';
 
 export const AllData = () => {
@@ -38,4 +39,8 @@ export const getAllChattingData = () => {
 
 export const postChatMessage = (body: {}) => {
   return basicClient.post('/chat', body);
+};
+
+export const getInfiniteData = ({ offset, limit }: pagingType) => {
+  return basicClient.get(`/paging?limit=${limit}&offset=${offset}`);
 };

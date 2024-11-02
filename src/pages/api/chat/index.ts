@@ -63,7 +63,7 @@ const chatHandler = async (
             return u.user_id;
           }
         });
-        return { ...d, chat_user_nickname: addUserId[0].user_id };
+        return { ...d, chat_user_nickname: addUserId[0].user_nickname };
       });
 
       if (row.length > 0) {

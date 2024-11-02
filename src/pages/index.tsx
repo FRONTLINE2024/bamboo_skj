@@ -49,16 +49,13 @@ import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
 
 const Home = () => {
   // 라우터
   const router = useRouter();
-
   // 채팅
-  const { socket } = useSocket();
-  const [, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>('');
-
   // 컴포넌트 내에서
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // 게시글 수정
@@ -89,13 +86,22 @@ const Home = () => {
     createdAt: '',
   });
   const { board_title, board_content, board_img, createdAt } = boardData;
-
   // chat modal boolean
   const [chattingModalBoolean, setChattingModalBoolean] =
     useState<boolean>(false);
-
   // dropdown boolean
   const [dropdownBoolean, setDropdownBoolean] = useState<boolean>(false);
+  // 무한 스크롤 게시글 데이터
+  const [infiniteBoardData, setInfiniteBoardData] = useState<BoardType[]>([
+    {
+      id: 0,
+      board_title: '',
+      board_content: '',
+      board_user_id: '',
+      board_img: '',
+      createdAt: '',
+    },
+  ]);
 
   // FormData 생성
   const formData = useFormData({
@@ -124,6 +130,15 @@ const Home = () => {
     refetch: refetchSpecificData,
     isSuccess: specificDataSuccess,
   } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
+
+  const { mutate: getPagingBoard } = useInfiniteScroll({
+    infiniteBoardData,
+    setInfiniteBoardData,
+  }); // 무한 스크롤 데이터 GET
+
+  useEffect(() => {
+    getPagingBoard();
+  }, []);
 
   const { data: chattingData, refetch: refetchChattingData } =
     useGetChattingData(); // 채팅 GET
@@ -162,10 +177,30 @@ const Home = () => {
     }
   }, [specificDataSuccess, getSpecificData]);
 
+  // 헤더 드롭다운
   const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
-
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
+
+  // 게시글 작성 모달 열기
+  function openModalBoard() {
+    setIsBoardOpened(!isBoardOpened);
+  }
+
+  // 게시글 모달 닫기
+  function closeModal() {
+    setIsOpened(false);
+  }
+
+  // 게시글 작성 모달 닫기
+  function closeModalBoard() {
+    setIsBoardOpened(false);
+  }
+
+  // 게시글 작성 모달 닫기
+  function closeModalChat() {
+    setChattingModalBoolean(false);
+  }
 
   // 이미지 수정
   const handleImageClick = () => {
@@ -233,26 +268,6 @@ const Home = () => {
     execute();
   }
 
-  // 게시글 작성 모달 열기
-  function openModalBoard() {
-    setIsBoardOpened(!isBoardOpened);
-  }
-
-  // 게시글 모달 닫기
-  function closeModal() {
-    setIsOpened(false);
-  }
-
-  // 게시글 작성 모달 닫기
-  function closeModalBoard() {
-    setIsBoardOpened(false);
-  }
-
-  // 게시글 작성 모달 닫기
-  function closeModalChat() {
-    setChattingModalBoolean(false);
-  }
-
   // 게시글 post 실행 함수
   function writeBoard() {
     const createdAt = useSetDate();
@@ -308,10 +323,10 @@ const Home = () => {
   useEffect(() => {
     console.log('boardData: ', boardData);
     console.log('selected: ', selected);
-  }, [boardData, selected]);
+    console.log('infiniteBoardData:', infiniteBoardData);
+  }, [boardData, selected, infiniteBoardData]);
 
   return (
-    // <h1>안녕</h1>
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
@@ -357,7 +372,7 @@ const Home = () => {
           <NavBar />
         </navContext.Provider>
         <MainContent
-          data={data}
+          data={infiniteBoardData}
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
         />

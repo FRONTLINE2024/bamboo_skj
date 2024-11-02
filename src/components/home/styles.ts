@@ -85,8 +85,11 @@ export const ChatData = styled.div`
     }
 
     .userName {
+      font-size: 0.9rem;
       text-align: end;
-      font-family: 'RobotoMedium';
+      font-family: 'GmarketSansMedium';
+      margin-bottom: 0.2rem;
+      color: #c0c0c0;
     }
 
     .myContent {
@@ -100,6 +103,7 @@ export const ChatData = styled.div`
 
       font-size: 0.8rem;
       font-family: 'RobotoLight';
+      font-weight: 550;
     }
   }
 
@@ -113,7 +117,10 @@ export const ChatData = styled.div`
     }
 
     .otherUserName {
-      font-family: 'RobotoMedium';
+      font-size: 0.9rem;
+      font-family: 'GmarketSansMedium';
+      margin-bottom: 0.2rem;
+      color: #c0c0c0;
     }
 
     .otherContent {
@@ -127,6 +134,7 @@ export const ChatData = styled.div`
 
       font-size: 0.8rem;
       font-family: 'RobotoLight';
+      font-weight: 550;
     }
   }
 `;
