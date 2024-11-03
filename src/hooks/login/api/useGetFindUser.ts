@@ -14,15 +14,17 @@ const useGetFindUser = ({ userIndex }: useGetFindUserType) => {
     mutationFn: async () => {
       const response = await findUser(Number(userIndex));
 
-      // console.log(response);
+      console.log(response);
       return response.data;
     },
     onSuccess: (data) => {
       router.push('/');
-      const { accessToken, user_nickname, profile_image } = data.data;
+      const { accessToken, user_nickname, profile_image, user_index } =
+        data.data;
       Cookie.set('accessToken', accessToken);
       Cookie.set('user_nickname', user_nickname);
       Cookie.set('profile_image', profile_image);
+      Cookie.set('user_index', user_index);
     },
     onError: (err) => {
       console.log(err);
