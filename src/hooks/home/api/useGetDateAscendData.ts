@@ -4,10 +4,12 @@ import { useMutation } from '@tanstack/react-query';
 import { SetStateAction } from 'react';
 
 interface useGetDateAscendDataType {
-  setData: React.Dispatch<SetStateAction<BoardType[]>>;
+  setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;
 }
 
-const useGetDateAscendData = ({ setData }: useGetDateAscendDataType) => {
+const useGetDateAscendData = ({
+  setInfiniteBoardData,
+}: useGetDateAscendDataType) => {
   return useMutation({
     mutationKey: ['DateAscendData'],
     mutationFn: async () => {
@@ -15,7 +17,7 @@ const useGetDateAscendData = ({ setData }: useGetDateAscendDataType) => {
       return response.data;
     },
     onSuccess: (data) => {
-      setData(data.data);
+      setInfiniteBoardData(data.data);
     },
     onError(err) {
       console.log(err);

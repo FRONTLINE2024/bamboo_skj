@@ -1,31 +1,32 @@
 import { getInfiniteData } from '@/pages/api/clients/home';
 import { BoardType } from '@/types/home';
 import { useMutation } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
 import { SetStateAction } from 'react';
 
 interface useInfiniteScrollType {
   infiniteBoardData: BoardType[];
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<SetStateAction<number>>;
 }
 
 const useInfiniteScroll = ({
-  infiniteBoardData,
   setInfiniteBoardData,
+  currentPage,
 }: useInfiniteScrollType) => {
   return useMutation({
-    mutationKey: ['scroll'],
+    mutationKey: ['scrollData'],
     mutationFn: async () => {
-      const limit = 8;
-      const offset = 8;
+      const limit = 10;
+      const offset = currentPage * limit;
       const response = await getInfiniteData({ offset, limit });
-      // console.log(response);
+      console.log(offset, limit);
+      console.log(response);
 
       return response.data;
     },
     onSuccess: (data: BoardType[]) => {
-      console.log('data: ', data);
-      console.log('infiniteBoardData: ', infiniteBoardData);
-
       setInfiniteBoardData((prev) => {
         const filteredPrev = prev.filter((item) => item.id !== 0);
 

@@ -9,6 +9,8 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardType } from '@/types/home';
+import { useEffect, useRef } from 'react';
+import { MutateOptions } from '@tanstack/react-query';
 
 interface MainContentType {
   data: BoardType[];
@@ -17,13 +19,45 @@ interface MainContentType {
     id: number,
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
+  getPagingBoard: (
+    variables: void,
+    options?: MutateOptions<BoardType[], Error, void, unknown> | undefined
+  ) => void;
 }
 
 const MainContent = ({
   data,
   getSelectedData,
   boardDelete,
+  getPagingBoard,
 }: MainContentType) => {
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          getPagingBoard();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.8,
+      }
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
+  }, []);
+
   return (
     <Main aria-label="전체데이터">
       {data.map((d, i) => (
@@ -73,6 +107,7 @@ const MainContent = ({
           </div>
         </div>
       ))}
+      <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div>
     </Main>
   );
 };

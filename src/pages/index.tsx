@@ -102,6 +102,12 @@ const Home = () => {
       createdAt: '',
     },
   ]);
+  // 바텀 컨테이너 ref
+  const bottomRef = useRef(null);
+  // 무한 페이지 컨트롤
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  // 처음 로딩에 대한 플래그 추가
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   // FormData 생성
   const formData = useFormData({
@@ -131,10 +137,23 @@ const Home = () => {
     isSuccess: specificDataSuccess,
   } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
 
-  const { mutate: getPagingBoard } = useInfiniteScroll({
+  const {
+    data: scrollData,
+    mutate: getPagingBoard,
+    isSuccess: successScrollData,
+  } = useInfiniteScroll({
     infiniteBoardData,
     setInfiniteBoardData,
+    currentPage,
+    setCurrentPage,
   }); // 무한 스크롤 데이터 GET
+
+  useEffect(() => {
+    if (successScrollData) {
+      // successScrollData가 true일 때만
+      setCurrentPage((prev) => prev + 1); // 페이지 수 증가
+    }
+  }, [successScrollData]);
 
   useEffect(() => {
     getPagingBoard();
@@ -155,12 +174,17 @@ const Home = () => {
     refetchChattingData,
   }); // 채팅 메세지 보내기
 
-  const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
+  // 정렬
+  const { mutate: fetchAscendData } = useGetDateAscendData({
+    setInfiniteBoardData,
+  }); // 오래된 순
 
-  const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
+  const { mutate: fetchDescendData } = useGetDateDescendData({
+    setInfiniteBoardData,
+  }); // 최신 순
 
   const { mutate: fetchContentAscendData } = useGetContentAscendData({
-    setData,
+    setInfiniteBoardData,
   }); // 이름 순
 
   const { mutate: patchBoards } = usePatchBoard({
@@ -316,15 +340,14 @@ const Home = () => {
   useEffect(() => {
     const token = Cookie.get('accessToken');
     if (!token) {
-      router.replace('/login'); // 일반적으로 router.replace 사용
+      router.replace('/login');
     }
-  }, []); // 종속성 배열을 비워 초기 렌더링에서만 실행
+  }, []);
 
   useEffect(() => {
-    console.log('boardData: ', boardData);
-    console.log('selected: ', selected);
     console.log('infiniteBoardData:', infiniteBoardData);
-  }, [boardData, selected, infiniteBoardData]);
+    console.log('currentPage:', currentPage);
+  }, [infiniteBoardData, currentPage]);
 
   return (
     <Container>
@@ -375,6 +398,7 @@ const Home = () => {
           data={infiniteBoardData}
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
+          getPagingBoard={getPagingBoard}
         />
         {isOpened && (
           <Modal openModal={openModal} modal={isOpened}>
@@ -404,6 +428,7 @@ const Home = () => {
           <Chat chattingData={chattingData} />
         </ChatModal>
       )}
+      {/* <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div> */}
     </Container>
   );
 };
