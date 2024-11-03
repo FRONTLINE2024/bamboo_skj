@@ -50,6 +50,7 @@ import { navContext } from '@/context/homeContext';
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
+import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 const Home = () => {
   // 라우터
@@ -108,6 +109,10 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   // 처음 로딩에 대한 플래그 추가
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // 삭제되는 게시글 아이디
+  const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
+  // 초기화 플래그
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -129,7 +134,9 @@ const Home = () => {
   });
 
   // React Query
-  const { refetch: refetchAllData } = useGetAllData({ setData }); // 모든 데이터 GET
+  const { data: boardAllData, refetch: refetchAllData } = useGetAllData({
+    setData,
+  }); // 모든 데이터 GET
 
   const {
     data: getSpecificData,
@@ -142,21 +149,33 @@ const Home = () => {
     mutate: getPagingBoard,
     isSuccess: successScrollData,
   } = useInfiniteScroll({
-    infiniteBoardData,
     setInfiniteBoardData,
     currentPage,
-    setCurrentPage,
   }); // 무한 스크롤 데이터 GET
 
   useEffect(() => {
-    if (successScrollData) {
-      // successScrollData가 true일 때만
-      setCurrentPage((prev) => prev + 1); // 페이지 수 증가
+    if (successScrollData && isInitialized) {
+      setCurrentPage((prev) => prev + 1);
+      const currentOffset = (currentPage + 1) * 10;
+      localStorage.setItem('limit', `${currentOffset}`);
+    } else {
+      setIsInitialized(true);
     }
-  }, [successScrollData]);
+  }, [successScrollData, isInitialized]);
+
+  // useEffect(() => {
+  //   console.log(1);
+  //   console.log(2);
+  // }, []);
+
+  const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
+    setInfiniteBoardData,
+    deleteBoardId,
+  });
 
   useEffect(() => {
     getPagingBoard();
+    localStorage.setItem('limit', '10');
   }, []);
 
   const { data: chattingData, refetch: refetchChattingData } =
@@ -193,7 +212,10 @@ const Home = () => {
     refetchAllData,
   }); // 게시글 Patch
 
-  const { mutate: deleteBoards } = useDeleteBoard({ refetchAllData }); // 게시글 Delete
+  const { mutate: deleteBoards } = useDeleteBoard({
+    refetchAllData,
+    getPagingBoardDelete,
+  }); // 게시글 Delete
 
   useEffect(() => {
     if (specificDataSuccess) {
@@ -299,13 +321,14 @@ const Home = () => {
       ...prev,
       createdAt,
     }));
-    // boardWrite.mutate();
     postBoard();
   }
 
   // 게시글 삭제 함수
   function boardDelete(id: number) {
     deleteBoards(id);
+    //setState 함수
+    setDeleteBoardId(id);
   }
 
   // 오래된 순

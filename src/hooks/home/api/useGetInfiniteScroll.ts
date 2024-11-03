@@ -5,27 +5,31 @@ import { SetStateAction } from 'react';
 
 interface useInfiniteScrollType {
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;
-  currentPage: number;
+  deleteBoardId: number;
 }
 
-const useInfiniteScroll = ({
+const useGetInfiniteScroll = ({
   setInfiniteBoardData,
-  currentPage,
+  deleteBoardId,
 }: useInfiniteScrollType) => {
   return useMutation({
     mutationKey: ['scrollData'],
     mutationFn: async () => {
-      const limit = 10;
-      const offset = currentPage * limit;
-      const response = await getInfiniteData({ offset, limit });
-      console.log(offset, limit);
+      const boardLimit = Number(localStorage.getItem('limit'));
+      const offset = 0;
+
+      const response = await getInfiniteData({ offset, limit: boardLimit });
+
+      console.log(offset, boardLimit);
       console.log(response);
 
       return response.data;
     },
     onSuccess: (data: BoardType[]) => {
       setInfiniteBoardData((prev) => {
-        const filteredPrev = prev.filter((item) => item.id !== 0);
+        const filteredPrev = prev.filter(
+          (item) => item.id !== 0 && item.id !== deleteBoardId
+        );
 
         const newBoards = data.filter(
           (newItem) =>
@@ -38,4 +42,4 @@ const useInfiniteScroll = ({
   });
 };
 
-export default useInfiniteScroll;
+export default useGetInfiniteScroll;

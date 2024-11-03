@@ -1,7 +1,9 @@
 import { deleteBoardData } from '@/pages/api/clients/home';
+import { BoardType } from '@/types/home';
 import {
   QueryObserverResult,
   RefetchOptions,
+  UseMutateFunction,
   useMutation,
 } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
@@ -10,9 +12,13 @@ interface useDeleteBoardType {
   refetchAllData: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<any, Error>>;
+  getPagingBoardDelete: UseMutateFunction<BoardType[], Error, void, unknown>;
 }
 
-const useDeleteBoard = ({ refetchAllData }: useDeleteBoardType) => {
+const useDeleteBoard = ({
+  refetchAllData,
+  getPagingBoardDelete,
+}: useDeleteBoardType) => {
   return useMutation({
     mutationKey: ['deleteBoard'],
     mutationFn: async (id: number) => {
@@ -24,7 +30,7 @@ const useDeleteBoard = ({ refetchAllData }: useDeleteBoardType) => {
       return response.data;
     },
     onSuccess: () => {
-      refetchAllData();
+      getPagingBoardDelete();
     },
     onError: (err) => {
       console.log(err);
