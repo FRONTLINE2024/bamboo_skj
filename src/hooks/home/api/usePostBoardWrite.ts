@@ -1,4 +1,5 @@
 import { postBoardData } from '@/pages/api/clients/home';
+import { BoardType } from '@/types/home';
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -9,7 +10,7 @@ interface usePostBoardWriteType {
   closeModalBoard: () => void;
   refetchAllData: (
     options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<BoardType[], Error>>;
   formData: FormData;
 }
 
@@ -22,6 +23,8 @@ const usePostBoardWrite = ({
     mutationKey: ['boardWrite'],
     mutationFn: async () => {
       const response = await postBoardData(formData);
+
+      return response;
     },
     onSuccess: () => {
       closeModalBoard();

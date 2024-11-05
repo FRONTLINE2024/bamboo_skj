@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader } from 'mysql2/promise';
+import type { NextFunction, Request, Response } from 'express';
 
 export const config = {
   api: {
@@ -21,15 +22,20 @@ const upload = multer({
 const runMiddleware = (
   req: NextApiRequest,
   res: NextApiResponse,
-  fn: Function
+  fn: (req: Request, res: Response, next: NextFunction) => void
 ) =>
-  new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
+  new Promise<void>((resolve, reject) => {
+    fn(
+      req as unknown as Request,
+      res as unknown as Response,
+      (error?: Error | string | undefined) => {
+        // 정확한 타입 지정
+        if (error && typeof error !== 'undefined') {
+          return reject(error);
+        }
+        resolve();
       }
-      return resolve(result);
-    });
+    );
   });
 
 // 게시글 업로드

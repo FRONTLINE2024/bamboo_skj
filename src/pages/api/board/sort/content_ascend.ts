@@ -1,6 +1,5 @@
 import { createConnection } from '@/lib/db';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 type NextApiRequestWithFile = NextApiRequest & {
   file?: Express.Multer.File;

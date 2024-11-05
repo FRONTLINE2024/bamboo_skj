@@ -9,7 +9,7 @@ interface ModalType {
   modal: boolean;
   openModal: () => void;
 }
-const Modal = ({ modal, openModal, children }: ModalType) => {
+const Modal = ({ openModal, children }: ModalType) => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {

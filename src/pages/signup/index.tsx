@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 // styles
 import { Flex } from '@/styles/common/direction';
-import { SignupContainer } from './styles';
-import { SignupButton } from '../login/styles';
+import { SignupContainer } from '@/styles/signup/styles';
+import { SignupButton } from '@/styles/login/styles';
 
 // types
 import { signupType } from '@/types/signup';
@@ -15,10 +15,20 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { useMutation } from '@tanstack/react-query';
 
 // apis
-import { signup } from '../api/clients/signup';
+import { signup } from '@/pages/api/clients/signup';
 
 // components
 import Toast from '@/components/common/Toast';
+
+interface AxiosError {
+  response: {
+    data: {
+      stateCode: string;
+      stateText: string;
+    };
+  };
+  status: number;
+}
 
 const Signup = () => {
   const router = useRouter();
@@ -78,7 +88,7 @@ const Signup = () => {
         }, 2510);
       }
     },
-    onError(err: any) {
+    onError(err: AxiosError) {
       console.log(err);
       if (err.status === 409) {
         setToastState((prev) => ({

@@ -1,7 +1,7 @@
 import { getInfiniteData } from '@/pages/api/clients/home';
 import { BoardType } from '@/types/home';
 import { useMutation } from '@tanstack/react-query';
-import { SetStateAction } from 'react';
+import { SetStateAction, useCallback } from 'react';
 
 interface useInfiniteScrollType {
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;
@@ -12,17 +12,18 @@ const useInfiniteScroll = ({
   setInfiniteBoardData,
   currentPage,
 }: useInfiniteScrollType) => {
-  return useMutation({
-    mutationKey: ['scrollData'],
-    mutationFn: async () => {
-      const limit = 10;
-      const offset = currentPage * limit;
-      const response = await getInfiniteData({ offset, limit });
-      console.log(offset, limit);
-      console.log(response);
+  const fetchInfiniteData = useCallback(async () => {
+    const limit = 10;
+    const offset = currentPage * limit;
+    const response = await getInfiniteData({ offset, limit });
 
-      return response.data;
-    },
+    return response.data;
+  }, [currentPage]); // currentPage가 변경될 때만 새롭게 생성
+
+  // useMutation 훅 사용
+  const { mutate, isSuccess } = useMutation({
+    mutationKey: ['scrollData'],
+    mutationFn: fetchInfiniteData, // fetchInfiniteData 사용
     onSuccess: (data: BoardType[]) => {
       setInfiniteBoardData((prev) => {
         const filteredPrev = prev.filter((item) => item.id !== 0);
@@ -36,6 +37,8 @@ const useInfiniteScroll = ({
       });
     },
   });
+
+  return { mutate, isSuccess };
 };
 
 export default useInfiniteScroll;

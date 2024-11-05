@@ -11,18 +11,19 @@ import Cookie from 'js-cookie';
 interface useDeleteBoardType {
   refetchAllData: (
     options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<BoardType[], Error>>;
   getPagingBoardDelete: UseMutateFunction<BoardType[], Error, void, unknown>;
 }
 
-const useDeleteBoard = ({
-  refetchAllData,
-  getPagingBoardDelete,
-}: useDeleteBoardType) => {
+const useDeleteBoard = ({ getPagingBoardDelete }: useDeleteBoardType) => {
   return useMutation({
     mutationKey: ['deleteBoard'],
     mutationFn: async (id: number) => {
       const board_user_id = Cookie.get('user_index');
+      if (!board_user_id) {
+        return;
+      }
+
       const body = {
         data: { id, board_user_id },
       };

@@ -6,7 +6,6 @@ import {
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import Cookie from 'js-cookie';
 import { SetStateAction } from 'react';
 
@@ -27,7 +26,7 @@ const usePostSendMessage = ({
     mutationKey: ['sendMessage'],
     mutationFn: async () => {
       const data = {
-        chat_user_id: Cookie.get('user_index'),
+        chat_user_id: Number(Cookie.get('user_index')),
         chat_content: currentMessage,
       };
 

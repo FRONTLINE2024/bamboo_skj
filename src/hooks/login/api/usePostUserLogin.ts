@@ -18,6 +18,16 @@ interface usePostUserLoginType {
   handleToast(): void;
 }
 
+// 정의된 AxiosError로 향후 검증
+interface AxiosError {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+  status: number;
+}
+
 const usePostUserLogin = ({
   loginData,
   setToastState,
@@ -40,7 +50,7 @@ const usePostUserLogin = ({
       router.push('/');
     },
     // 타입 지정 알아보기
-    onError(err: any) {
+    onError(err: AxiosError) {
       setToastState((prev) => ({
         ...prev,
         stateText: `${err.response.data.message}`,

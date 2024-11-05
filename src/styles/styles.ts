@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from './common/color';
 
 export const Container = styled.div`

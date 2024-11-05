@@ -4,23 +4,21 @@ import { useEffect, useState } from 'react';
 import Logo from '@/assets/images/FrontLine_Logo.png';
 
 // styles
-import { Letter, LoadingContainer, LogoContainer } from './styles';
+import {
+  Letter,
+  LoadingContainer,
+  LogoContainer,
+} from '@/styles/login/callback/styles';
 
 // apis
 import usePostKakaoLogin from '@/hooks/login/api/usePostKaKaoLogin';
 import useGetUserKakoDataType from '@/hooks/login/api/useGetUserKakoData';
-
-// types
-import { kakaoUserType } from '@/types/login';
-import usePostSignupKakoLogin from '@/hooks/login/api/usePostSignupKakaoLogin';
+import usePostSignupKakoLogin, {
+  KakaoData,
+} from '@/hooks/login/api/usePostSignupKakaoLogin';
 
 const Loading = () => {
   const [accessToken, setAccessToken] = useState<string>('');
-  const [userData, setUserData] = useState<kakaoUserType>({
-    user_id: 0,
-    user_nickname: '',
-    profile_image: '',
-  });
   const text = 'Front Line▹';
 
   const {
@@ -28,11 +26,17 @@ const Loading = () => {
     data: kakaoData,
     isSuccess,
   } = useGetUserKakoDataType({ accessToken });
+
+  const kakaoDataTyped = kakaoData as KakaoData;
+
   const { mutate: kakaoLogin } = usePostKakaoLogin({
     setAccessToken,
     refetchKakaoData,
   });
-  const { mutate: signup } = usePostSignupKakoLogin({ kakaoData, accessToken });
+  const { mutate: signup } = usePostSignupKakoLogin({
+    kakaoData: kakaoDataTyped,
+    accessToken,
+  });
 
   useEffect(() => {
     kakaoLogin();

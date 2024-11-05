@@ -17,15 +17,17 @@ export const ContentAscendData = () => {
   return basicClient.get('/board/sort/content_ascend');
 };
 
-export const postBoardData = (body: {}) => {
+export const postBoardData = (body: FormData) => {
   return basicClient.post('/board/upload', body);
 };
 
-export const deleteBoardData = (body: {}) => {
+export const deleteBoardData = (body: {
+  data: { id: number; board_user_id: string };
+}) => {
   return basicClient.delete('/board', body);
 };
 
-export const patchBoardData = (body: {}) => {
+export const patchBoardData = (body: FormData) => {
   return basicClient.patch('/board/patch', body);
 };
 
@@ -37,7 +39,10 @@ export const getAllChattingData = () => {
   return basicClient.get('/chat');
 };
 
-export const postChatMessage = (body: {}) => {
+export const postChatMessage = (body: {
+  chat_content: string;
+  chat_user_id: number;
+}) => {
   return basicClient.post('/chat', body);
 };
 

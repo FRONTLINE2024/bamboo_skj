@@ -1,30 +1,9 @@
 import { createConnection } from '@/lib/db';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import multer from 'multer';
-import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 type NextApiRequestWithFile = NextApiRequest & {
   file?: Express.Multer.File;
 };
-
-const upload = multer({
-  dest: './public/uploads',
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB로 파일 사이즈 제한
-});
-
-const runMiddleware = (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  fn: Function
-) =>
-  new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
 
 export default async function handler(
   req: NextApiRequestWithFile,

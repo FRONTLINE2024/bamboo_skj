@@ -17,9 +17,9 @@ export default async function handler(
       const [board] = await connection.execute('SELECT * FROM board');
       res.status(200).json(board); // 200: OK
 
-      const [rows] = await connection.execute(
-        'SELECT * FROM board ORDER BY createdAt'
-      );
+      // const [rows] = await connection.execute(
+      //   'SELECT * FROM board ORDER BY createdAt'
+      // );
 
       // console.log(rows);
     } else if (req.method === 'DELETE') {

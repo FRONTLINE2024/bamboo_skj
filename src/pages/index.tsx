@@ -9,7 +9,6 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
-import { IMessage } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -27,7 +26,6 @@ import Chat from '@/components/home/ChatModal/Chat';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
-import { useSocket } from '@/components/provider/SocketWrapper';
 import useFormData from '@/hooks/home/useFormData';
 import useFileInput from '@/hooks/home/useGetImg';
 import useSetDate from '@/hooks/home/useSetDate';
@@ -68,7 +66,7 @@ const Home = () => {
   // board boolean
   const [isBoardOpened, setIsBoardOpened] = useState<boolean>(false);
   // 전체 데이터
-  const [data, setData] = useState<BoardType[]>([
+  const [, setData] = useState<BoardType[]>([
     {
       id: 0,
       board_title: '',
@@ -103,12 +101,10 @@ const Home = () => {
       createdAt: '',
     },
   ]);
-  // 바텀 컨테이너 ref
-  const bottomRef = useRef(null);
   // 무한 페이지 컨트롤
   const [currentPage, setCurrentPage] = useState<number>(0);
   // 처음 로딩에 대한 플래그 추가
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // const [isFirstLoad, setIsFirstLoad] = useState(true);
   // 삭제되는 게시글 아이디
   const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
   // 초기화 플래그
@@ -134,7 +130,7 @@ const Home = () => {
   });
 
   // React Query
-  const { data: boardAllData, refetch: refetchAllData } = useGetAllData({
+  const { refetch: refetchAllData } = useGetAllData({
     setData,
   }); // 모든 데이터 GET
 
@@ -144,14 +140,11 @@ const Home = () => {
     isSuccess: specificDataSuccess,
   } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
 
-  const {
-    data: scrollData,
-    mutate: getPagingBoard,
-    isSuccess: successScrollData,
-  } = useInfiniteScroll({
-    setInfiniteBoardData,
-    currentPage,
-  }); // 무한 스크롤 데이터 GET
+  const { mutate: getPagingBoard, isSuccess: successScrollData } =
+    useInfiniteScroll({
+      setInfiniteBoardData,
+      currentPage,
+    }); // 무한 스크롤 데이터 GET
 
   useEffect(() => {
     if (successScrollData && isInitialized) {
@@ -171,7 +164,7 @@ const Home = () => {
   const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
     setInfiniteBoardData,
     deleteBoardId,
-  });
+  }); // 삭제 시 무한 스크롤 데이터 GET
 
   useEffect(() => {
     getPagingBoard();
@@ -310,12 +303,14 @@ const Home = () => {
       isOpened,
       setIsOpened,
     };
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const execute = useModalOpen(object);
     execute();
   }
 
   // 게시글 post 실행 함수
   function writeBoard() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const createdAt = useSetDate();
     setBoardData((prev) => ({
       ...prev,

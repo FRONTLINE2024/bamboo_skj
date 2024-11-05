@@ -12,16 +12,16 @@ export default async function handler(
   try {
     if (req.method === 'GET') {
       const { board_user_id } = req.query;
-      const [rows, fields] = await connection.execute<RowDataPacket[]>(
+      const [rows] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM board WHERE board_user_id = ?',
         [board_user_id]
       );
       console.log(rows);
 
       if (rows.length > 0) {
-        res.status(200).json({ sucess: true, data: rows });
+        res.status(200).json({ success: true, data: rows[0] });
       } else {
-        res.status(404).json({ sucess: false, message: 'Board Not Exists!' });
+        res.status(404).json({ success: false, message: 'Board Not Exists!' });
       }
     }
   } catch (e) {

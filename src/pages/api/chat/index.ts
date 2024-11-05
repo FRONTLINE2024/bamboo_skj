@@ -9,6 +9,16 @@ function checkKorean(str: string) {
   return regex.test(str);
 }
 
+interface IUser {
+  user_index: number;
+  user_id: string;
+  user_nickname: string;
+  profile_image: string | null;
+  accessToken: string | null;
+  chat_content: string;
+  user_password?: string;
+}
+
 const chatHandler = async (
   req: NextApiRequest,
   res: NextApiResponseServerIO
@@ -22,7 +32,7 @@ const chatHandler = async (
 
       console.log('message: ', message);
 
-      const [rows, fields] = await connection.execute<RowDataPacket[]>(
+      const [rows] = await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_index = ? `,
         [chat_user_id]
       );
@@ -38,20 +48,27 @@ const chatHandler = async (
         isKoreanEmitted = true;
       }
 
-      if (chat[0].affectedRows > 0) {
-        const Data = {
-          ...rows[0],
-          chat_content,
-        };
-        res.status(201).json(Data);
+      if (rows.length > 0) {
+        const { user_password, ...data } = rows[0] as IUser;
+        console.log('user: ', user_password);
+
+        if (chat[0].affectedRows > 0) {
+          const Data = {
+            ...data,
+            chat_content,
+          };
+          res.status(201).json(Data);
+        } else {
+          res.status(404).json({ message: 'Invalid Chat Data!' });
+        }
       } else {
-        res.status(404).json({ message: 'Invaild Chat Data!' });
+        res.status(404).json({ message: 'User not found!' });
       }
     } else if (req.method === 'GET') {
-      const [row, field] =
+      const [row] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM chat');
 
-      const [userRow, userField] =
+      const [userRow] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM user');
 
       // console.log('userRow:', userRow);

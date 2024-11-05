@@ -1,4 +1,5 @@
 import { patchBoardData } from '@/pages/api/clients/home';
+import { BoardType } from '@/types/home';
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -9,10 +10,10 @@ interface usePatchBoardType {
   formPatchData: FormData;
   refetchSpecificData: (
     options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<BoardType, Error>>;
   refetchAllData: (
     options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<BoardType[], Error>>;
 }
 
 const usePatchBoard = ({

@@ -11,13 +11,13 @@ export default async function handler(
     if (req.method === 'POST') {
       const { user_id, user_nickname, profile_image, accessToken } = req.body;
 
-      const [rows, fields] = await connection.execute<RowDataPacket[]>(
+      const [rows] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM user WHERE user_id = ?',
         [user_id]
       );
 
       if (rows.length === 0) {
-        const [row, field] = await connection.execute<ResultSetHeader>(
+        const [row] = await connection.execute<ResultSetHeader>(
           'INSERT INTO user (user_id, user_nickname, profile_image, accessToken) VALUES (?, ?, ?, ?)',
           [user_id, user_nickname, profile_image, accessToken]
         );
@@ -36,7 +36,9 @@ export default async function handler(
       }
     }
   } catch (e) {
-    res.status(500).json({ success: false, message: 'Database error' });
+    res
+      .status(500)
+      .json({ success: false, message: 'Database error', error: e });
   } finally {
     connection.end();
   }

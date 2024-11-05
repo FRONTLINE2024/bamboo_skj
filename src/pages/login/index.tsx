@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
+import Link from 'next/link';
 // styles
 import { Flex } from '@/styles/common/direction';
-import { Container, KakaoButton, LoginButton, SignupButton } from './styles';
+import {
+  Container,
+  KakaoButton,
+  LoginButton,
+  SignupButton,
+} from '../../styles/login/styles';
 
 // icons
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
@@ -13,28 +17,14 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { userType } from '@/types/login';
 
 // apis
-import { login } from '../api/clients/login';
-import Link from 'next/link';
 
 // components
 import Toast from '@/components/common/Toast';
 
 // libraries
-import Cookie from 'js-cookie';
 import { ToastStateType } from '@/types/home';
 import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
 import useGetFindUser from '@/hooks/login/api/useGetFindUser';
-
-interface dataType {
-  data: {
-    accessToken: string;
-    profile_image: string;
-    user_id: string;
-    user_index: number;
-    user_nickname: string;
-  };
-  sucess: boolean;
-}
 
 const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -45,8 +35,6 @@ const Login = () => {
     stateCode: '',
   });
   const { state, stateText, stateCode } = toastState;
-  // router
-  const router = useRouter();
   // password show
   const [isShowed, setIsShowed] = useState<boolean>(false);
   // login data

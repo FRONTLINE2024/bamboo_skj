@@ -12,7 +12,7 @@ export default async function handler(
     try {
       const { user_index } = req.query;
       console.log(user_index);
-      const [rows, fields] = await connection.execute<RowDataPacket[]>(
+      const [rows] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM user WHERE user_index = ?',
         [user_index]
       );
@@ -23,7 +23,9 @@ export default async function handler(
         res.status(404).json({ success: false, message: 'User not found' });
       }
     } catch (err) {
-      res.status(500).json({ success: false, message: 'Database error' });
+      res
+        .status(500)
+        .json({ success: false, message: 'Database error', error: err });
     } finally {
       connection.end();
     }

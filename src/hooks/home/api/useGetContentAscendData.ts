@@ -1,4 +1,4 @@
-import { ContentAscendData, DescendData } from '@/pages/api/clients/home';
+import { ContentAscendData } from '@/pages/api/clients/home';
 import { BoardType } from '@/types/home';
 import { useMutation } from '@tanstack/react-query';
 import { SetStateAction } from 'react';
@@ -7,7 +7,7 @@ interface useGetDateAscendDataType {
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;
 }
 
-const usegetContentAscendData = ({
+const useGetContentAscendData = ({
   setInfiniteBoardData,
 }: useGetDateAscendDataType) => {
   return useMutation({
@@ -25,4 +25,4 @@ const usegetContentAscendData = ({
   });
 };
 
-export default usegetContentAscendData;
+export default useGetContentAscendData;

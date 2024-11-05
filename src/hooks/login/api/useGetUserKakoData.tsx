@@ -14,7 +14,7 @@ const useGetUserKakoData = ({ accessToken }: useGetUserKakoDataType) => {
       };
 
       const response = await getKaKaoUserData(headers);
-      // console.log('user Data:', response);
+      console.log('user Data:', response);
 
       return response;
     },

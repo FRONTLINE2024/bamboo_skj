@@ -1,11 +1,21 @@
 import { postUserData } from '@/pages/api/clients/login';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
 import Cookie from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
+// Kakao data 타입 정의
+export interface KakaoData {
+  data: {
+    id: string;
+    properties: {
+      nickname: string;
+      profile_image: string;
+    };
+  };
+}
+
 interface usePostSignupKakoLoginType {
-  kakaoData: AxiosResponse<any, any> | undefined;
+  kakaoData: KakaoData;
   accessToken: string;
 }
 
@@ -22,7 +32,7 @@ const usePostSignupKakoLogin = ({
     mutationKey: ['postSignupKakao'],
     mutationFn: async () => {
       const body = {
-        user_id: kakaoData?.data.id,
+        user_id: Number(kakaoData?.data.id),
         user_nickname: kakaoData?.data.properties.nickname,
         profile_image: kakaoData?.data.properties.profile_image,
         accessToken,
@@ -34,7 +44,7 @@ const usePostSignupKakoLogin = ({
       return response.data;
     },
     onSuccess: (data: resultData) => {
-      for (let key in data) {
+      for (const key in data) {
         Cookie.set(`${key}`, data[key]);
       }
       localStorage.setItem('user_index', data.user_index);

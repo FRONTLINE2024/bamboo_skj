@@ -1,11 +1,11 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import Login from '@/pages/login/index';
 import '@testing-library/jest-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { userType } from '@/types/login';
 import { useRouter } from 'next/navigation';
-import { login } from '../api/clients/login'; // API 호출 경로를 수정하세요
+import { login } from '../../pages/api/clients/login'; // API 호출 경로를 수정하세요
 import { act } from 'react';
 import { changeMessage, repeatInput } from '@/hooks/test';
 

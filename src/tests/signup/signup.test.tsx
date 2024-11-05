@@ -2,7 +2,7 @@ import Signup from '@/pages/signup/index';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { signup } from '../api/clients/signup'; // API 호출 경로를 수정하세요
+import { signup } from '../../pages/api/clients/signup'; // API 호출 경로를 수정하세요
 import { user } from '@/mocks/api/userData';
 import { changeMessage, repeatInput } from '@/hooks/test';
 
