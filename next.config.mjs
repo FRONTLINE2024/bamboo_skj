@@ -8,6 +8,14 @@ const nextConfig = {
   //   // your project has ESLint errors.
   //   ignoreDuringBuilds: true,
   // },
+  reactStrictMode: true,
+  swcMinify: true,
+  rewrites: async () => [
+    {
+      source: '/api/:path*',
+      destination: 'https://bamboo-skj.vercel.app/api/:path*',
+    },
+  ],
 };
 
 export default nextConfig;

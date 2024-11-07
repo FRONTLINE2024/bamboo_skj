@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socket: ClientSocketType = io(`https://bamboo-skj.vercel.app`, {
+    const socket: ClientSocketType = io(`${process.env.NEXT_PUBLIC_ADDRESS}`, {
       path: '/api/socket/io',
       addTrailingSlash: false,
     });

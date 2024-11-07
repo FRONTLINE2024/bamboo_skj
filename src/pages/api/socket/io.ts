@@ -12,7 +12,7 @@ export type NextApiResponseServerIO = NextApiResponse & {
   };
 };
 
-const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
+const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as NetServer;
     const io = new ServerIO(httpServer, {

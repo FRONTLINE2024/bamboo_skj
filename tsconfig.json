@@ -29,7 +29,7 @@
     "jest.config.ts",
     "jest.setup.ts",
     "src/tests/home/home.test.tsx"
-  ],
+, "middleware.js"  ],
   "exclude": [
     "node_modules"
   ]
