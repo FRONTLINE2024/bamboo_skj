@@ -10,12 +10,16 @@ import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import Cookie from 'js-cookie';
+import Modal from '@/components/common/Modal';
+import BoardInfo from '@/components/home/BoardInfo';
+import React from 'react';
 
 jest.mock('js-cookie', () => ({
   get: jest.fn(),
   set: jest.fn(),
 }));
-jest.mock('./api/clients/home');
+
+jest.mock('../../pages/api/clients/home');
 //@/pages/api/clients/home
 
 jest.mock('next/navigation', () => ({
@@ -34,11 +38,19 @@ describe('Home Page', () => {
     (Cookie.get as jest.Mock).mockImplementation((key) => {
       switch (key) {
         case 'user_index':
-          return '20'; // 필요시 필요한 다른 키와 값을 추가할 수 있습니다.
+          return '1'; // 필요시 필요한 다른 키와 값을 추가할 수 있습니다.
         default:
           return null; // 기본적으로 null 반환
       }
     });
+
+    const intersectionObserverMock = () => ({
+      observe: () => null,
+      unobserve: () => null,
+    });
+    window.IntersectionObserver = jest
+      .fn()
+      .mockImplementation(intersectionObserverMock);
 
     render(
       <RecoilRoot>
@@ -82,55 +94,90 @@ describe('Home Page', () => {
     expect(boardImg.files).toHaveLength(1);
   });
 
-  test.only('게시글 수정 테스트', () => {
-    const data = screen.getByLabelText('전체데이터');
-    expect(data).toBeInTheDocument();
+  test.only('게시글 수정 테스트', async () => {
+    const file = new File(['dummy content'], 'campus.jpg', {
+      type: 'image/jpeg',
+    });
+
+    const mockOpenModal = jest.fn();
+    const mockInputSelectedBoardData = jest.fn();
+    const mockHandleImageClick = jest.fn();
+    const mockHandleSelectedImg = jest.fn();
+    const mockPatchBoardData = jest.fn();
+    const mockModifyChange = jest.fn();
+    const mockFileInputRef = React.createRef<HTMLInputElement>();
+
+    const selectedMock = {
+      id: 1,
+      board_title: 'Initial Title',
+      createdAt: '2024-09-26',
+      board_content: 'Initial Content',
+      board_user_id: '123',
+      board_img: file,
+    };
+
+    const boardModifyMock = true;
+
+    beforeEach(() =>
+      render(
+        <Modal modal={true} openModal={mockOpenModal}>
+          <BoardInfo
+            selected={selectedMock}
+            boardModify={boardModifyMock}
+            inputSelectedBoardData={mockInputSelectedBoardData}
+            handleImageClick={mockHandleImageClick}
+            handleSelectedImg={mockHandleSelectedImg}
+            fileInputRef={mockFileInputRef}
+            PatchBoardData={mockPatchBoardData}
+            modifyChange={mockModifyChange}
+          />
+        </Modal>
+      )
+    );
 
     const boardElement = screen.getByLabelText('게시글선택');
     fireEvent.click(boardElement);
 
     const modifyBtn = screen.getByLabelText('게시글수정');
-    expect(modifyBtn).toBeInTheDocument();
-    fireEvent.click(modifyBtn);
 
-    // // const modifyBtn = screen.getByText('수정');
-    // // const submitBtn = screen.getByText('확인');
+    await act(async () => {
+      fireEvent.click(modifyBtn);
+    });
 
-    // fireEvent.click(modifyBtn);
+    const modifyConfirmBtn = screen.getByLabelText('게시글수정확인');
+    const titleInput = screen.getByLabelText('게시글 제목') as HTMLInputElement;
+    const dateInput = screen.getByLabelText(
+      '게시글 생성일'
+    ) as HTMLInputElement;
+    const contentInput = screen.getByLabelText(
+      '게시글 내용'
+    ) as HTMLInputElement;
+    const fileInput = screen.getByLabelText(
+      '이미지 업로드'
+    ) as HTMLInputElement;
 
-    // const titleInput = screen.getByLabelText('게시글 제목') as HTMLInputElement;
-    // const dateInput = screen.getByLabelText(
-    //   '게시글 생성일'
-    // ) as HTMLInputElement;
-    // const contentInput = screen.getByLabelText(
-    //   '게시글 내용'
-    // ) as HTMLInputElement;
-    // const fileInput = screen.getByLabelText(
-    //   '이미지 업로드'
-    // ) as HTMLInputElement;
+    fireEvent.change(titleInput, { target: { value: '제목 테스트' } });
+    fireEvent.change(dateInput, { target: { value: '2024-9-26 14:20:51' } });
+    fireEvent.change(contentInput, { target: { value: '테스트 테스트' } });
+    fireEvent.change(fileInput, { target: { files: [file] } });
 
-    // const file = new File(['dummy content'], 'campus.jpg', {
-    //   type: 'image/jpeg',
-    // });
+    const submitBtn = screen.getByLabelText('게시글수정확인');
 
-    // fireEvent.change(titleInput, { target: { value: '제목 테스트' } });
-    // fireEvent.change(dateInput, { target: { value: '2024-9-26 14:20:51' } });
-    // fireEvent.change(contentInput, { target: { value: '테스트 테스트' } });
-    // fireEvent.change(fileInput, { target: { files: [file] } });
+    fireEvent.click(submitBtn);
 
-    // const submitBtn = screen.getByLabelText('게시글수정확인');
+    if (!fileInput.files) {
+      return;
+    }
 
-    // fireEvent.click(submitBtn);
+    expect(titleInput.value).toBe('제목 테스트');
+    expect(dateInput.value).toBe('2024-9-26 14:20:51');
+    expect(contentInput.value).toBe('테스트 테스트');
+    expect(fileInput.files?.[0]).toEqual(file);
+    expect(fileInput.files).toHaveLength(1);
 
-    // if (!fileInput.files) {
-    //   return;
-    // }
-
-    // expect(titleInput.value).toBe('제목 테스트');
-    // expect(dateInput.value).toBe('내용 테스트');
-    // expect(contentInput.value).toBe('테스트 테스트');
-    // expect(fileInput.files[0]).toEqual(file);
-    // expect(fileInput.files).toHaveLength(1);
+    await act(async () => {
+      fireEvent.click(modifyConfirmBtn);
+    });
   });
 
   test('게시글 삭제 테스트', async () => {
