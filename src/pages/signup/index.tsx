@@ -45,10 +45,11 @@ const Signup = () => {
   const [signupData, setSignupData] = useState<signupType>({
     user_id: '',
     user_password: '',
+    user_nickname: '',
     passwordConfirm: '',
   });
 
-  const { user_id, user_password, passwordConfirm } = signupData;
+  const { user_id, user_password, user_nickname, passwordConfirm } = signupData;
 
   // password show
   const [isShowed, setIsShowed] = useState<boolean>(false);
@@ -70,6 +71,7 @@ const Signup = () => {
       const body = {
         user_id,
         user_password,
+        user_nickname,
       };
       const response = await signup(body);
 
@@ -152,20 +154,37 @@ const Signup = () => {
           style={{
             ...Flex,
             flexDirection: 'column',
-            height: '50%',
+            height: '60%',
             justifyContent: 'space-between',
             transform: 'translateY(-10%)',
           }}
         >
           <h2>FrontLine</h2>
 
-          <div style={{ ...Flex, flexDirection: 'column', gap: '20px' }}>
+          <div
+            style={{
+              ...Flex,
+              flexDirection: 'column',
+              gap: '20px',
+            }}
+          >
             <div className="inputContainer">
               <input
                 type="text"
                 placeholder="아이디 입력"
                 value={user_id}
                 onChange={(e) => handleLoginDate('user_id', e.target.value)}
+              />
+            </div>
+
+            <div className="inputContainer">
+              <input
+                type="text"
+                placeholder="닉네임 입력(4~8자)"
+                value={user_nickname}
+                onChange={(e) =>
+                  handleLoginDate('user_nickname', e.target.value)
+                }
               />
             </div>
 

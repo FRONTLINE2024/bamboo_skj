@@ -1,6 +1,7 @@
 export interface signupType {
   user_id: string;
   user_password: string;
+  user_nickname: string;
   passwordConfirm: string;
 }
 
