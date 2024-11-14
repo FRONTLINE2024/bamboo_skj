@@ -16,12 +16,6 @@ export default async function handler(
     if (req.method === 'GET') {
       const [board] = await connection.execute('SELECT * FROM board');
       res.status(200).json(board); // 200: OK
-
-      // const [rows] = await connection.execute(
-      //   'SELECT * FROM board ORDER BY createdAt'
-      // );
-
-      // console.log(rows);
     } else if (req.method === 'DELETE') {
       const { id, board_user_id } = req.body;
 
@@ -29,7 +23,6 @@ export default async function handler(
         'SELECT * FROM board WHERE id = ?',
         [id]
       );
-      console.log(rows);
 
       if (rows.length === 0) {
         return res
@@ -41,8 +34,6 @@ export default async function handler(
         'DELETE FROM board WHERE id = ? AND board_user_id = ?',
         [id, board_user_id]
       );
-
-      console.log(result);
 
       if (result.affectedRows > 0) {
         res.status(200).json({ success: true, message: 'Delete successful' });

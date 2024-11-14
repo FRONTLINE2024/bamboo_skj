@@ -41,14 +41,16 @@ import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
 import useGetChattingData from '@/hooks/home/api/useGetChattingData';
+import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
+import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 // context
 import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
-import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
+import { useMutation } from '@tanstack/react-query';
+import { addFriends } from './api/clients/home';
 
 const Home = () => {
   // 라우터
@@ -103,8 +105,6 @@ const Home = () => {
   ]);
   // 무한 페이지 컨트롤
   const [currentPage, setCurrentPage] = useState<number>(0);
-  // 처음 로딩에 대한 플래그 추가
-  // const [isFirstLoad, setIsFirstLoad] = useState(true);
   // 삭제되는 게시글 아이디
   const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
   // 초기화 플래그
@@ -155,11 +155,6 @@ const Home = () => {
       setIsInitialized(true);
     }
   }, [successScrollData, isInitialized]);
-
-  // useEffect(() => {
-  //   console.log(1);
-  //   console.log(2);
-  // }, []);
 
   const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
     setInfiniteBoardData,
@@ -354,6 +349,25 @@ const Home = () => {
         break;
     }
   }
+
+  const friend = useMutation({
+    mutationKey: ['addFriend'],
+    mutationFn: async () => {
+      const response = await addFriends({
+        userID: 1,
+        friendUserID: 2,
+        status: false,
+      });
+
+      console.log(response);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+  useEffect(() => {
+    friend.mutate();
+  }, []);
 
   useEffect(() => {
     const token = Cookie.get('accessToken');

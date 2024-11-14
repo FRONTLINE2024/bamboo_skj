@@ -49,3 +49,7 @@ export const postChatMessage = (body: {
 export const getInfiniteData = ({ offset, limit }: pagingType) => {
   return basicClient.get(`/paging?limit=${limit}&offset=${offset}`);
 };
+
+export const addFriends = (body: {}) => {
+  return basicClient.post('/friend', body);
+};

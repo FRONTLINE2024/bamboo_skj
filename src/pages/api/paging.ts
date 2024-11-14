@@ -16,7 +16,6 @@ export default async function handler(
         'SELECT * FROM board LIMIT ? OFFSET ?',
         [limit, offset]
       );
-      console.log(rows);
 
       res.status(200).json(rows); // 200: OK
     } else {
