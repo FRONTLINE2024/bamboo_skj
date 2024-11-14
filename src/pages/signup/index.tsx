@@ -19,6 +19,7 @@ import { signup } from '@/pages/api/clients/signup';
 
 // components
 import Toast from '@/components/common/Toast';
+import useUserLogin from '@/hooks/signup/useUserLogin';
 
 interface AxiosError {
   response: {
@@ -65,43 +66,12 @@ const Signup = () => {
     }));
   }
 
-  const doSignup = useMutation({
-    mutationKey: ['signup'],
-    mutationFn: async () => {
-      const body = {
-        user_id,
-        user_password,
-        user_nickname,
-      };
-      const response = await signup(body);
-
-      console.log(response);
-
-      if (response.status === 201) {
-        setToastState((prev) => ({
-          ...prev,
-          stateCode: `${response.status}`,
-          stateText: '회원가입 성공!',
-        }));
-
-        handleToast();
-        setTimeout(() => {
-          router.push('/login');
-        }, 2510);
-      }
-    },
-    onError(err: AxiosError) {
-      console.log(err);
-      if (err.status === 409) {
-        setToastState((prev) => ({
-          ...prev,
-          stateCode: '409',
-          stateText: '이미 존재하는 아이디입니다!',
-        }));
-
-        handleToast();
-      }
-    },
+  const { mutate: login } = useUserLogin({
+    user_id,
+    user_password,
+    user_nickname,
+    setToastState,
+    handleToast,
   });
 
   function signups() {
@@ -116,7 +86,7 @@ const Signup = () => {
         stateText: '비밀번호가 다릅니다!',
       }));
     } else {
-      doSignup.mutate(); // 비밀번호가 일치하는 경우 회원가입을 시도합니다.
+      login(); // 비밀번호가 일치하는 경우 회원가입을 시도합니다.
     }
     handleToast();
   }
