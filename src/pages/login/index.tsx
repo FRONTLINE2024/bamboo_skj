@@ -25,6 +25,8 @@ import Toast from '@/components/common/Toast';
 import { ToastStateType } from '@/types/home';
 import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
 import useGetFindUser from '@/hooks/login/api/useGetFindUser';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -40,6 +42,7 @@ const Login = () => {
   // login data
   const [loginData, setLoginData] = useState<userType>({
     user_id: '',
+    user_nickname: '',
     user_password: '',
   });
 
@@ -95,6 +98,35 @@ const Login = () => {
   async function kakaoLogin() {
     findUser();
   }
+
+  const myChat = useMutation({
+    mutationKey: ['getMyChat'],
+    mutationFn: async () => {
+      const chat_user_id = 1;
+      // const response = await getMyChat(chat_user_id);
+      const response = await axios.get(
+        `http://localhost:3000/api/chat/chatting`,
+        {
+          params: { chat_user_id },
+        }
+      );
+
+      console.log(response);
+
+      return response;
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  function getDat() {
+    myChat.mutate();
+  }
+
+  useEffect(() => {
+    getDat();
+  }, []);
 
   return (
     <>

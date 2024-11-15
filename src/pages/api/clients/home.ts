@@ -50,6 +50,14 @@ export const getInfiniteData = ({ offset, limit }: pagingType) => {
   return basicClient.get(`/paging?limit=${limit}&offset=${offset}`);
 };
 
-export const addFriends = (body: {}) => {
+export const addFriends = (body: {
+  userID: number;
+  friendUserID: number;
+  status: boolean;
+}) => {
   return basicClient.post('/friend', body);
+};
+
+export const getMyChat = (chat_user_id: number) => {
+  return basicClient.get(`/chat/${chat_user_id}`);
 };

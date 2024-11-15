@@ -50,7 +50,8 @@ import { navContext } from '@/context/homeContext';
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 import { useMutation } from '@tanstack/react-query';
-import { addFriends } from './api/clients/home';
+import { addFriends, getMyChat } from './api/clients/home';
+import axios from 'axios';
 
 const Home = () => {
   // 라우터
@@ -350,24 +351,25 @@ const Home = () => {
     }
   }
 
-  const friend = useMutation({
-    mutationKey: ['addFriend'],
-    mutationFn: async () => {
-      const response = await addFriends({
-        userID: 1,
-        friendUserID: 2,
-        status: false,
-      });
+  // 친구 요청
+  // const friend = useMutation({
+  //   mutationKey: ['addFriend'],
+  //   mutationFn: async () => {
+  //     const response = await addFriends({
+  //       userID: 1,
+  //       friendUserID: 2,
+  //       status: false,
+  //     });
 
-      console.log(response);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-  useEffect(() => {
-    friend.mutate();
-  }, []);
+  //     console.log(response);
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //   },
+  // });
+  // useEffect(() => {
+  //   friend.mutate();
+  // }, []);
 
   useEffect(() => {
     const token = Cookie.get('accessToken');
