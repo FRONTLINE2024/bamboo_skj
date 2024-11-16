@@ -38,7 +38,7 @@ const chatHandler = async (
       );
 
       const chat = await connection.execute<ResultSetHeader>(
-        `INSERT INTO chat (chat_user_id, chat_content) VALUES (?, ?)`,
+        `INSERT INTO chat (chat_user_id, chat_content, createAt) VALUES (?, ?, NOW() + INTERVAL 9 HOUR)`,
         [chat_user_id, chat_content]
       );
 

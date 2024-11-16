@@ -26,7 +26,7 @@ export default async function handler(
       );
       console.log(myChat[0]);
 
-      res.status(200).json({ success: true, data: myChat });
+      res.status(200).json(myChat);
     } else {
       res.status(405).json({ success: false, message: 'Method not allowed' });
     }

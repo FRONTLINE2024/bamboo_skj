@@ -49,9 +49,7 @@ import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import { useMutation } from '@tanstack/react-query';
-import { addFriends, getMyChat } from './api/clients/home';
-import axios from 'axios';
+import FriendRequestUserList from '@/components/home/FriendRequestUserList';
 
 const Home = () => {
   // 라우터
@@ -110,6 +108,8 @@ const Home = () => {
   const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
   // 초기화 플래그
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  const [friendRequestModal, setFriendRequestModal] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -216,6 +216,8 @@ const Home = () => {
   const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
+  // 친구창
+  const handleFriendModal = () => setFriendRequestModal(!friendRequestModal);
 
   // 게시글 작성 모달 열기
   function openModalBoard() {
@@ -235,6 +237,11 @@ const Home = () => {
   // 게시글 작성 모달 닫기
   function closeModalChat() {
     setChattingModalBoolean(false);
+  }
+
+  // 친구창 모달 닫기
+  function closeFriendModal() {
+    setFriendRequestModal(false);
   }
 
   // 이미지 수정
@@ -403,10 +410,22 @@ const Home = () => {
           {' '}
         </div>
       )}
+      {friendRequestModal && (
+        <div className="background" onClick={closeFriendModal}>
+          {' '}
+        </div>
+      )}
       <Header
         handleDropdown={handleDropdown}
         dropdownBoolean={dropdownBoolean}
+        handleFriendModal={handleFriendModal}
       />
+      {friendRequestModal && (
+        <Modal openModal={handleFriendModal} modal={friendRequestModal}>
+          <FriendRequestUserList />
+        </Modal>
+      )}
+
       <div
         style={{
           width: '70%',

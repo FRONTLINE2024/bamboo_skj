@@ -61,3 +61,9 @@ export const addFriends = (body: {
 export const getMyChat = (chat_user_id: number) => {
   return basicClient.get(`/chat/${chat_user_id}`);
 };
+
+export const getMyFriendRequest = (userID: number) => {
+  return basicClient.get(`/friend`, {
+    params: { userID },
+  });
+};

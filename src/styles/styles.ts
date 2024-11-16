@@ -195,8 +195,8 @@ export const HomeHeader = styled.header<{ $dropdownboolean: string }>`
 
   .logoutIcon {
     cursor: pointer;
-    position: absolute;
-    margin-top: 4rem;
+    /* position: absolute;
+    margin-top: 4rem; */
 
     background-color: white;
     box-shadow: ${(props) =>

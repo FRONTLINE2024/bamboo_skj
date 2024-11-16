@@ -38,3 +38,12 @@ export interface pagingType {
   offset: number;
   limit: number;
 }
+
+export interface userRequestType {
+  createAt: string;
+  friendUserID: number;
+  id: number;
+  status: number;
+  userID: number;
+  userEmail: string;
+}

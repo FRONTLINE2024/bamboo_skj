@@ -12,6 +12,18 @@ export default async function handler(
     if (req.method === 'POST') {
       const { userID, friendUserID, status } = req.body;
 
+      // friendUserID가 실제 사용자 테이블에 존재하는지 확인
+      const [userExist] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM user WHERE user_index = ?',
+        [friendUserID]
+      );
+
+      if (userExist.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: 'Friend user does not exist' });
+      }
+
       const [existRequest] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM friend WHERE userID = ? AND friendUserID = ?',
         [userID, friendUserID]
@@ -19,7 +31,7 @@ export default async function handler(
 
       if (existRequest.length === 0) {
         const requestFriend = await connection.execute(
-          'INSERT INTO friend (userID, friendUserID, status, createAt) VALUES (? ,? ,?, NOW())',
+          'INSERT INTO friend (userID, friendUserID, status, createAt) VALUES (? ,? ,?, NOW() + INTERVAL 9 HOUR)',
           [userID, friendUserID, status]
         );
 
@@ -38,6 +50,33 @@ export default async function handler(
           .json({ success: false, message: 'Request already exists' });
       }
     } else if (req.method === 'GET') {
+      const { userID } = req.query;
+      console.log('userID: ', userID);
+
+      const [myRequest] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE friendUserID = ?',
+        [userID]
+      );
+
+      const [userList] =
+        await connection.execute<RowDataPacket[]>('SELECT * FROM user');
+
+      // console.log('내가 받은 친구 요청', myRequest);
+      console.log('전체 유저 리스트:', userList);
+
+      const newData = myRequest.map((request) => {
+        const user = userList.find(
+          (user) => user.user_index === request.userID
+        );
+        return { ...request, userEmail: user ? user.user_id : null };
+      });
+
+      console.log('유저 아이디 추가: ', newData);
+      if (myRequest.length > 0) {
+        res.status(200).json(newData);
+      } else {
+        res.status(404).json({ message: 'Not Exist Request' });
+      }
     } else {
       res.status(405).json({ success: false, message: 'Method not allowed' });
     }
