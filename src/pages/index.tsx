@@ -23,6 +23,7 @@ import MainContent from '@/components/home/MainContent';
 import BoardInfo from '@/components/home/BoardInfo';
 import ChatModal from '@/components/home/ChattModal';
 import Chat from '@/components/home/ChatModal/Chat';
+import Friend from '@/components/home/Friend';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
@@ -49,7 +50,6 @@ import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import FriendRequestUserList from '@/components/home/FriendRequestUserList';
 
 const Home = () => {
   // 라우터
@@ -422,7 +422,7 @@ const Home = () => {
       />
       {friendRequestModal && (
         <Modal openModal={handleFriendModal} modal={friendRequestModal}>
-          <FriendRequestUserList />
+          <Friend />
         </Modal>
       )}
 

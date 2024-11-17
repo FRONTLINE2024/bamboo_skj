@@ -47,3 +47,12 @@ export interface userRequestType {
   userID: number;
   userEmail: string;
 }
+
+export interface userEntireType {
+  user_index: number;
+  user_id: string;
+  user_nickname: string;
+  user_password: string;
+  profile_image: string;
+  accessToken: string;
+}

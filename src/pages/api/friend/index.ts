@@ -51,7 +51,6 @@ export default async function handler(
       }
     } else if (req.method === 'GET') {
       const { userID } = req.query;
-      console.log('userID: ', userID);
 
       const [myRequest] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM friend WHERE friendUserID = ?',
@@ -61,17 +60,13 @@ export default async function handler(
       const [userList] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM user');
 
-      // console.log('내가 받은 친구 요청', myRequest);
-      console.log('전체 유저 리스트:', userList);
-
       const newData = myRequest.map((request) => {
         const user = userList.find(
           (user) => user.user_index === request.userID
         );
-        return { ...request, userEmail: user ? user.user_id : null };
+        return { ...request, userEmail: user ? user.user_nickname : null };
       });
 
-      console.log('유저 아이디 추가: ', newData);
       if (myRequest.length > 0) {
         res.status(200).json(newData);
       } else {

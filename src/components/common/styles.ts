@@ -13,7 +13,7 @@ const showModal = keyframes`
 
 export const ModalContainer = styled.div`
   width: 50vw;
-  height: 70vh;
+  max-height: 70vh;
   background-color: white;
   border-radius: 0.2rem;
   position: fixed;
@@ -21,6 +21,11 @@ export const ModalContainer = styled.div`
   right: 25%;
   z-index: 500;
   animation: 0.5s ${showModal};
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .modal {
     width: 100%;
@@ -29,7 +34,8 @@ export const ModalContainer = styled.div`
   }
 
   .modalHeader {
-    width: 100%;
+    width: 50vw;
+    position: fixed;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;

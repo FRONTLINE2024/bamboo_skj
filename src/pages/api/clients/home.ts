@@ -67,3 +67,15 @@ export const getMyFriendRequest = (userID: number) => {
     params: { userID },
   });
 };
+
+export const acceptFriend = (body: {
+  userID: number;
+  friendUserID: number;
+  status: boolean;
+}) => {
+  return basicClient.post('/friend/accept', body);
+};
+
+export const getAllUser = () => {
+  return basicClient.get('/user');
+};
