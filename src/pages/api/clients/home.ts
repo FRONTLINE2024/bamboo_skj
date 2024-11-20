@@ -50,6 +50,7 @@ export const getInfiniteData = ({ offset, limit }: pagingType) => {
   return basicClient.get(`/paging?limit=${limit}&offset=${offset}`);
 };
 
+// 친구 요청
 export const addFriends = (body: {
   userID: number;
   friendUserID: number;
@@ -58,16 +59,19 @@ export const addFriends = (body: {
   return basicClient.post('/friend', body);
 };
 
+// 내 채팅 가져오기
 export const getMyChat = (chat_user_id: number) => {
   return basicClient.get(`/chat/${chat_user_id}`);
 };
 
+// 내가 받은 친구 요청 가져오기
 export const getMyFriendRequest = (userID: number) => {
   return basicClient.get(`/friend`, {
     params: { userID },
   });
 };
 
+// 친구 수락
 export const acceptFriend = (body: {
   userID: number;
   friendUserID: number;
@@ -78,4 +82,10 @@ export const acceptFriend = (body: {
 
 export const getAllUser = () => {
   return basicClient.get('/user');
+};
+
+export const deleteFriendss = (body: {
+  data: { userID: number; friendUserID: number; status: boolean };
+}) => {
+  return basicClient.delete('/friend', body);
 };

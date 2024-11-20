@@ -29,9 +29,7 @@ const FriendRequestUserList = () => {
   });
   const { userID, friendUserID, status } = requestData;
 
-  const { data: friendList, refetch: requestFriend } = useGetFriendRequest({
-    userID,
-  });
+  const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
 
   // 날짜 변환
   function getDate(createAt: string) {
@@ -56,7 +54,12 @@ const FriendRequestUserList = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'friendRequests':
-        return <FriendRequest userID={userID} />;
+        return (
+          <FriendRequest
+            friendList={friendList}
+            requestFriend={requestFriend}
+          />
+        );
       case 'friendList':
         return (
           <FriendList
@@ -73,8 +76,9 @@ const FriendRequestUserList = () => {
         return (
           <UserList
             setRequestData={setRequestData}
-            userID={userID}
             friendList={friendList}
+            requestFriend={requestFriend}
+            friendUserID={friendUserID}
           />
         );
       default:

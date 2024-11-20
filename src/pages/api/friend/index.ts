@@ -54,12 +54,12 @@ export default async function handler(
 
       // userID로 요청한 경우
       const [myRequestFromUser] = await connection.execute<RowDataPacket[]>(
-        'SELECT * FROM friend WHERE friendUserID = ? AND status = 1',
+        'SELECT * FROM friend WHERE friendUserID = ?',
         [userID]
       );
       // userID로 요청을 받은 경우
       const [myRequestFromFriend] = await connection.execute<RowDataPacket[]>(
-        'SELECT * FROM friend WHERE userID = ? AND status = 1',
+        'SELECT * FROM friend WHERE userID = ?',
         [userID]
       );
 
@@ -95,6 +95,22 @@ export default async function handler(
 
       if (deduplication.length > 0) {
         res.status(200).json(deduplication);
+      } else {
+        res.status(404).json({ message: 'Not Exist Request' });
+      }
+    } else if (req.method === 'DELETE') {
+      const { userID, friendUserID, status } = req.body;
+      console.log(userID, friendUserID, status);
+
+      const [info] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE userID = ? AND friendUserID = ?',
+        [userID, friendUserID]
+      );
+
+      console.log(info);
+
+      if (info.length > 0) {
+        res.status(200).json({ message: 'Delete Successful!' });
       } else {
         res.status(404).json({ message: 'Not Exist Request' });
       }

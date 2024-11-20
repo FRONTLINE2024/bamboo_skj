@@ -1,6 +1,10 @@
 // apis
 import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
-import { acceptFriend } from '@/pages/api/clients/home';
+import {
+  acceptFriend,
+  addFriends,
+  deleteFriendss,
+} from '@/pages/api/clients/home';
 
 // styles
 import { FriendRequestContainer } from '@/styles/home/styles';
@@ -10,7 +14,7 @@ import {
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
-import { SetStateAction } from 'react';
+import { SetStateAction, useEffect } from 'react';
 
 interface FriendListType {
   userID: number;
@@ -34,32 +38,30 @@ const FriendList = ({
   requestFriend,
 }: FriendListType) => {
   // 친구 삭제
-  const deleteFriend = useMutation({
-    mutationKey: ['deleteFriend'],
+  const deleteFriendMutate = useMutation({
+    mutationKey: ['deleteFriends'],
     mutationFn: async () => {
       const body = {
         userID,
         friendUserID,
         status: status === 1 && false,
       };
+
       const response = await acceptFriend(body);
 
       console.log(response);
 
-      return response;
+      return response.data;
     },
     onSuccess: () => {
       requestFriend();
-    },
-    onError: (err) => {
-      console.log(err);
     },
   });
 
   // 친구 삭제 함수
   function acceptFunc(data: userRequestType) {
     setRequestData(data);
-    deleteFriend.mutate();
+    deleteFriendMutate.mutate();
   }
 
   return (

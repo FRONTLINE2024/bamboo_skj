@@ -358,26 +358,6 @@ const Home = () => {
     }
   }
 
-  // 친구 요청
-  // const friend = useMutation({
-  //   mutationKey: ['addFriend'],
-  //   mutationFn: async () => {
-  //     const response = await addFriends({
-  //       userID: 1,
-  //       friendUserID: 2,
-  //       status: false,
-  //     });
-
-  //     console.log(response);
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //   },
-  // });
-  // useEffect(() => {
-  //   friend.mutate();
-  // }, []);
-
   useEffect(() => {
     const token = Cookie.get('accessToken');
     if (!token) {
