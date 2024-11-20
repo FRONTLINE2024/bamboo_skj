@@ -34,6 +34,7 @@ const Header = ({
 
   function logOut() {
     Cookie.remove('accessToken');
+    Cookie.remove('user_index');
     router.replace('/login');
   }
 

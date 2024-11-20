@@ -35,7 +35,7 @@ const FriendList = ({
 }: FriendListType) => {
   // 친구 삭제
   const deleteFriend = useMutation({
-    mutationKey: ['postFriendAccept'],
+    mutationKey: ['deleteFriend'],
     mutationFn: async () => {
       const body = {
         userID,
@@ -45,6 +45,8 @@ const FriendList = ({
       const response = await acceptFriend(body);
 
       console.log(response);
+
+      return response;
     },
     onSuccess: () => {
       requestFriend();
@@ -54,9 +56,8 @@ const FriendList = ({
     },
   });
 
-  // 수락
+  // 친구 삭제 함수
   function acceptFunc(data: userRequestType) {
-    console.log(data);
     setRequestData(data);
     deleteFriend.mutate();
   }

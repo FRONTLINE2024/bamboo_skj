@@ -15,31 +15,20 @@ import { SetStateAction, useEffect } from 'react';
 
 interface UserListType {
   userID: number;
-  friendUserID: number;
-  status: number;
   setRequestData: React.Dispatch<SetStateAction<userRequestType>>;
   friendList: userRequestType[] | undefined;
 }
 
-const UserList = ({
-  userID,
-  friendUserID,
-  status,
-  setRequestData,
-  friendList,
-}: UserListType) => {
+const UserList = ({ userID, setRequestData, friendList }: UserListType) => {
   // 친구 요청
   const { mutate: request } = useMutation({
     mutationKey: ['postFriendRequest'],
     mutationFn: async () => {
-      const body = {
-        userID,
-        friendUserID,
-        status: status === 0 && true,
-      };
-      const response = await acceptFriend(body);
+      const response = await getMyFriendRequest(userID);
 
       console.log(response);
+
+      return response.data;
     },
     onError: (err) => {
       console.log(err);
@@ -56,13 +45,27 @@ const UserList = ({
         ?.filter((user) => user.status === 1)
         .map((user) => user.userID);
 
+      const myFriendIDs2 = friendList
+        ?.filter((user) => user.status === 1)
+        .map((user) => user.friendUserID);
+
+      if (!myFriendIDs2) {
+        return;
+      }
+
+      myFriendIDs?.push(...myFriendIDs2);
+
       const { data } = response;
 
+      const removeOne = myFriendIDs?.filter(
+        (id) => id !== Number(Cookies.get('user_index'))
+      );
+
       const usersNotFriends = data.filter((d: userEntireType) => {
-        return !myFriendIDs?.includes(d.user_index);
+        return !removeOne?.includes(d.user_index);
       });
 
-      console.log('Users not in friend list: ', usersNotFriends);
+      // console.log('Users not in friend list: ', usersNotFriends);
 
       return usersNotFriends;
     },
@@ -77,6 +80,10 @@ const UserList = ({
     }));
     request();
   }
+
+  useEffect(() => {
+    getEntireUser.refetch();
+  }, []);
 
   return (
     <>

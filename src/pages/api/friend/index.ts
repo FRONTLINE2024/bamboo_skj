@@ -1,4 +1,4 @@
-import { createConnection } from '@/lib/db';
+import { createConnection } from '../../../lib/db';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
@@ -52,23 +52,49 @@ export default async function handler(
     } else if (req.method === 'GET') {
       const { userID } = req.query;
 
-      const [myRequest] = await connection.execute<RowDataPacket[]>(
-        'SELECT * FROM friend WHERE friendUserID = ?',
+      // userID로 요청한 경우
+      const [myRequestFromUser] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE friendUserID = ? AND status = 1',
+        [userID]
+      );
+      // userID로 요청을 받은 경우
+      const [myRequestFromFriend] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE userID = ? AND status = 1',
         [userID]
       );
 
       const [userList] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM user');
 
-      const newData = myRequest.map((request) => {
+      const newData2 = myRequestFromUser.map((request) => {
         const user = userList.find(
           (user) => user.user_index === request.userID
         );
+
         return { ...request, userEmail: user ? user.user_nickname : null };
       });
 
-      if (myRequest.length > 0) {
-        res.status(200).json(newData);
+      const newData3 = myRequestFromFriend.map((request) => {
+        const user = userList.find(
+          (user) => user.user_index === request.friendUserID
+        );
+
+        return { ...request, userEmail: user ? user.user_nickname : null };
+      });
+
+      const allRequests = [...newData2, ...newData3];
+
+      const seenEmails = new Set();
+      const deduplication = allRequests.filter((request) => {
+        if (!seenEmails.has(request.userEmail)) {
+          seenEmails.add(request.userEmail);
+          return true; // 중복이 아닐 경우 유지
+        }
+        return false; // 중복인 경우 필터링
+      });
+
+      if (deduplication.length > 0) {
+        res.status(200).json(deduplication);
       } else {
         res.status(404).json({ message: 'Not Exist Request' });
       }

@@ -9,7 +9,11 @@ import { FriendRequestContainer } from '@/styles/home/styles';
 // types
 import { userRequestType } from '@/types/home';
 
-const FriendRequest = () => {
+interface FriendRequestType {
+  userID: number;
+}
+
+const FriendRequest = ({ userID }: FriendRequestType) => {
   // 친구 요청 데이터
   const [requestData, setRequestData] = useState<userRequestType>({
     createAt: '',
@@ -19,10 +23,12 @@ const FriendRequest = () => {
     userID: 0,
     userEmail: '',
   });
-  const { userID, friendUserID, status } = requestData;
+  const { friendUserID, status } = requestData;
 
   // 친구 요청
-  const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
+  const { data: friendList, refetch: requestFriend } = useGetFriendRequest({
+    userID,
+  });
   // 친구 수락
   const { mutate: acceptFriend } = usePostFriendAccept({
     requestFriend,
@@ -52,13 +58,12 @@ const FriendRequest = () => {
 
   // 수락
   function acceptFunc(data: userRequestType) {
-    console.log(data);
     setRequestData(data);
     acceptFriend();
   }
 
   return (
-    <>
+    <div style={{ height: '70vh' }}>
       {friendList?.map((d, i) => {
         if (d.status === 0) {
           return (
@@ -98,7 +103,7 @@ const FriendRequest = () => {
           );
         }
       })}
-    </>
+    </div>
   );
 };
 

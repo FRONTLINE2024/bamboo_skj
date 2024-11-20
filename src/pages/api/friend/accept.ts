@@ -1,4 +1,4 @@
-import { createConnection } from '@/lib/db';
+import { createConnection } from '../../../lib/db';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
@@ -27,6 +27,8 @@ export default async function handler(
         'SELECT * FROM friend WHERE userID = ? AND friendUserID = ?',
         [userID, friendUserID]
       );
+
+      console.log('existRequest: ', existRequest);
 
       if (existRequest.length > 0) {
         const requestFriend = await connection.execute(

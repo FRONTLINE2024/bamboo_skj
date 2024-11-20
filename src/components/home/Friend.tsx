@@ -10,10 +10,12 @@ import { userRequestType } from '@/types/home';
 import UserList from './Friend/UserList';
 import FriendRequest from './Friend/FriendRequest';
 import FriendList from './Friend/FriendList';
+
+// apis
 import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
+import Cookies from 'js-cookie';
 
 const FriendRequestUserList = () => {
-  const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
   // 기본 탭 상태
   const [activeTab, setActiveTab] = useState('');
   // 친구 요청 데이터
@@ -22,10 +24,14 @@ const FriendRequestUserList = () => {
     friendUserID: 0,
     id: 0,
     status: 0,
-    userID: 0,
+    userID: Number(Cookies.get('user_index')),
     userEmail: '',
   });
   const { userID, friendUserID, status } = requestData;
+
+  const { data: friendList, refetch: requestFriend } = useGetFriendRequest({
+    userID,
+  });
 
   // 날짜 변환
   function getDate(createAt: string) {
@@ -50,7 +56,7 @@ const FriendRequestUserList = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'friendRequests':
-        return <FriendRequest />;
+        return <FriendRequest userID={userID} />;
       case 'friendList':
         return (
           <FriendList
@@ -68,8 +74,6 @@ const FriendRequestUserList = () => {
           <UserList
             setRequestData={setRequestData}
             userID={userID}
-            friendUserID={friendUserID}
-            status={status}
             friendList={friendList}
           />
         );
@@ -80,6 +84,7 @@ const FriendRequestUserList = () => {
 
   useEffect(() => {
     setActiveTab('friendRequests');
+    requestFriend();
   }, []);
 
   return (
