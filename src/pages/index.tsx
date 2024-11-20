@@ -370,30 +370,22 @@ const Home = () => {
     console.log('currentPage:', currentPage);
   }, [infiniteBoardData, currentPage]);
 
+  const modalStates = [
+    { isOpen: isOpened, close: closeModal },
+    { isOpen: isBoardOpened, close: closeModalBoard },
+    { isOpen: chattingModalBoolean, close: closeModalChat },
+    { isOpen: friendRequestModal, close: closeFriendModal },
+  ];
+
   return (
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
       <div id="modal-chat"></div>
-      {isOpened && (
-        <div className="background" onClick={closeModal}>
-          {' '}
-        </div>
-      )}
-      {isBoardOpened && (
-        <div className="background" onClick={closeModalBoard}>
-          {' '}
-        </div>
-      )}
-      {chattingModalBoolean && (
-        <div className="background" onClick={closeModalChat}>
-          {' '}
-        </div>
-      )}
-      {friendRequestModal && (
-        <div className="background" onClick={closeFriendModal}>
-          {' '}
-        </div>
+      {modalStates.map((modal, index) =>
+        modal.isOpen ? (
+          <div key={index} className="background" onClick={modal.close}></div>
+        ) : null
       )}
       <Header
         handleDropdown={handleDropdown}
@@ -461,7 +453,6 @@ const Home = () => {
           <Chat chattingData={chattingData} />
         </ChatModal>
       )}
-      {/* <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div> */}
     </Container>
   );
 };

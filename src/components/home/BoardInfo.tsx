@@ -53,6 +53,7 @@ const BoardInfo = ({
         flexDirection: 'column',
         padding: '10px',
         gap: '5px',
+        marginTop: '2rem',
       }}
     >
       <div className="publisher">
