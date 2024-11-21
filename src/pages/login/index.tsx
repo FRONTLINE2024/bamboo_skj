@@ -99,35 +99,6 @@ const Login = () => {
     findUser();
   }
 
-  // const myChat = useMutation({
-  //   mutationKey: ['getMyChat'],
-  //   mutationFn: async () => {
-  //     const chat_user_id = 1;
-  //     // const response = await getMyChat(chat_user_id);
-  //     const response = await axios.get(
-  //       `http://localhost:3000/api/chat/chatting`,
-  //       {
-  //         params: { chat_user_id },
-  //       }
-  //     );
-
-  //     console.log(response);
-
-  //     return response;
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //   },
-  // });
-
-  // function getDat() {
-  //   myChat.mutate();
-  // }
-
-  // useEffect(() => {
-  //   getDat();
-  // }, []);
-
   const getFriendRequest = useMutation({
     mutationKey: ['getMyChat'],
     mutationFn: async () => {

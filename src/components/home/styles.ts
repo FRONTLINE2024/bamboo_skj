@@ -34,35 +34,45 @@ export const ChattingContainer = styled.div`
   }
 
   .modalHeader {
-    position: sticky;
+    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    background-color: ${theme.primary};
     border-radius: 0.2rem 0.2rem 0 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0px 1px 4px 1px gray;
   }
+
   .footer {
-    width: 100%;
+    width: 95%;
     height: 80px;
-    position: sticky;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
     bottom: 0;
     margin-top: 0.3rem;
 
-    textarea {
-      width: 100%;
-      height: 100%;
+    input {
+      width: 80%;
+      height: 20px;
       outline: none;
-      border: none;
-      border-top: 2px solid #efefef;
+      border: 1px solid #e1e1e1;
+      background-color: #efefef;
+      border-radius: 0.2rem;
       padding: 5px;
-      border-radius: 0 0 0.2rem 0.2rem;
 
       font-family: 'GmarketSansMedium';
 
       &::-webkit-scrollbar {
         display: none;
+      }
+
+      &:focus {
+        background-color: white;
       }
     }
   }
@@ -71,13 +81,44 @@ export const ChattingContainer = styled.div`
 export const ChatData = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 5px;
   gap: 10px;
+  height: 80%;
+  overflow-y: auto;
+  margin-top: 2rem;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chatUserSearchBar {
+    width: 80%;
+    border: 1.5px solid #efefef;
+    background-color: #efefef;
+    border-radius: 0.2rem;
+    outline: none;
+    padding: 3px;
+    color: #c1c1c1;
+
+    font-family: 'GmarketSansLight';
+
+    &:focus {
+      border: 1.5px solid #efefef;
+      background-color: white;
+    }
+  }
+  .chatList {
+    &:hover {
+      cursor: pointer;
+      background-color: #efefef;
+      border-radius: 0.5rem;
+    }
+  }
   .myChat {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    overflow-y: auto;
     div {
       width: 50%;
       display: flex;

@@ -13,7 +13,10 @@ export default async function handler(
     if (req.method === 'GET') {
       const [users] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM user');
-      res.status(200).json(users);
+
+      if (users.length > 0) {
+        res.status(200).json(users);
+      }
     } else if (req.method === 'POST') {
       const { user_id, user_password, user_nickname }: userType = req.body;
 

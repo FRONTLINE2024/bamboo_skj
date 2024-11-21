@@ -17,6 +17,9 @@ interface IUser {
   accessToken: string | null;
   chat_content: string;
   user_password?: string;
+  senderID: number;
+  receiverID: number;
+  createAt: string;
 }
 
 const chatHandler = async (
@@ -27,8 +30,10 @@ const chatHandler = async (
 
   try {
     if (req.method === 'POST') {
-      const { chat_content, chat_user_id } = req.body;
+      const { chat_content, chat_user_id, receiverID } = req.body;
       const message = req.body as IMessage;
+      const senderID = chat_user_id;
+      // const receiverID = 38;
 
       console.log('message: ', message);
 
@@ -37,22 +42,31 @@ const chatHandler = async (
         [chat_user_id]
       );
 
-      const chat = await connection.execute<ResultSetHeader>(
-        `INSERT INTO chat (chat_user_id, chat_content, createAt) VALUES (?, ?, NOW() + INTERVAL 9 HOUR)`,
-        [chat_user_id, chat_content]
+      // 친구인지 판별하는 쿼리
+      const [areWeFriends] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE (userID = ? AND friendUserID = ?) OR (userID = ? AND friendUserID = ?)',
+        [chat_user_id, receiverID, receiverID, chat_user_id]
       );
 
-      let isKoreanEmitted = false;
-      if (checkKorean(chat_content) === true && !isKoreanEmitted) {
-        res.socket.server.emit('message', message);
-        isKoreanEmitted = true;
-      }
+      console.log('친구 판별', areWeFriends);
 
-      if (rows.length > 0) {
+      if (areWeFriends.length > 0) {
+        const [createChat] = await connection.execute<ResultSetHeader>(
+          `INSERT INTO chat (chat_user_id, chat_content, senderID, receiverID, createAt) VALUES (?, ?, ?, ?, NOW() + INTERVAL 9 HOUR)`,
+          [chat_user_id, chat_content, senderID, receiverID]
+        );
+
+        // let isKoreanEmitted = false;
+        // if (checkKorean(chat_content) === true && !isKoreanEmitted) {
+        //   res.socket.server.emit('message', message);
+        //   isKoreanEmitted = true;
+        // }
+
+        console.log('채팅 생성 성공!', createChat);
+
         const { user_password, ...data } = rows[0] as IUser;
-        console.log('user: ', user_password);
-
-        if (chat[0].affectedRows > 0) {
+        // console.log('user: ', user_password);
+        if (createChat.affectedRows > 0) {
           const Data = {
             ...data,
             chat_content,
@@ -62,7 +76,7 @@ const chatHandler = async (
           res.status(404).json({ message: 'Invalid Chat Data!' });
         }
       } else {
-        res.status(404).json({ message: 'User not found!' });
+        res.status(404).json({ message: 'Not Found Friend Info!' });
       }
     } else if (req.method === 'GET') {
       const [row] =

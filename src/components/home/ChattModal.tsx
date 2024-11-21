@@ -3,22 +3,17 @@ import ReactDOM from 'react-dom';
 import { ChattingContainer } from './styles';
 import { IoClose } from 'react-icons/io5';
 import { UseMutateFunction } from '@tanstack/react-query';
+import { messageType } from '@/types/chat';
 
 interface ChatModalType {
   children: React.ReactNode;
   openModal: () => void;
   sendMessages: UseMutateFunction<void, Error, void, unknown>;
   currentMessage: string;
-  setCurrentMessage: React.Dispatch<SetStateAction<string>>;
+  setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
 }
 
-const ChatModal = ({
-  children,
-  openModal,
-  sendMessages,
-  currentMessage,
-  setCurrentMessage,
-}: ChatModalType) => {
+const ChatModal = ({ children, openModal, sendMessages }: ChatModalType) => {
   const [chatRoot, setChatRoot] = useState<HTMLElement | null>(null);
   const [isComposing, setIsComposing] = useState<boolean>(false);
 
@@ -54,26 +49,16 @@ const ChatModal = ({
         <div onClick={openModal}>
           <IoClose
             style={{
-              marginRight: '0.4rem',
+              marginRight: '0.2rem',
               width: '20',
               height: '20',
               cursor: 'pointer',
-              color: 'white',
+              color: '#101010',
             }}
           />
         </div>
       </div>
       {children}
-      <div className="footer">
-        <textarea
-          onCompositionStart={handleCompositionStart}
-          onCompositionEnd={handleCompositionEnd}
-          onKeyDown={(e) => handleKeyDown(e)}
-          placeholder="채팅 예시"
-          value={currentMessage}
-          onChange={(e) => setCurrentMessage(e.target.value)}
-        />
-      </div>
     </ChattingContainer>,
     chatRoot
   );

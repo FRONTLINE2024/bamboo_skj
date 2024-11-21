@@ -61,7 +61,9 @@ export const addFriends = (body: {
 
 // 내 채팅 가져오기
 export const getMyChat = (chat_user_id: number) => {
-  return basicClient.get(`/chat/${chat_user_id}`);
+  return basicClient.get(`/chat/chatting`, {
+    params: { chat_user_id },
+  });
 };
 
 // 내가 받은 친구 요청 가져오기
