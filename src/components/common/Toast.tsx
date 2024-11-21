@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ToastContainer } from './styles';
+import { ToastContainer } from '@/styles/common/styles';
 
 interface ToastType {
   children: React.ReactNode;

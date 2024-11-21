@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
 
 // styles
-import { ChatData } from '../styles';
+import { ChatData } from '../../../styles/home/components/styles';
 import { Flex } from '@/styles/common/direction';
 
 // icons

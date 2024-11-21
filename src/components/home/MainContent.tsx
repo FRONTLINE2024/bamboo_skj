@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 
 // styles
 import { DeleteBtn, Main } from '@/styles/styles';
@@ -6,11 +7,10 @@ import { Flex } from '@/styles/common/direction';
 
 // libraries
 import Cookie from 'js-cookie';
+import { MutateOptions } from '@tanstack/react-query';
 
 // types
 import { BoardType } from '@/types/home';
-import { useEffect, useRef } from 'react';
-import { MutateOptions } from '@tanstack/react-query';
 
 interface MainContentType {
   data: BoardType[];

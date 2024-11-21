@@ -1,9 +1,16 @@
-import { signup } from '@/pages/api/clients/signup';
-import { ToastStateType } from '@/types/home';
-import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { SetStateAction } from 'react';
+
+// apis
+import { signup } from '@/pages/api/clients/signup';
+
+// types
+import { ToastStateType } from '@/types/home';
+
+// libraries
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+
 interface useUserLoginType {
   user_id: string;
   user_password: string;

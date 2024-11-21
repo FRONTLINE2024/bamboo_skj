@@ -1,7 +1,11 @@
+import { useRouter } from 'next/navigation';
+
+// apis
 import { postUserData } from '@/pages/api/clients/login';
+
+// libraries
 import { useMutation } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
-import { useRouter } from 'next/navigation';
 
 // Kakao data 타입 정의
 export interface KakaoData {

@@ -1,5 +1,4 @@
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // styles
 import { Flex } from '@/styles/common/direction';
@@ -12,27 +11,12 @@ import { ToastStateType } from '@/types/home';
 
 // icons
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
-import { useMutation } from '@tanstack/react-query';
-
-// apis
-import { signup } from '@/pages/api/clients/signup';
 
 // components
 import Toast from '@/components/common/Toast';
 import useUserLogin from '@/hooks/signup/useUserLogin';
 
-interface AxiosError {
-  response: {
-    data: {
-      stateCode: string;
-      stateText: string;
-    };
-  };
-  status: number;
-}
-
 const Signup = () => {
-  const router = useRouter();
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
     state: false,
@@ -66,6 +50,7 @@ const Signup = () => {
     }));
   }
 
+  // 로그인
   const { mutate: login } = useUserLogin({
     user_id,
     user_password,
@@ -74,6 +59,7 @@ const Signup = () => {
     handleToast,
   });
 
+  // 로그인 에러 처리 함수
   function signups() {
     if (user_id.length < 5) {
       setToastState((prev) => ({
@@ -91,6 +77,7 @@ const Signup = () => {
     handleToast();
   }
 
+  // Toast 메세지 handle
   function handleToast() {
     setToastState((prev) => ({
       ...prev,
@@ -103,11 +90,6 @@ const Signup = () => {
       }));
     }, 2500);
   }
-
-  useEffect(() => {
-    console.log('toastState: ', toastState);
-    console.log('singupData:', signupData);
-  }, [toastState, signupData]);
 
   return (
     <>

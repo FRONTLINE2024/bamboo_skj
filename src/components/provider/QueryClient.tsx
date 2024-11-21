@@ -1,5 +1,3 @@
-// Ensure this is in your provider setup correctly, which you seem to have:
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 

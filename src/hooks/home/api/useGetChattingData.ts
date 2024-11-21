@@ -1,5 +1,10 @@
+// apis
 import { getAllChattingData } from '@/pages/api/clients/home';
+
+// types
 import { ChattingDataType } from '@/types/chat';
+
+// libraries
 import { useQuery } from '@tanstack/react-query';
 
 const useGetChattingData = () => {

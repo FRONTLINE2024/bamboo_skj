@@ -1,4 +1,7 @@
+// apis
 import { getKaKaoUserData } from '@/pages/api/clients/login';
+
+// libraries
 import { useQuery } from '@tanstack/react-query';
 
 interface useGetUserKakoDataType {

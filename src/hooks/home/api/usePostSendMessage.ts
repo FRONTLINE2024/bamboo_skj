@@ -1,13 +1,18 @@
+import { SetStateAction } from 'react';
+
 // libraries
-import { postChatMessage } from '@/pages/api/clients/home';
-import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
 import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
-import { SetStateAction } from 'react';
+
+//apis
+import { postChatMessage } from '@/pages/api/clients/home';
+
+// types
+import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
 
 interface usePostSendMessageType {
   currentMessage: string;

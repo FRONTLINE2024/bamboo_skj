@@ -1,5 +1,4 @@
 import { createConnection } from '@/lib/db';
-import Cookies from 'js-cookie';
 import { RowDataPacket } from 'mysql2';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

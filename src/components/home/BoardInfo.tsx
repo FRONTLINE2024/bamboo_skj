@@ -6,6 +6,8 @@ import { ModifyBtn } from '@/styles/styles';
 
 // libraries
 import Cookie from 'js-cookie';
+
+// types
 import { BoardType } from '@/types/home';
 
 interface BoardInfoType {

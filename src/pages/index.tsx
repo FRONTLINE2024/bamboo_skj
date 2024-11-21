@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
-import { ChatDataType, messageType } from '@/types/chat';
+import { messageType } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -45,14 +45,13 @@ import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
 import useGetChattingData from '@/hooks/home/api/useGetChattingData';
 import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
 import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
+import useGetMyIndividualChat from '@/hooks/home/api/useGetMyIndividualChat';
 
 // context
 import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getMyChat } from './api/clients/home';
 
 const Home = () => {
   // 라우터
@@ -178,21 +177,8 @@ const Home = () => {
   const { data: chattingData, refetch: refetchChattingData } =
     useGetChattingData(); // 채팅 GET
 
-  const { data: myChat, refetch: getMyIndividualChat } = useQuery<
-    ChatDataType[]
-  >({
-    queryKey: ['getMyIndividualChat'],
-    queryFn: async () => {
-      const chat_user_id = Number(Cookie.get('user_index'));
-      const response = await getMyChat(chat_user_id);
-
-      return response.data;
-    },
-  });
-
-  // useEffect(() => {
-  //   getMyIndividualChat();
-  // }, []);
+  const { data: myChat, refetch: getMyIndividualChat } =
+    useGetMyIndividualChat(); // 1대1 채팅방 데이터 GET
 
   const { mutate: postBoard } = usePostBoardWrite({
     closeModalBoard,
@@ -390,11 +376,6 @@ const Home = () => {
       router.replace('/login');
     }
   }, []);
-
-  // useEffect(() => {
-  //   console.log('infiniteBoardData:', infiniteBoardData);
-  //   console.log('currentPage:', currentPage);
-  // }, [infiniteBoardData, currentPage]);
 
   const modalStates = [
     { isOpen: isOpened, close: closeModal },

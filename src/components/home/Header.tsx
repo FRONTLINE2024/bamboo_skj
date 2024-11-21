@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // styles
 import { HomeHeader, HomeInput } from '@/styles/styles';
+
 // icons
 import { FaUserCircle } from 'react-icons/fa';
 import { CiLogin } from 'react-icons/ci';
@@ -10,8 +12,9 @@ import { FaUserFriends } from 'react-icons/fa';
 
 // libraries
 import Cookie from 'js-cookie';
+
+// styles
 import { Flex } from '@/styles/common/direction';
-import { useRouter } from 'next/navigation';
 
 interface HeaderType {
   handleDropdown: () => void;

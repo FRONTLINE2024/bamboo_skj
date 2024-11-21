@@ -17,16 +17,14 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { userType } from '@/types/login';
 
 // apis
+import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
+import useGetFindUser from '@/hooks/login/api/useGetFindUser';
 
 // components
 import Toast from '@/components/common/Toast';
 
 // libraries
 import { ToastStateType } from '@/types/home';
-import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
-import useGetFindUser from '@/hooks/login/api/useGetFindUser';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 
 const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -98,28 +96,6 @@ const Login = () => {
   async function kakaoLogin() {
     findUser();
   }
-
-  const getFriendRequest = useMutation({
-    mutationKey: ['getMyChat'],
-    mutationFn: async () => {
-      const userID = 1;
-      // const response = await getMyChat(chat_user_id);
-      const response = await axios.get(`http://localhost:3000/api/friend`, {
-        params: { userID },
-      });
-
-      console.log(response);
-
-      return response;
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-
-  useEffect(() => {
-    getFriendRequest.mutate();
-  }, []);
 
   return (
     <>

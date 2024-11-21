@@ -1,7 +1,14 @@
-import { AllData } from '@/pages/api/clients/home';
-import { BoardType } from '@/types/home';
-import { useQuery } from '@tanstack/react-query';
 import { SetStateAction } from 'react';
+
+// apis
+import { AllData } from '@/pages/api/clients/home';
+
+// types
+import { BoardType } from '@/types/home';
+
+// libraries
+import { useQuery } from '@tanstack/react-query';
+
 interface useGetAllDataType {
   setData: React.Dispatch<SetStateAction<BoardType[]>>;
 }

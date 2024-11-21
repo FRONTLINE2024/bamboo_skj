@@ -13,6 +13,8 @@ import FriendList from './Friend/FriendList';
 
 // apis
 import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
+
+// libraries
 import Cookies from 'js-cookie';
 
 const FriendRequestUserList = () => {

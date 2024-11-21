@@ -1,7 +1,12 @@
-import { Flex } from '@/styles/common/direction';
-import { Nav, WriteBtn } from '@/styles/styles';
-import ModalBoard from './ModalBoard';
 import { useContext } from 'react';
+
+// styles
+import { Nav, WriteBtn } from '@/styles/styles';
+import { Flex } from '@/styles/common/direction';
+// components
+import ModalBoard from './ModalBoard';
+
+// context
 import { navContext } from '@/context/homeContext';
 
 const NavBar = () => {

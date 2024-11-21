@@ -1,14 +1,14 @@
+import { SetStateAction, useEffect } from 'react';
+
 // apis
-import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
-import usePostFriendAccept from '@/hooks/home/api/usePostFriendAccept';
-import {
-  acceptFriend,
-  addFriends,
-  getAllUser,
-  getMyFriendRequest,
-} from '@/pages/api/clients/home';
+import { addFriends, getAllUser } from '@/pages/api/clients/home';
+
+// styles
 import { FriendRequestContainer } from '@/styles/home/styles';
+
+// types
 import { userEntireType, userRequestType } from '@/types/home';
+
 // libraries
 import {
   QueryObserverResult,
@@ -18,7 +18,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { SetStateAction, useEffect } from 'react';
 
 interface UserListType {
   setRequestData: React.Dispatch<SetStateAction<userRequestType>>;

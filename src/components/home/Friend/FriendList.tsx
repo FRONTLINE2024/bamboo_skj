@@ -1,10 +1,5 @@
 // apis
-import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
-import {
-  acceptFriend,
-  addFriends,
-  deleteFriendss,
-} from '@/pages/api/clients/home';
+import { acceptFriend } from '@/pages/api/clients/home';
 
 // styles
 import { FriendRequestContainer } from '@/styles/home/styles';

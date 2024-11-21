@@ -1,5 +1,10 @@
+// apis
 import { acceptFriend } from '@/pages/api/clients/home';
+
+// types
 import { userRequestType } from '@/types/home';
+
+// libraries
 import {
   QueryObserverResult,
   RefetchOptions,

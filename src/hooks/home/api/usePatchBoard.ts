@@ -1,5 +1,10 @@
+// apis
 import { patchBoardData } from '@/pages/api/clients/home';
+
+// types
 import { BoardType } from '@/types/home';
+
+// libraries
 import {
   QueryObserverResult,
   RefetchOptions,

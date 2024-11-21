@@ -1,5 +1,10 @@
+// apis
 import { getMyFriendRequest } from '@/pages/api/clients/home';
+
+// types
 import { userRequestType } from '@/types/home';
+
+// libraries
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 

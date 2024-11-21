@@ -1,7 +1,13 @@
-import { DescendData } from '@/pages/api/clients/home';
-import { BoardType } from '@/types/home';
-import { useMutation } from '@tanstack/react-query';
 import { SetStateAction } from 'react';
+
+// apis
+import { DescendData } from '@/pages/api/clients/home';
+
+// types
+import { BoardType } from '@/types/home';
+
+// libraries
+import { useMutation } from '@tanstack/react-query';
 
 interface useGetDateDescendDataType {
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;

@@ -1,7 +1,13 @@
-import { getInfiniteData } from '@/pages/api/clients/home';
-import { BoardType } from '@/types/home';
-import { useMutation } from '@tanstack/react-query';
 import { SetStateAction, useCallback } from 'react';
+
+// apis
+import { getInfiniteData } from '@/pages/api/clients/home';
+
+// types
+import { BoardType } from '@/types/home';
+
+// libraries
+import { useMutation } from '@tanstack/react-query';
 
 interface useInfiniteScrollType {
   setInfiniteBoardData: React.Dispatch<SetStateAction<BoardType[]>>;

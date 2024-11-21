@@ -1,6 +1,8 @@
 import React, { SetStateAction, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ChattingContainer } from './styles';
+
+// styles
+import { ChattingContainer } from '../../styles/home/components/styles';
 import { IoClose } from 'react-icons/io5';
 import { UseMutateFunction } from '@tanstack/react-query';
 import { messageType } from '@/types/chat';

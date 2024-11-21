@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ModalContainer } from './styles';
+import { ModalContainer } from '@/styles/common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';

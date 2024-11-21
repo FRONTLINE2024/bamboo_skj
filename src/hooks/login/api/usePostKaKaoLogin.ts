@@ -1,12 +1,18 @@
+import { SetStateAction } from 'react';
+
+// apis
 import { getToken } from '@/pages/api/clients/login';
+import { KakaoData } from './usePostSignupKakaoLogin';
+
+// types
 import { accessTokenType } from '@/types/login';
+
+// libraries
 import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
-import { SetStateAction } from 'react';
-import { KakaoData } from './usePostSignupKakaoLogin';
 
 interface usePostKakaoLoginType {
   setAccessToken: React.Dispatch<SetStateAction<string>>;
