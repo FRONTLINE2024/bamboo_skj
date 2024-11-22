@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { ChatDataType, IMessage, messageType } from './chat';
+import { ChatDataType } from './chat';
 
 export interface ServerToClientEvents {
   basicEmit: (a: number, b: string, c: Buffer) => void;

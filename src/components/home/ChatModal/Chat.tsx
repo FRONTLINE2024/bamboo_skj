@@ -178,11 +178,6 @@ const Chat = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
-  // const handleSendMessage = () => {
-  //   const message = { currentMessage: 'Your message', receiverID: 1 }; // 임의의 메시지 구조
-  //   socket?.emit('message', message);
-  // };
-
   return (
     <ChatData>
       {chatData.length > 0 && (
