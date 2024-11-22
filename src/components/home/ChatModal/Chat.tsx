@@ -20,6 +20,8 @@ import { PiUserCircleFill } from 'react-icons/pi';
 import { GrSearch } from 'react-icons/gr';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { SlArrowUpCircle } from 'react-icons/sl';
+import { useSocket } from '@/components/provider/SocketWrapper';
+import axios from 'axios';
 
 interface ChatType {
   chattingData: ChattingDataType[] | undefined;
@@ -44,6 +46,8 @@ const Chat = ({
   setCurrentMessage,
 }: ChatType) => {
   // console.log('myChat: ', myChat);
+  // 소켓
+  const { socket } = useSocket();
   // 입력중인지 판단
   const [isComposing, setIsComposing] = useState<boolean>(false);
   // 채팅방 데이터
@@ -106,10 +110,6 @@ const Chat = ({
     }
   }, [myChat]);
 
-  // useEffect(() => {
-  //   processChattingRoom({ id, userNickname });
-  // },[])
-
   const handleCompositionStart = () => {
     setIsComposing(true);
     // console.log('입력 시작');
@@ -119,6 +119,27 @@ const Chat = ({
     setIsComposing(false);
     // console.log('입력 끝');
   };
+
+  // async function testInput() {
+  //   if (currentMessage.trim()) {
+  //     try {
+  //       const data = {
+  //         chat_user_id: Number(Cookies.get('user_index')),
+  //         chat_content: currentMessage,
+  //         receiverID: Number(Cookies.get('id')),
+  //       };
+  //       const response = await axios.post('/api/chat', data);
+
+  //       console.log('test input success', response);
+
+  //       if (response.status === 200) {
+  //         setCurrentMessage({ currentMessage: '', receiverID: 0 });
+  //       }
+  //     } catch (e) {
+  //       console.log('test input error', e);
+  //     }
+  //   }
+  // }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
@@ -133,8 +154,34 @@ const Chat = ({
 
   useEffect(() => {
     sorting();
-  }, []);
-  // <div ref={messageEndRef}></div>;
+  }, [myChat]);
+
+  useEffect(() => {
+    if (!socket) {
+      console.warn('No socket connection');
+      return;
+    }
+
+    console.log('Setting up socket listeners');
+
+    socket.on('message', (message: ChatDataType[]) => {
+      console.log('Message received:', message);
+      setChatData((prev) => [...prev, message[0]]);
+    });
+
+    // Cleanup
+    return () => {
+      console.log('Cleaning up socket listeners');
+      socket.off('message');
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
+
+  // const handleSendMessage = () => {
+  //   const message = { currentMessage: 'Your message', receiverID: 1 }; // 임의의 메시지 구조
+  //   socket?.emit('message', message);
+  // };
 
   return (
     <ChatData>

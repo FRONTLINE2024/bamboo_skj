@@ -1,5 +1,5 @@
 import { NextApiRequest } from 'next';
-import { IMessage } from '@/types/chat';
+import { ChatDataType, IMessage } from '@/types/chat';
 import { NextApiResponseServerIO } from '@/pages/api/socket/io';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
@@ -31,7 +31,10 @@ const chatHandler = async (
   try {
     if (req.method === 'POST') {
       const { chat_content, chat_user_id, receiverID } = req.body;
-      const message = req.body as IMessage;
+      const message = {
+        currentMessage: chat_content,
+        receiverID: receiverID,
+      };
       const senderID = chat_user_id;
       // const receiverID = 38;
 
@@ -48,7 +51,7 @@ const chatHandler = async (
         [chat_user_id, receiverID, receiverID, chat_user_id]
       );
 
-      console.log('친구 판별', areWeFriends);
+      // console.log('친구 판별', areWeFriends);
 
       if (areWeFriends.length > 0) {
         const [createChat] = await connection.execute<ResultSetHeader>(
@@ -56,13 +59,22 @@ const chatHandler = async (
           [chat_user_id, chat_content, senderID, receiverID]
         );
 
+        console.log('채팅 생성 성공', createChat);
+
         // let isKoreanEmitted = false;
         // if (checkKorean(chat_content) === true && !isKoreanEmitted) {
         //   res.socket.server.emit('message', message);
         //   isKoreanEmitted = true;
         // }
 
-        console.log('채팅 생성 성공!', createChat);
+        const [getChat] = await connection.execute(
+          'SELECT * FROM chat WHERE chat_id = ?',
+          [createChat.insertId]
+        );
+
+        console.log('채팅 생성 후 데이터 가져오기: ', getChat);
+
+        const changeType = getChat as ChatDataType[];
 
         const { user_password, ...data } = rows[0] as IUser;
         // console.log('user: ', user_password);
@@ -71,7 +83,10 @@ const chatHandler = async (
             ...data,
             chat_content,
           };
-          res.status(201).json(Data);
+
+          res.socket.server.io.emit('message', changeType);
+
+          res.status(201).json(getChat);
         } else {
           res.status(404).json({ message: 'Invalid Chat Data!' });
         }

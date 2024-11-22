@@ -28,7 +28,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     socket.on('connect', () => {
+      const message = { currentMessage: 'Connected', receiverID: 2 };
       setIsConnected(true);
+      console.log('Broadcasting message:', message);
     });
 
     socket.on('error', (error: Error) => {

@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
-import { messageType } from '@/types/chat';
+import { IMessage, messageType } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -53,6 +53,9 @@ import { navContext } from '@/context/homeContext';
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
+// context
+import { useSocket } from '@/components/provider/SocketWrapper';
+
 const Home = () => {
   // 라우터
   const router = useRouter();
@@ -61,6 +64,7 @@ const Home = () => {
     currentMessage: '',
     receiverID: 0,
   });
+  const { socket } = useSocket();
 
   const { currentMessage, receiverID } = message;
   // 컴포넌트 내에서
