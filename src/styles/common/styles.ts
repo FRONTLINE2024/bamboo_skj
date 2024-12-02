@@ -18,9 +18,9 @@ export const ModalContainer = styled.div<{ width: number; height: number }>`
   background-color: white;
   border-radius: 0.2rem;
   position: fixed;
-  top: 50%; // 수직 중앙
-  left: 50%; // 수평 중앙
-  transform: translate(-50%, -50%); // 중앙 정렬
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 500;
   animation: 0.5s ${showModal};
   overflow-y: auto;
@@ -60,22 +60,24 @@ const toastShow = keyframes`
 `;
 
 export const ToastContainer = styled.div`
-  width: 20vw;
+  width: 25vw;
   height: 40px;
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   top: 10%;
   left: 40%;
   box-shadow: 0px 1px 2px 1px gray;
   border-radius: 0.2rem;
   font-family: 'GmarketSansMedium';
+  background-color: white;
 
   animation: 0.5s ${toastShow};
 
   span {
-    margin-right: 1rem;
+    margin-right: 0.2rem;
+    margin-left: 0.6rem;
   }
 `;
 

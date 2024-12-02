@@ -20,10 +20,8 @@ const Toast = ({ children, stateCode }: ToastType) => {
   useEffect(() => {
     const firstChar = stateCode.charAt(0);
     if (firstChar === '4') {
-      // console.log('Error case handled');
       setIcon(messageIcon.error);
     } else if (firstChar === '2') {
-      // console.log('Correct case handled');
       setIcon(messageIcon.correct);
     }
   }, [stateCode]);

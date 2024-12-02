@@ -84,12 +84,26 @@ const Signup = () => {
     if (user_id.length < 5) {
       setToastState((prev) => ({
         ...prev,
+        stateCode: '404',
         stateText: '아이디는 4자리 이상으로 설정해주세요!',
+      }));
+    } else if (user_nickname === '' || user_nickname.length < 5) {
+      setToastState((prev) => ({
+        ...prev,
+        stateCode: '404',
+        stateText: '닉네임을 제대로 입력해주세요!',
       }));
     } else if (user_password !== passwordConfirm) {
       setToastState((prev) => ({
         ...prev,
+        stateCode: '404',
         stateText: '비밀번호가 다릅니다!',
+      }));
+    } else if (user_password === '' || passwordConfirm === '') {
+      setToastState((prev) => ({
+        ...prev,
+        stateCode: '404',
+        stateText: '비밀번호를 전부 입력해주세요!',
       }));
     } else {
       login(); // 비밀번호가 일치하는 경우 회원가입을 시도합니다.
@@ -145,7 +159,7 @@ const Signup = () => {
 
       {state && (
         <Toast stateCode={stateCode}>
-          <div>{stateText}</div>
+          <div style={{ width: '100%', textAlign: 'center' }}>{stateText}</div>
         </Toast>
       )}
 
