@@ -404,7 +404,12 @@ const Home = () => {
         handleFriendModal={handleFriendModal}
       />
       {friendRequestModal && (
-        <Modal openModal={handleFriendModal} modal={friendRequestModal}>
+        <Modal
+          width={50}
+          height={70}
+          openModal={handleFriendModal}
+          modal={friendRequestModal}
+        >
           <Friend />
         </Modal>
       )}
@@ -437,7 +442,7 @@ const Home = () => {
           getPagingBoard={getPagingBoard}
         />
         {isOpened && (
-          <Modal openModal={openModal} modal={isOpened}>
+          <Modal width={50} height={70} openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}
               boardModify={boardModify}

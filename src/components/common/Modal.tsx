@@ -8,8 +8,10 @@ interface ModalType {
   children: React.ReactNode;
   modal: boolean;
   openModal: () => void;
+  width: number;
+  height: number;
 }
-const Modal = ({ openModal, children }: ModalType) => {
+const Modal = ({ width, height, openModal, children }: ModalType) => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ const Modal = ({ openModal, children }: ModalType) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer>
+    <ModalContainer width={width} height={height}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">
@@ -33,7 +35,7 @@ const Modal = ({ openModal, children }: ModalType) => {
                 width: '20',
                 height: '20',
                 cursor: 'pointer',
-                color: 'white',
+                color: 'black',
               }}
             />
           </div>

@@ -1,5 +1,6 @@
 import { theme } from '@/styles/common/color';
 import styled, { keyframes } from 'styled-components';
+import { Flex } from './direction';
 
 const showModal = keyframes`
   0% {
@@ -11,14 +12,15 @@ const showModal = keyframes`
   }
 `;
 
-export const ModalContainer = styled.div`
-  width: 50vw;
-  max-height: 70vh;
+export const ModalContainer = styled.div<{ width: number; height: number }>`
+  width: ${({ width }) => width}vw;
+  height: ${({ height }) => height}vh;
   background-color: white;
   border-radius: 0.2rem;
   position: fixed;
-  top: 15%;
-  right: 25%;
+  top: 50%; // 수직 중앙
+  left: 50%; // 수평 중앙
+  transform: translate(-50%, -50%); // 중앙 정렬
   z-index: 500;
   animation: 0.5s ${showModal};
   overflow-y: auto;
@@ -34,13 +36,14 @@ export const ModalContainer = styled.div`
   }
 
   .modalHeader {
-    width: 50vw;
+    width: ${({ width }) => width}vw;
     position: fixed;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    background-color: ${theme.primary};
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 0.2rem 0.2rem 0 0;
+    margin-top: 0.5rem;
   }
 `;
 
@@ -73,5 +76,28 @@ export const ToastContainer = styled.div`
 
   span {
     margin-right: 1rem;
+  }
+`;
+
+export const SchoolContainer = styled.div`
+  margin-top: 2rem;
+  padding: 5px;
+
+  main {
+    margin-top: 0.3rem;
+    height: 50vh;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    div {
+      cursor: pointer;
+      &:hover {
+        background-color: #efefef;
+        border-radius: 0.2rem;
+      }
+    }
   }
 `;

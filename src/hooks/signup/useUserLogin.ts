@@ -15,6 +15,7 @@ interface useUserLoginType {
   user_id: string;
   user_password: string;
   user_nickname: string;
+  university: string;
   setToastState: React.Dispatch<SetStateAction<ToastStateType>>;
   handleToast(): void;
 }
@@ -23,6 +24,7 @@ const useUserLogin = ({
   user_id,
   user_password,
   user_nickname,
+  university,
   setToastState,
   handleToast,
 }: useUserLoginType) => {
@@ -35,6 +37,7 @@ const useUserLogin = ({
         user_id,
         user_password,
         user_nickname,
+        university,
       };
       const response = await signup(body);
 

@@ -120,27 +120,6 @@ const Chat = ({
     // console.log('입력 끝');
   };
 
-  // async function testInput() {
-  //   if (currentMessage.trim()) {
-  //     try {
-  //       const data = {
-  //         chat_user_id: Number(Cookies.get('user_index')),
-  //         chat_content: currentMessage,
-  //         receiverID: Number(Cookies.get('id')),
-  //       };
-  //       const response = await axios.post('/api/chat', data);
-
-  //       console.log('test input success', response);
-
-  //       if (response.status === 200) {
-  //         setCurrentMessage({ currentMessage: '', receiverID: 0 });
-  //       }
-  //     } catch (e) {
-  //       console.log('test input error', e);
-  //     }
-  //   }
-  // }
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault();

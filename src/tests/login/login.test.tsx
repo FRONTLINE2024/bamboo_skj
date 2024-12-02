@@ -5,7 +5,7 @@ import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { userType } from '@/types/login';
 import { useRouter } from 'next/navigation';
-import { login } from '../../pages/api/clients/login'; // API 호출 경로를 수정하세요
+import { login } from '../../pages/api/clients/login';
 import { act } from 'react';
 import { changeMessage, repeatInput } from '@/hooks/test';
 
@@ -83,7 +83,11 @@ describe('Login Page', () => {
     ]);
     fireEvent.click(btnElement);
 
-    const loginData = { user_id: 'testUser', user_password: 'test1' };
+    const loginData = {
+      user_id: 'testUser',
+      user_password: 'test1',
+      user_nickname: '유저 닉네임',
+    };
 
     const response = await logins(loginData);
 

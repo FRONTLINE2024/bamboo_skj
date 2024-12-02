@@ -1,20 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // styles
 import { Flex } from '@/styles/common/direction';
-import { SignupContainer } from '@/styles/signup/styles';
+import { SchoolInput, SignupContainer } from '@/styles/signup/styles';
 import { SignupButton } from '@/styles/login/styles';
 
 // types
-import { signupType } from '@/types/signup';
+import { signupType, universityType } from '@/types/signup';
 import { ToastStateType } from '@/types/home';
 
 // icons
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
+import { FaSchoolFlag } from 'react-icons/fa6';
+import { GrSearch } from 'react-icons/gr';
 
 // components
 import Toast from '@/components/common/Toast';
+import Modal from '@/components/common/Modal';
+
+// hooks
 import useUserLogin from '@/hooks/signup/useUserLogin';
+
+// constants
+import { universities } from '@/constants/universities';
+import { SchoolContainer } from '@/styles/common/styles';
+import Image from 'next/image';
 
 const Signup = () => {
   // toast boolean
@@ -26,21 +36,30 @@ const Signup = () => {
 
   const { state, stateCode, stateText } = toastState;
 
+  // 학교 모달
+  const [modalState, setModalState] = useState<boolean>(false);
+
   // signup data
   const [signupData, setSignupData] = useState<signupType>({
     user_id: '',
     user_password: '',
     user_nickname: '',
     passwordConfirm: '',
+    university: '',
   });
 
-  const { user_id, user_password, user_nickname, passwordConfirm } = signupData;
+  const { user_id, user_password, user_nickname, passwordConfirm, university } =
+    signupData;
 
   // password show
   const [isShowed, setIsShowed] = useState<boolean>(false);
 
   function handlePwd() {
     setIsShowed(!isShowed);
+  }
+
+  function handleModal() {
+    setModalState(!modalState);
   }
 
   function handleLoginDate(sort: string, value: string) {
@@ -55,6 +74,7 @@ const Signup = () => {
     user_id,
     user_password,
     user_nickname,
+    university,
     setToastState,
     handleToast,
   });
@@ -91,9 +111,37 @@ const Signup = () => {
     }, 2500);
   }
 
+  // 학교 가져오기
+  function getUniversity(university: universityType) {
+    setSignupData((prev) => ({
+      ...prev,
+      university: university.name,
+    }));
+    handleModal();
+  }
+
+  useEffect(() => {
+    console.log('signupData: ', signupData);
+  }, [signupData]);
+
   return (
     <>
       <div id="toast_message"></div>
+      <div id="modal-container"></div>
+      {modalState && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 2,
+          }}
+          onClick={handleModal}
+        />
+      )}
 
       {state && (
         <Toast stateCode={stateCode}>
@@ -106,7 +154,7 @@ const Signup = () => {
           style={{
             ...Flex,
             flexDirection: 'column',
-            height: '60%',
+            height: '65%',
             justifyContent: 'space-between',
             transform: 'translateY(-10%)',
           }}
@@ -170,6 +218,68 @@ const Signup = () => {
                 }
               />
             </div>
+
+            <div className="inputContainer" onClick={handleModal}>
+              <FaSchoolFlag />
+              <input style={{ cursor: 'pointer' }} defaultValue={university} />
+            </div>
+            {modalState && (
+              <Modal
+                width={40}
+                height={60}
+                modal={modalState}
+                openModal={handleModal}
+              >
+                <SchoolContainer>
+                  <header
+                    style={{
+                      ...Flex,
+                      justifyContent: 'space-around',
+                    }}
+                  >
+                    <SchoolInput />
+                    <GrSearch size={20} />
+                  </header>
+                  <main>
+                    {universities.map((university, i) => {
+                      return (
+                        <div
+                          key={i}
+                          style={{
+                            ...Flex,
+                            justifyContent: 'space-between',
+                            padding: '3px 10px',
+                            fontFamily: 'GmarketSansMedium',
+                          }}
+                          onClick={() => getUniversity(university)}
+                        >
+                          <div
+                            style={{
+                              ...Flex,
+                              justifyContent: 'flex-start',
+                            }}
+                          >
+                            <Image
+                              src={university.img}
+                              alt="학교 이미지"
+                              width={30}
+                              height={30}
+                              style={{
+                                marginRight: '10px',
+                                objectFit: 'contain',
+                              }}
+                            />{' '}
+                            {university.name}
+                          </div>
+
+                          <div></div>
+                        </div>
+                      );
+                    })}
+                  </main>
+                </SchoolContainer>
+              </Modal>
+            )}
           </div>
 
           <SignupButton onClick={signups}>회원가입</SignupButton>

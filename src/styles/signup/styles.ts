@@ -46,4 +46,37 @@ export const SignupContainer = styled.div`
       border: 2px solid ${theme.primary};
     }
   }
+
+  select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  option {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+`;
+
+export const SchoolInput = styled.input`
+  width: 85%;
+  height: 20px;
+  outline: none;
+  border-radius: 0.2rem;
+  border: 1px solid #e1e1e1;
+  background-color: #efefef;
+  font-family: 'GmarketSansMedium';
+  padding: 3px;
+
+  &:focus {
+    background-color: white;
+  }
 `;
