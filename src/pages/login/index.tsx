@@ -42,6 +42,7 @@ const Login = () => {
     user_id: '',
     user_nickname: '',
     user_password: '',
+    university: '',
   });
 
   const userIndex = isClient && localStorage.getItem('user_index');

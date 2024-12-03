@@ -16,6 +16,8 @@ export default async function handler(
         [user_id]
       );
 
+      console.log('kakao login?: ', rows);
+
       if (rows.length === 0) {
         const [row] = await connection.execute<ResultSetHeader>(
           'INSERT INTO user (user_id, user_nickname, profile_image, accessToken) VALUES (?, ?, ?, ?)',
@@ -28,11 +30,17 @@ export default async function handler(
           profile_image,
           accessToken,
         };
+
         res.status(201).json(data);
       } else {
-        res
-          .status(409)
-          .json({ success: false, message: 'User already exists' }); // 409: Conflict
+        const existingUser = rows[0];
+        const data = {
+          user_index: existingUser.user_index,
+          user_nickname: existingUser.user_nickname,
+          profile_image: existingUser.profile_image,
+          accessToken: existingUser.accessToken,
+        };
+        res.status(200).json(data);
       }
     }
   } catch (e) {
