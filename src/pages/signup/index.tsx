@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 
 // styles
 import { Flex } from '@/styles/common/direction';
-import { SchoolInput, SignupContainer } from '@/styles/signup/styles';
-import { SignupButton } from '@/styles/login/styles';
+import {
+  SchoolInput,
+  SignupContainer,
+  InputContainer,
+  Container,
+} from '@/styles/signup/styles';
+import { LoginButton, SignupButton } from '@/styles/login/styles';
 
 // types
 import { signupType, universityType } from '@/types/signup';
@@ -22,7 +27,13 @@ import Modal from '@/components/common/Modal';
 import useUserLogin from '@/hooks/signup/useUserLogin';
 
 // constants
-import { universities } from '@/constants/universities';
+import {
+  universities,
+  universityBlue,
+  universityRed,
+  universityGreen,
+  universityGray,
+} from '@/constants/universities';
 import { SchoolContainer } from '@/styles/common/styles';
 import Image from 'next/image';
 
@@ -46,10 +57,14 @@ const Signup = () => {
     user_nickname: '',
     passwordConfirm: '',
     university: '',
+    logo: null,
   });
 
   const { user_id, user_password, user_nickname, passwordConfirm, university } =
     signupData;
+
+  // border color
+  const [borderColor, setBorderColor] = useState<string>('');
 
   // password show
   const [isShowed, setIsShowed] = useState<boolean>(false);
@@ -127,19 +142,40 @@ const Signup = () => {
 
   // 학교 가져오기
   function getUniversity(university: universityType) {
+    const { img, name } = university;
     setSignupData((prev) => ({
       ...prev,
-      university: university.name,
+      university: name,
+      logo: img,
     }));
+
+    const colorMap = {
+      '#0B4A8F': universityBlue,
+      '#42AE37': universityGreen,
+      '#D60F14': universityRed,
+      '#8B7E75': universityGray,
+    };
+
+    let borderColor = '#FF6500'; // 기본 색상
+
+    for (const [color, universities] of Object.entries(colorMap)) {
+      if (universities.includes(name)) {
+        borderColor = color;
+        break; // 원하는 값을 찾으면 루프 종료
+      }
+    }
+    setBorderColor(borderColor);
+
     handleModal();
   }
 
   useEffect(() => {
     console.log('signupData: ', signupData);
-  }, [signupData]);
+    console.log('borderColor: ', borderColor);
+  }, [signupData, borderColor]);
 
   return (
-    <>
+    <Container $borderColor={borderColor}>
       <div id="toast_message"></div>
       <div id="modal-container"></div>
       {modalState && (
@@ -168,7 +204,7 @@ const Signup = () => {
           style={{
             ...Flex,
             flexDirection: 'column',
-            height: '65%',
+            height: '75%',
             justifyContent: 'space-between',
             transform: 'translateY(-10%)',
           }}
@@ -233,10 +269,29 @@ const Signup = () => {
               />
             </div>
 
-            <div className="inputContainer" onClick={handleModal}>
-              <FaSchoolFlag />
-              <input style={{ cursor: 'pointer' }} defaultValue={university} />
-            </div>
+            <InputContainer $borderColor={borderColor} onClick={handleModal}>
+              {signupData.logo ? (
+                <Image
+                  src={signupData.logo?.src}
+                  alt="대학로고"
+                  width={25}
+                  height={25}
+                  style={{
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                <FaSchoolFlag />
+              )}
+
+              <input
+                style={{
+                  cursor: 'pointer',
+                  paddingLeft: '3px',
+                }}
+                defaultValue={university}
+              />
+            </InputContainer>
             {modalState && (
               <Modal
                 width={40}
@@ -297,9 +352,10 @@ const Signup = () => {
           </div>
 
           <SignupButton onClick={signups}>회원가입</SignupButton>
+          <LoginButton>취소</LoginButton>
         </div>
       </SignupContainer>
-    </>
+    </Container>
   );
 };
 

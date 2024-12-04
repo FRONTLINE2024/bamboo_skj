@@ -71,11 +71,11 @@ export const universities: universityType[] = [
     img: Seogang,
   },
   {
-    name: 'GIST (광주과학기술원)',
+    name: 'GIST(광주과학기술원)',
     img: Gwangju,
   },
   {
-    name: '이화여대학교',
+    name: '이화여자대학교',
     img: EwhaWomans,
   },
   {
@@ -127,7 +127,7 @@ export const universities: universityType[] = [
     img: Chungnam,
   },
   {
-    name: '서울 시립대학교',
+    name: '서울시립대학교',
     img: UniversityOfSeoul,
   },
   {
@@ -151,3 +151,43 @@ export const universities: universityType[] = [
     img: Chungbuk,
   },
 ];
+
+export const universityBlue = [
+  '서울대학교',
+  'KAIST(한국과학기술원)',
+  '연세대학교',
+  '한양대학교',
+  'UNIST(율산과학기술원)',
+  '중앙대학교',
+  '아주대학교',
+  '부산대학교',
+  '인하대학교',
+  '영남대학교',
+  '전북대학교',
+  '충남대학교',
+  '서울시립대학교',
+  '한림대학교',
+  '강원대학교',
+];
+
+export const universityRed = [
+  '고려대학교',
+  '포항공과대학교',
+  '경희대학교',
+  '서강대학교',
+  'GIST(광주과학기술원)',
+  '경북대학교',
+  '세종대학교',
+  '가톨릭대학교',
+  '충북대학교',
+];
+
+export const universityGreen = [
+  '성균관대학교',
+  '이화여자대학교',
+  '울산대학교',
+  '건국대학교',
+  '전남대학교',
+];
+
+export const universityGray = ['동국대학교'];

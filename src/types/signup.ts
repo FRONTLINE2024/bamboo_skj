@@ -6,6 +6,7 @@ export interface signupType {
   user_nickname: string;
   passwordConfirm: string;
   university: string;
+  logo: StaticImageData | null;
 }
 
 export interface kakaoSignupType {
