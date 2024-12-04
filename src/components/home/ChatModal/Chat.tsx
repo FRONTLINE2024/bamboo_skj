@@ -21,8 +21,11 @@ import { PiUserCircleFill } from 'react-icons/pi';
 import { GrSearch } from 'react-icons/gr';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { SlArrowUpCircle } from 'react-icons/sl';
+
+// components
 import { useSocket } from '@/components/provider/SocketWrapper';
-import axios from 'axios';
+
+// constants
 import { universities } from '@/constants/universities';
 
 interface ChatType {
@@ -73,7 +76,7 @@ const Chat = ({
   function sorting() {
     const myList: listType[] = [];
 
-    const nameList = myChat?.map((chat) => {
+    myChat?.map((chat) => {
       const userNickname = String(chat.chat_user_nickname);
       if (!myList.some((item) => item.userNickname === userNickname)) {
         const id =

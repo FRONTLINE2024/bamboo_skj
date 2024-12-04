@@ -1,6 +1,5 @@
 import { useState } from 'react';
 // apis
-import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
 import usePostFriendAccept from '@/hooks/home/api/usePostFriendAccept';
 
 // styles

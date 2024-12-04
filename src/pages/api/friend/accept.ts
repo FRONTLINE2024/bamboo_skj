@@ -1,6 +1,6 @@
 import { createConnection } from '../../../lib/db';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
+import { RowDataPacket } from 'mysql2/promise';
 
 export default async function handler(
   req: NextApiRequest,

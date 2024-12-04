@@ -48,7 +48,7 @@ export default async function handler(
         { expiresIn: '1h' }
       );
 
-      const insultToken = await connection.execute(
+      await connection.execute(
         'UPDATE user SET accessToken = ? WHERE user_id = ?',
         [token, user.user_id]
       );

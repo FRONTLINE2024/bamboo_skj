@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { MutableRefObject, useEffect, useState } from 'react';
+import { MutableRefObject, useState } from 'react';
 
 // styles
 import { ModifyBtn } from '@/styles/styles';

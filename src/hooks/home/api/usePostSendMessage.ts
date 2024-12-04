@@ -28,9 +28,7 @@ interface usePostSendMessageType {
 
 const usePostSendMessage = ({
   currentMessage,
-  receiverID,
   setCurrentMessage,
-  refetchChattingData,
   getMyIndividualChat,
 }: usePostSendMessageType) => {
   return useMutation({

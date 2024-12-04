@@ -10,5 +10,7 @@ export const selectedPost = atom<BoardType>({
     board_content: '',
     board_img: '',
     createdAt: '',
+    university: '',
+    user_nickname: '',
   },
 });

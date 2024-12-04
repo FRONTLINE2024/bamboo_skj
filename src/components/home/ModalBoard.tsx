@@ -24,7 +24,7 @@ const ModalBoard = ({ openModal, children }: ModalType) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer>
+    <ModalContainer width={30} height={70}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">

@@ -15,9 +15,8 @@ interface ChatModalType {
   setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
 }
 
-const ChatModal = ({ children, openModal, sendMessages }: ChatModalType) => {
+const ChatModal = ({ children, openModal }: ChatModalType) => {
   const [chatRoot, setChatRoot] = useState<HTMLElement | null>(null);
-  const [isComposing, setIsComposing] = useState<boolean>(false);
 
   useEffect(() => {
     const root = document.querySelector('#modal-chat') as HTMLElement | null;
@@ -25,25 +24,6 @@ const ChatModal = ({ children, openModal, sendMessages }: ChatModalType) => {
   }, []);
 
   if (!chatRoot) return null;
-
-  const handleCompositionStart = () => {
-    setIsComposing(true);
-    console.log('입력 시작');
-  };
-
-  const handleCompositionEnd = () => {
-    setIsComposing(false);
-    console.log('입력 끝');
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // console.log(`Key pressed: ${e.key}, Composing: ${isComposing}`);
-    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
-      e.preventDefault();
-      // console.log('Sending message');
-      sendMessages();
-    }
-  };
 
   return ReactDOM.createPortal(
     <ChattingContainer>

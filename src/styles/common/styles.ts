@@ -1,6 +1,4 @@
-import { theme } from '@/styles/common/color';
 import styled, { keyframes } from 'styled-components';
-import { Flex } from './direction';
 
 const showModal = keyframes`
   0% {

@@ -15,7 +15,6 @@ import {
   RefetchOptions,
   useMutation,
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 
@@ -34,8 +33,6 @@ const UserList = ({
   requestFriend,
   friendUserID,
 }: UserListType) => {
-  // queryClient 얻기
-  const queryClient = useQueryClient();
   // 전체 유저 가져오기
   const { data: Alldata, refetch: getEntireUser } = useQuery<userEntireType[]>({
     queryKey: ['getEntireUser'],
