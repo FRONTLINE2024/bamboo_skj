@@ -1,4 +1,5 @@
 import { SetStateAction, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 // libraries
 import {
@@ -22,6 +23,7 @@ import { TbArrowBackUp } from 'react-icons/tb';
 import { SlArrowUpCircle } from 'react-icons/sl';
 import { useSocket } from '@/components/provider/SocketWrapper';
 import axios from 'axios';
+import { universities } from '@/constants/universities';
 
 interface ChatType {
   chattingData: ChattingDataType[] | undefined;
@@ -37,6 +39,7 @@ interface ChatType {
 interface listType {
   id: number;
   userNickname: string;
+  university: string;
 }
 
 const Chat = ({
@@ -45,7 +48,7 @@ const Chat = ({
   currentMessage,
   setCurrentMessage,
 }: ChatType) => {
-  // console.log('myChat: ', myChat);
+  console.log('myChat: ', myChat);
   // 소켓
   const { socket } = useSocket();
   // 입력중인지 판단
@@ -57,6 +60,7 @@ const Chat = ({
     {
       id: 0,
       userNickname: '',
+      university: '',
     },
   ]);
   // 스크롤 감지 DOM
@@ -76,7 +80,7 @@ const Chat = ({
           Number(Cookies.get('user_index')) === chat.receiverID
             ? chat.senderID
             : chat.receiverID;
-        myList.push({ id, userNickname });
+        myList.push({ id, userNickname, university: chat.university });
       }
     });
 
@@ -141,21 +145,36 @@ const Chat = ({
       return;
     }
 
-    console.log('Setting up socket listeners');
-
     socket.on('message', (message: ChatDataType[]) => {
-      console.log('Message received:', message);
+      // console.log('Message received:', message);
       setChatData((prev) => [...prev, message[0]]);
     });
 
-    // Cleanup
     return () => {
-      console.log('Cleaning up socket listeners');
       socket.off('message');
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
+
+  function sortingLogo(universityName: string) {
+    if (universityName) {
+      const logo = universities.filter(
+        (university) => university.name === universityName
+      );
+      // console.log(logo);
+
+      return (
+        <Image
+          src={logo[0].img.src}
+          alt="대학교로고"
+          width={25}
+          height={25}
+          style={{ objectFit: 'contain' }}
+        />
+      );
+    }
+  }
 
   return (
     <ChatData>
@@ -218,7 +237,11 @@ const Chat = ({
                 onClick={() => processChattingRoom(user)}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <PiUserCircleFill size={30} color="#e1e1e1" />
+                  {user.university ? (
+                    sortingLogo(user.university)
+                  ) : (
+                    <PiUserCircleFill size={30} color="#e1e1e1" />
+                  )}
                 </div>
 
                 <div

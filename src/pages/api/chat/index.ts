@@ -4,11 +4,6 @@ import { NextApiResponseServerIO } from '@/pages/api/socket/io';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
-function checkKorean(str: string) {
-  const regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-  return regex.test(str);
-}
-
 interface IUser {
   user_index: number;
   user_id: string;
@@ -61,12 +56,6 @@ const chatHandler = async (
 
         console.log('채팅 생성 성공', createChat);
 
-        // let isKoreanEmitted = false;
-        // if (checkKorean(chat_content) === true && !isKoreanEmitted) {
-        //   res.socket.server.emit('message', message);
-        //   isKoreanEmitted = true;
-        // }
-
         const [getChat] = await connection.execute(
           'SELECT * FROM chat WHERE chat_id = ?',
           [createChat.insertId]
@@ -109,8 +98,15 @@ const chatHandler = async (
             return u.user_id;
           }
         });
-        return { ...d, chat_user_nickname: addUserId[0].user_nickname };
+
+        return {
+          ...d,
+          chat_user_nickname: addUserId[0].user_nickname,
+          // university: addUserId[0].university,
+        };
       });
+
+      console.log('inputUserId:', inputUserId);
 
       if (row.length > 0) {
         res.status(200).json(inputUserId);

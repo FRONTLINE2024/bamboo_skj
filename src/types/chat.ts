@@ -19,6 +19,7 @@ export interface ChatDataType {
   receiverID: number;
   senderID: number;
   chat_user_nickname: string;
+  university: string;
 }
 
 export interface messageType {
