@@ -1,14 +1,18 @@
 import Image from 'next/image';
-import { MutableRefObject, useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
 // styles
 import { ModifyBtn } from '@/styles/styles';
+import { Flex } from '@/styles/common/direction';
 
 // libraries
 import Cookie from 'js-cookie';
 
 // types
 import { BoardType } from '@/types/home';
+
+// constants
+import { universities } from '@/constants/universities';
 
 interface BoardInfoType {
   selected: BoardType;
@@ -36,17 +40,32 @@ const BoardInfo = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // 선택된 파일의 URL 생성
       const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl); // 미리보기 이미지 설정
+      setPreviewImage(imageUrl);
 
-      // handleSelectedImg가 선택된 파일 처리
       handleSelectedImg(e);
-
-      // 파일 URL 해제(메모리 누수 방지)
       return () => URL.revokeObjectURL(imageUrl);
     }
   };
+
+  function sortingLogo(universityName: string) {
+    if (universityName) {
+      const logo = universities.filter(
+        (university) => university.name === universityName
+      );
+      // console.log(logo);
+
+      return (
+        <Image
+          src={logo[0].img.src}
+          alt="대학교로고"
+          width={25}
+          height={25}
+          style={{ objectFit: 'contain' }}
+        />
+      );
+    }
+  }
 
   return (
     <div
@@ -71,6 +90,18 @@ const BoardInfo = ({
         ) : (
           selected.board_title
         )}
+      </div>
+      <div
+        style={{
+          ...Flex,
+          width: '200px',
+          height: '30px',
+          justifyContent: 'flex-start',
+          fontFamily: 'GmarketSansBold',
+        }}
+      >
+        {sortingLogo(selected.university)}
+        <span style={{ marginLeft: '5px' }}>{selected.user_nickname}</span>
       </div>
       <div className="date">
         {' '}

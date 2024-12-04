@@ -81,11 +81,13 @@ const Home = () => {
   const [, setData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 게시글 입력 데이터
@@ -106,11 +108,13 @@ const Home = () => {
   const [infiniteBoardData, setInfiniteBoardData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 무한 페이지 컨트롤
@@ -388,6 +392,10 @@ const Home = () => {
     { isOpen: friendRequestModal, close: closeFriendModal },
   ];
 
+  // useEffect(() => {
+  //   console.log('선택된 게시글 데이터: ', selected);
+  // }, [selected]);
+
   return (
     <Container>
       <div id="modal-container"></div>
@@ -442,7 +450,7 @@ const Home = () => {
           getPagingBoard={getPagingBoard}
         />
         {isOpened && (
-          <Modal width={50} height={70} openModal={openModal} modal={isOpened}>
+          <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}
               boardModify={boardModify}

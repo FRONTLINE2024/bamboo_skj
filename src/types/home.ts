@@ -7,6 +7,8 @@ export interface BoardType {
   board_user_id: string;
   board_img: File | string | null;
   createdAt: string;
+  university: string;
+  user_nickname: string;
 }
 
 export interface ToastStateType {

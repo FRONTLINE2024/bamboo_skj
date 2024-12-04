@@ -17,8 +17,18 @@ export default async function handler(
         [id]
       );
 
+      const [userData] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM user WHERE user_index = ?',
+        [rows[0].board_user_id]
+      );
+
       if (rows.length > 0) {
-        res.status(200).json({ sucess: true, data: rows[0] });
+        const data = {
+          ...rows[0],
+          university: userData[0].university,
+          user_nickname: userData[0].user_nickname,
+        };
+        res.status(200).json({ sucess: true, data });
       } else {
         res.status(404).json({ sucess: false, message: 'Board Not Exists!' });
       }

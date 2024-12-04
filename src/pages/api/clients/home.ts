@@ -32,7 +32,9 @@ export const patchBoardData = (body: FormData) => {
 };
 
 export const getSpecificBoard = (id: number) => {
-  return basicClient.get(`/board/${id}`);
+  return basicClient.get(`/board/id`, {
+    params: { id },
+  });
 };
 
 export const getAllChattingData = () => {

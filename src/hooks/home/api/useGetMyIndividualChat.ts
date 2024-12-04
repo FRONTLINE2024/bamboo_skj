@@ -19,7 +19,7 @@ const useGetMyIndividualChat = () => {
         throw new Error('채팅이 존재하지 않습니다!');
       }
 
-      console.log(response);
+      // console.log(response);
       return response.data;
     },
   });
