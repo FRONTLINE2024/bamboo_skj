@@ -440,17 +440,18 @@ const Home = () => {
       >
         <navContext.Provider
           value={{
-            isBoardOpened,
-            setIsBoardOpened,
-            openModalBoard,
             inputBoardData,
             writeBoard,
-            sortingBoards,
             handleBoardImg,
+            sortingBoards,
             sortValues,
           }}
         >
-          <NavBar />
+          <NavBar
+            setIsBoardOpened={setIsBoardOpened}
+            isBoardOpened={isBoardOpened}
+            openModalBoard={openModalBoard}
+          />
         </navContext.Provider>
         <MainContent
           data={infiniteBoardData}

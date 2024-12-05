@@ -246,6 +246,7 @@ const Chat = ({
           />
         </div>
       )}
+
       {chatData.length === 0 && (
         <header style={{ display: 'flex', justifyContent: 'space-evenly' }}>
           <input className="chatUserSearchBar" />
@@ -315,6 +316,7 @@ const Chat = ({
               </div>
             );
           })}
+
       {chatData.length > 0 && (
         <div className="footer">
           <input
@@ -333,6 +335,7 @@ const Chat = ({
           <SlArrowUpCircle size={25} />
         </div>
       )}
+
       {chatData.length > 0 && (
         <div className="footer">
           <input

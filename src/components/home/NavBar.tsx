@@ -1,28 +1,24 @@
-import { useContext } from 'react';
+import { SetStateAction, useContext } from 'react';
 
 // styles
 import { Nav, WriteBtn } from '@/styles/styles';
 import { Flex } from '@/styles/common/direction';
 // components
 import ModalBoard from './ModalBoard';
+import ModalBoardContent from '../ModalBoard/ModalBoardContent';
+import SortSelect from '../ModalBoard/SortSelect';
 
-// context
-import { navContext } from '@/context/homeContext';
+interface NavBarType {
+  setIsBoardOpened: React.Dispatch<SetStateAction<boolean>>;
+  isBoardOpened: boolean;
+  openModalBoard: () => void;
+}
 
-const NavBar = () => {
-  const context = useContext(navContext);
-
-  const {
-    setIsBoardOpened,
-    isBoardOpened,
-    openModalBoard,
-    inputBoardData,
-    handleBoardImg,
-    writeBoard,
-    sortingBoards,
-    sortValues,
-  } = context;
-
+const NavBar = ({
+  setIsBoardOpened,
+  isBoardOpened,
+  openModalBoard,
+}: NavBarType) => {
   return (
     <Nav>
       <div></div>
@@ -31,49 +27,10 @@ const NavBar = () => {
         <WriteBtn onClick={() => setIsBoardOpened(true)}>작성</WriteBtn>
         {isBoardOpened && (
           <ModalBoard modal={isBoardOpened} openModal={openModalBoard}>
-            <div className="boardWriteContainer">
-              <div className="boardWriteTitle">
-                <input
-                  className="boardTitleInput"
-                  placeholder="제목"
-                  onChange={(e) =>
-                    inputBoardData('board_title', e.target.value)
-                  }
-                />
-              </div>
-              <textarea
-                className="boardContent"
-                placeholder="글 내용 작성"
-                onChange={(e) =>
-                  inputBoardData('board_content', e.target.value)
-                }
-              />
-              <div className="boardWriteFile">
-                <label htmlFor="file">
-                  <div className="btnUpload">이미지 업로드</div>
-                </label>
-                <input
-                  type="file"
-                  name="file"
-                  id="file"
-                  onChange={(e) => handleBoardImg(e)}
-                />
-                <WriteBtn onClick={writeBoard}>작성 완료</WriteBtn>
-              </div>
-            </div>
+            <ModalBoardContent />
           </ModalBoard>
         )}
-        <select
-          name="sortValue"
-          id="sortValue"
-          onChange={(e) => sortingBoards(e.target.value)}
-        >
-          {sortValues.map((v, i) => (
-            <option className="sortButton" key={i} value={v}>
-              {v}
-            </option>
-          ))}
-        </select>
+        <SortSelect />
       </div>
     </Nav>
   );
