@@ -361,16 +361,29 @@ const Home = () => {
   };
 
   function sortingBoards(value: string) {
+    let sorting;
+
     switch (value) {
       case '최신순':
-        getDateDescendDataFunc();
+        sorting = [...infiniteBoardData].sort((a, b) =>
+          b.createdAt.localeCompare(a.createdAt)
+        );
+        setInfiniteBoardData(sorting);
         break;
       case '오래된 순':
-        getDateAscendDataFunc();
+        sorting = [...infiniteBoardData].sort((a, b) =>
+          a.createdAt.localeCompare(b.createdAt)
+        );
+        setInfiniteBoardData(sorting);
         break;
       case '이름순':
-        getContentAscendDataFuncs();
+        sorting = [...infiniteBoardData].sort((a, b) =>
+          a.board_title.localeCompare(b.board_title)
+        );
+        setInfiniteBoardData(sorting);
         break;
+      default:
+        break; // 기본값 추가
     }
   }
 

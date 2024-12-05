@@ -228,9 +228,9 @@ export const Nav = styled.nav`
   .sortButton {
     width: auto;
     height: 30px;
-    padding: 10px;
     display: flex;
     align-items: center;
+    text-align: center;
     border: 1px solid #e2e2e2;
     background-color: #f5f5f5;
     font-family: 'GmarketSansMedium';
