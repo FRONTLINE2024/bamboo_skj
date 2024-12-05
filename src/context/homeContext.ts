@@ -2,6 +2,7 @@ import { SetStateAction, createContext } from 'react';
 
 // types
 import { messageType } from '@/types/chat';
+import { BoardType } from '@/types/home';
 
 // 상태 타입 정의
 export interface NavContextType {
@@ -17,6 +18,16 @@ export interface ChatContextType {
   setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
 }
 
+export interface BoardContextType {
+  inputSelectedBoardData: (sort: string, value: string | number) => void;
+  selected: BoardType;
+  boardModify: boolean;
+  handleImageClick: () => void;
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  PatchBoardData(): void;
+  modifyChange(): void;
+}
+
 // Context 생성 및 초기값 설정
 export const navContext = createContext<NavContextType>({
   inputBoardData: () => {},
@@ -29,4 +40,23 @@ export const navContext = createContext<NavContextType>({
 export const chatContext = createContext<ChatContextType>({
   currentMessage: '',
   setCurrentMessage: () => {},
+});
+
+export const boardContext = createContext<BoardContextType>({
+  inputSelectedBoardData: () => {},
+  selected: {
+    id: 0,
+    board_title: '',
+    board_content: '',
+    board_user_id: '',
+    board_img: '',
+    createdAt: '',
+    university: '',
+    user_nickname: '',
+  },
+  boardModify: false,
+  handleImageClick: () => {},
+  fileInputRef: { current: null },
+  PatchBoardData: () => {},
+  modifyChange: () => {},
 });

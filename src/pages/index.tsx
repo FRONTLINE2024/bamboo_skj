@@ -48,7 +48,7 @@ import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 import useGetMyIndividualChat from '@/hooks/home/api/useGetMyIndividualChat';
 
 // context
-import { chatContext, navContext } from '@/context/homeContext';
+import { chatContext, navContext, boardContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
@@ -461,16 +461,19 @@ const Home = () => {
         />
         {isOpened && (
           <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
-            <BoardInfo
-              selected={selected}
-              boardModify={boardModify}
-              inputSelectedBoardData={inputSelectedBoardData}
-              handleImageClick={handleImageClick}
-              handleSelectedImg={handleSelectedImg}
-              fileInputRef={fileInputRef}
-              PatchBoardData={PatchBoardData}
-              modifyChange={modifyChange}
-            />
+            <boardContext.Provider
+              value={{
+                inputSelectedBoardData,
+                selected,
+                boardModify,
+                handleImageClick,
+                fileInputRef,
+                PatchBoardData,
+                modifyChange,
+              }}
+            >
+              <BoardInfo handleSelectedImg={handleSelectedImg} />
+            </boardContext.Provider>
           </Modal>
         )}
       </div>
