@@ -15,24 +15,30 @@ import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
 
 // styles
 import { ChatData } from '../../../styles/home/components/styles';
-import { Flex } from '@/styles/common/direction';
 
 // icons
-import { PiUserCircleFill } from 'react-icons/pi';
 import { GrSearch } from 'react-icons/gr';
 import { TbArrowBackUp } from 'react-icons/tb';
-import { SlArrowUpCircle } from 'react-icons/sl';
 
 // components
 import { useSocket } from '@/components/provider/SocketWrapper';
+import ChatInput from './Chat/ChatInput';
+import ChatUserList from './Chat/ChatUserList';
+import ChatContent from './Chat/ChatContent';
 
 // constants
 import { universities } from '@/constants/universities';
+
+// apis
 import { getMyFriendRequest } from '@/pages/api/clients/home';
+
+// types
 import { userRequestType } from '@/types/home';
 
+// contexts
+import { chatContext } from '@/context/homeContext';
+
 interface ChatType {
-  chattingData: ChattingDataType[] | undefined;
   myChat: ChatDataType[] | undefined;
   sendMessages: UseMutateFunction<void, Error, void, unknown>;
   currentMessage: string;
@@ -42,7 +48,7 @@ interface ChatType {
   ) => Promise<QueryObserverResult<ChatDataType[], Error>>;
 }
 
-interface listType {
+export interface listType {
   id: number;
   userNickname: string;
   university: string;
@@ -94,7 +100,7 @@ const Chat = ({
       const response = await getMyFriendRequest(
         Number(Cookies.get('user_index'))
       );
-      return response.data; // 응답의 data 속성을 반환
+      return response.data;
     },
   });
 
@@ -108,8 +114,8 @@ const Chat = ({
     if (getMyFriendsData) {
       const data = getMyFriendsData?.filter((data) => data.status === 1);
 
-      console.log('데이터 제대로 분리 되었음 : ', data[0]);
-      console.log('데이터 비교: ', myChat![0]);
+      // console.log('데이터 제대로 분리 되었음 : ', data[0]);
+      // console.log('데이터 비교: ', myChat![0]);
 
       data?.map((chat) => {
         const userNickname = String(chat.userEmail);
@@ -254,105 +260,24 @@ const Chat = ({
         </header>
       )}
 
-      {chatData.length > 0
-        ? chatData[0].chat_content.length > 0 &&
-          chatData?.map((d, i) => (
-            <div key={i}>
-              {Number(Cookies.get('user_index')) === d.chat_user_id ? (
-                <div className="myChat">
-                  <div style={{ ...Flex, alignItems: 'flex-end' }}>
-                    <span className="userName">{d.chat_user_nickname}</span>
-                    <div className="myContent">{d.chat_content}</div>
-                  </div>
-                </div>
-              ) : (
-                <div className="otherChat">
-                  <div style={{ ...Flex, alignItems: 'flex-start' }}>
-                    <span className="otherUserName">
-                      {d.chat_user_nickname}
-                    </span>
-                    <div className="otherContent">{d.chat_content}</div>
-                  </div>
-                </div>
-              )}
-              <div ref={messageEndRef}></div>
-            </div>
-          ))
-        : chatUserList?.map((user, i) => {
-            return (
-              <div
-                key={i}
-                className="chatList"
-                style={{
-                  ...Flex,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  padding: '5px',
-                  fontFamily: 'GmarketSansMedium',
-                }}
-                onClick={() => processChattingRoom(user)}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {user.university ? (
-                    sortingLogo(user.university)
-                  ) : (
-                    <PiUserCircleFill size={30} color="#e1e1e1" />
-                  )}
-                </div>
-
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    paddingLeft: '10px',
-                  }}
-                >
-                  {user.userNickname}
-                </div>
-                <div> </div>
-              </div>
-            );
-          })}
-
-      {chatData.length > 0 && (
-        <div className="footer">
-          <input
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
-            onKeyDown={(e) => send(e)}
-            placeholder="메세지 입력"
-            value={currentMessage}
-            onChange={(e) =>
-              setCurrentMessage((prev) => ({
-                ...prev,
-                currentMessage: e.target.value,
-              }))
-            }
-          />
-          <SlArrowUpCircle size={25} />
-        </div>
+      {chatData.length > 0 ? (
+        chatData[0].chat_content.length > 0 && (
+          <ChatContent chatData={chatData} messageEndRef={messageEndRef} />
+        )
+      ) : (
+        <ChatUserList
+          chatUserList={chatUserList}
+          processChattingRoom={processChattingRoom}
+          sortingLogo={sortingLogo}
+        />
       )}
 
       {chatData.length > 0 && (
-        <div className="footer">
-          <input
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
-            onKeyDown={(e) => send(e)}
-            placeholder="메세지 입력"
-            value={currentMessage}
-            onChange={(e) =>
-              setCurrentMessage((prev) => ({
-                ...prev,
-                currentMessage: e.target.value,
-              }))
-            }
-          />
-          <SlArrowUpCircle size={25} />
-        </div>
+        <ChatInput
+          handleCompositionStart={handleCompositionStart}
+          handleCompositionEnd={handleCompositionEnd}
+          send={send}
+        />
       )}
     </ChatData>
   );

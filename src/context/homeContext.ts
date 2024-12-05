@@ -1,4 +1,7 @@
-import { createContext } from 'react';
+import { SetStateAction, createContext } from 'react';
+
+// types
+import { messageType } from '@/types/chat';
 
 // 상태 타입 정의
 export interface NavContextType {
@@ -9,6 +12,11 @@ export interface NavContextType {
   sortValues: string[];
 }
 
+export interface ChatContextType {
+  currentMessage: string;
+  setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
+}
+
 // Context 생성 및 초기값 설정
 export const navContext = createContext<NavContextType>({
   inputBoardData: () => {},
@@ -16,4 +24,9 @@ export const navContext = createContext<NavContextType>({
   handleBoardImg: () => {},
   sortingBoards: () => {},
   sortValues: [],
+});
+
+export const chatContext = createContext<ChatContextType>({
+  currentMessage: '',
+  setCurrentMessage: () => {},
 });

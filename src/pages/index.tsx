@@ -48,7 +48,7 @@ import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 import useGetMyIndividualChat from '@/hooks/home/api/useGetMyIndividualChat';
 
 // context
-import { navContext } from '@/context/homeContext';
+import { chatContext, navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
@@ -474,9 +474,11 @@ const Home = () => {
           </Modal>
         )}
       </div>
+
       <div className="chatSpinner" onClick={handleChatModal}>
         <IoChatbubbleEllipsesOutline />
       </div>
+
       {chattingModalBoolean && (
         <ChatModal
           openModal={handleChatModal}
@@ -484,14 +486,15 @@ const Home = () => {
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
         >
-          <Chat
-            chattingData={chattingData}
-            myChat={myChat}
-            sendMessages={sendMessages}
-            currentMessage={currentMessage}
-            setCurrentMessage={setCurrentMessage}
-            getMyIndividualChat={getMyIndividualChat}
-          />
+          <chatContext.Provider value={{ currentMessage, setCurrentMessage }}>
+            <Chat
+              myChat={myChat}
+              sendMessages={sendMessages}
+              currentMessage={currentMessage}
+              setCurrentMessage={setCurrentMessage}
+              getMyIndividualChat={getMyIndividualChat}
+            />
+          </chatContext.Provider>
         </ChatModal>
       )}
     </Container>

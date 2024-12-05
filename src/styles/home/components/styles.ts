@@ -47,7 +47,7 @@ export const ChattingContainer = styled.div`
 
   .footer {
     width: 95%;
-    height: 80px;
+    height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
