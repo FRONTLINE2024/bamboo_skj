@@ -6,6 +6,7 @@ import {
   QueryObserverResult,
   RefetchOptions,
   UseMutateFunction,
+  useQuery,
 } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 
@@ -27,6 +28,8 @@ import { useSocket } from '@/components/provider/SocketWrapper';
 
 // constants
 import { universities } from '@/constants/universities';
+import { getMyFriendRequest } from '@/pages/api/clients/home';
+import { userRequestType } from '@/types/home';
 
 interface ChatType {
   chattingData: ChattingDataType[] | undefined;
@@ -51,13 +54,24 @@ const Chat = ({
   currentMessage,
   setCurrentMessage,
 }: ChatType) => {
-  console.log('myChat: ', myChat);
   // 소켓
   const { socket } = useSocket();
   // 입력중인지 판단
   const [isComposing, setIsComposing] = useState<boolean>(false);
   // 채팅방 데이터
-  const [chatData, setChatData] = useState<ChatDataType[]>([]);
+  const [chatData, setChatData] = useState<ChatDataType[]>([
+    {
+      chat_content: '',
+      chat_id: 0,
+      chat_user_id: 0,
+      createAt: '',
+      receiverID: 0,
+      senderID: 0,
+      chat_user_nickname: '',
+      university: '',
+    },
+  ]);
+
   // 유저 목록
   const [chatUserList, setChatUserList] = useState<listType[]>([
     {
@@ -66,6 +80,7 @@ const Chat = ({
       university: '',
     },
   ]);
+
   // 스크롤 감지 DOM
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -73,21 +88,41 @@ const Chat = ({
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatData]);
 
+  const { data: getMyFriendsData } = useQuery<userRequestType[]>({
+    queryKey: ['getMyChat', Number(Cookies.get('user_index'))],
+    queryFn: async () => {
+      const response = await getMyFriendRequest(
+        Number(Cookies.get('user_index'))
+      );
+      return response.data; // 응답의 data 속성을 반환
+    },
+  });
+
+  useEffect(() => {
+    console.log(getMyFriendsData!);
+  }, [getMyFriendsData]);
+
   function sorting() {
     const myList: listType[] = [];
 
-    myChat?.map((chat) => {
-      const userNickname = String(chat.chat_user_nickname);
-      if (!myList.some((item) => item.userNickname === userNickname)) {
-        const id =
-          Number(Cookies.get('user_index')) === chat.receiverID
-            ? chat.senderID
-            : chat.receiverID;
-        myList.push({ id, userNickname, university: chat.university });
-      }
-    });
+    if (getMyFriendsData) {
+      const data = getMyFriendsData?.filter((data) => data.status === 1);
 
-    // console.log('myList: ', myList);
+      console.log('데이터 제대로 분리 되었음 : ', data[0]);
+      console.log('데이터 비교: ', myChat![0]);
+
+      data?.map((chat) => {
+        const userNickname = String(chat.userEmail);
+        if (!myList.some((item) => item.userNickname === userNickname)) {
+          const id =
+            Number(Cookies.get('user_index')) === chat.friendUserID
+              ? chat.userID
+              : chat.friendUserID;
+          myList.push({ id, userNickname, university: chat.university });
+        }
+      });
+    }
+
     setChatUserList(myList);
   }
 
@@ -97,12 +132,29 @@ const Chat = ({
         return chat;
       }
     });
-    // console.log('클릭된 채팅방 데이터: ', thisChattingRoom);
-    setChatData(thisChattingRoom!);
+
+    if (thisChattingRoom?.length! > 0) {
+      setChatData(thisChattingRoom!);
+    } else {
+      setChatData([
+        {
+          chat_content: '',
+          chat_id: 0,
+          chat_user_id: 0,
+          createAt: '',
+          receiverID: 0,
+          senderID: 0,
+          chat_user_nickname: '',
+          university: '',
+        },
+      ]);
+    }
+
     setCurrentMessage((prev) => ({
       ...prev,
       receiverID: id,
     }));
+
     Cookies.set('userNickname', userNickname);
     Cookies.set('id', String(id));
   }
@@ -140,7 +192,7 @@ const Chat = ({
 
   useEffect(() => {
     sorting();
-  }, [myChat]);
+  }, [myChat, getMyFriendsData]);
 
   useEffect(() => {
     if (!socket) {
@@ -165,7 +217,6 @@ const Chat = ({
       const logo = universities.filter(
         (university) => university.name === universityName
       );
-      // console.log(logo);
 
       return (
         <Image
@@ -203,7 +254,8 @@ const Chat = ({
       )}
 
       {chatData.length > 0
-        ? chatData?.map((d, i) => (
+        ? chatData[0].chat_content.length > 0 &&
+          chatData?.map((d, i) => (
             <div key={i}>
               {Number(Cookies.get('user_index')) === d.chat_user_id ? (
                 <div className="myChat">
@@ -263,6 +315,24 @@ const Chat = ({
               </div>
             );
           })}
+      {chatData.length > 0 && (
+        <div className="footer">
+          <input
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+            onKeyDown={(e) => send(e)}
+            placeholder="메세지 입력"
+            value={currentMessage}
+            onChange={(e) =>
+              setCurrentMessage((prev) => ({
+                ...prev,
+                currentMessage: e.target.value,
+              }))
+            }
+          />
+          <SlArrowUpCircle size={25} />
+        </div>
+      )}
       {chatData.length > 0 && (
         <div className="footer">
           <input

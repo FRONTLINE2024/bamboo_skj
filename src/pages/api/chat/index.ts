@@ -20,7 +20,7 @@ const chatHandler = async (
       const senderID = chat_user_id;
       // const receiverID = 38;
 
-      console.log('message: ', message);
+      // console.log('message: ', message);
 
       await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_index = ? `,
@@ -29,7 +29,7 @@ const chatHandler = async (
 
       // 친구인지 판별하는 쿼리
       const [areWeFriends] = await connection.execute<RowDataPacket[]>(
-        'SELECT * FROM friend WHERE (userID = ? AND friendUserID = ?) OR (userID = ? AND friendUserID = ?)',
+        'SELECT * FROM friend WHERE (userID = ? AND friendUserID = ? AND status = 1) OR (userID = ? AND friendUserID = ? AND status = 1)',
         [chat_user_id, receiverID, receiverID, chat_user_id]
       );
 
@@ -41,14 +41,14 @@ const chatHandler = async (
           [chat_user_id, chat_content, senderID, receiverID]
         );
 
-        console.log('채팅 생성 성공', createChat);
+        // console.log('채팅 생성 성공', createChat);
 
         const [getChat] = await connection.execute(
           'SELECT * FROM chat WHERE chat_id = ?',
           [createChat.insertId]
         );
 
-        console.log('채팅 생성 후 데이터 가져오기: ', getChat);
+        // console.log('채팅 생성 후 데이터 가져오기: ', getChat);
 
         const changeType = getChat as ChatDataType[];
 

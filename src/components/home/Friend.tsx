@@ -28,6 +28,7 @@ const FriendRequestUserList = () => {
     status: 0,
     userID: Number(Cookies.get('user_index')),
     userEmail: '',
+    university: '',
   });
   const { userID, friendUserID, status } = requestData;
 

@@ -42,6 +42,7 @@ export interface pagingType {
 }
 
 export interface userRequestType {
+  university: string;
   createAt: string;
   friendUserID: number;
   id: number;

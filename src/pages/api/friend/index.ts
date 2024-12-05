@@ -71,7 +71,11 @@ export default async function handler(
           (user) => user.user_index === request.userID
         );
 
-        return { ...request, userEmail: user ? user.user_nickname : null };
+        return {
+          ...request,
+          userEmail: user ? user.user_nickname : null,
+          university: user?.university,
+        };
       });
 
       const newData3 = myRequestFromFriend.map((request) => {
@@ -79,7 +83,11 @@ export default async function handler(
           (user) => user.user_index === request.friendUserID
         );
 
-        return { ...request, userEmail: user ? user.user_nickname : null };
+        return {
+          ...request,
+          userEmail: user ? user.user_nickname : null,
+          university: user?.university,
+        };
       });
 
       const allRequests = [...newData2, ...newData3];
