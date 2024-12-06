@@ -1,3 +1,4 @@
+import { SetStateAction } from 'react';
 // apis
 import { patchBoardData } from '@/pages/api/clients/home';
 
@@ -8,6 +9,7 @@ import { BoardType } from '@/types/home';
 import {
   QueryObserverResult,
   RefetchOptions,
+  UseMutateFunction,
   useMutation,
 } from '@tanstack/react-query';
 
@@ -16,25 +18,26 @@ interface usePatchBoardType {
   refetchSpecificData: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<BoardType, Error>>;
-  refetchAllData: (
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<BoardType[], Error>>;
+  getPagingData: UseMutateFunction<BoardType[], Error, void, unknown>;
 }
 
 const usePatchBoard = ({
   formPatchData,
   refetchSpecificData,
-  refetchAllData,
+  getPagingData,
 }: usePatchBoardType) => {
   return useMutation({
     mutationKey: ['patchBoard'],
     mutationFn: async () => {
       const response = await patchBoardData(formPatchData);
+
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data: BoardType) => {
+      console.log(data);
+
       refetchSpecificData();
-      refetchAllData();
+      getPagingData();
     },
   });
 };

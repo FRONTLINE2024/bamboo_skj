@@ -28,8 +28,6 @@ export default async function handler(
         [user_id, user_password]
       );
 
-      console.log(passwordRows);
-
       if (passwordRows.length === 0) {
         return res.status(401).json({ message: '비밀번호가 틀립니다!' });
       }

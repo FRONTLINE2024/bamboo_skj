@@ -29,7 +29,6 @@ const runMiddleware = (
       req as unknown as Request,
       res as unknown as Response,
       (error?: Error | string | undefined) => {
-        // 정확한 타입 지정
         if (error && typeof error !== 'undefined') {
           return reject(error);
         }
@@ -53,13 +52,7 @@ export default async function handler(
       req.body;
     console.log('req.body', req.body);
 
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'No file uploaded' });
-    }
-
-    const board_img = `/uploads/${req.file.filename}`;
+    const board_img = `/uploads/${req.file?.filename}`;
 
     if (!id || !board_title || !board_content || !board_user_id || !board_img) {
       return res

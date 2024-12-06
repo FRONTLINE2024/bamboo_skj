@@ -33,9 +33,6 @@ import useFileInput from '@/hooks/home/useGetImg';
 import useSetDate from '@/hooks/home/useSetDate';
 
 // apis
-import useGetDateAscendData from '@/hooks/home/api/useGetDateAscendData';
-import useGetDateDescendData from '@/hooks/home/api/useGetDateDescendData';
-import useGetContentAscendData from '@/hooks/home/api/useGetContentAscendData';
 import useGetAllData from '@/hooks/home/api/useGetAllData';
 import useDeleteBoard from '@/hooks/home/api/useDeleteBoard';
 import useGetSpecificBoardData from '@/hooks/home/api/useGetSpecificBoardData';
@@ -52,6 +49,7 @@ import { chatContext, navContext, boardContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import useGetScrollData from '@/hooks/home/api/useGetScrollData';
 
 const Home = () => {
   // 라우터
@@ -168,18 +166,20 @@ const Home = () => {
     }
   }, [successScrollData, isInitialized]);
 
-  const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
-    setInfiniteBoardData,
-    deleteBoardId,
-  }); // 삭제 시 무한 스크롤 데이터 GET
+  const { data: InfiniteScrollData, mutate: getPagingBoardDelete } =
+    useGetInfiniteScroll({
+      setInfiniteBoardData,
+      deleteBoardId,
+    }); // 삭제 시 무한 스크롤 데이터 GET
+
+  const { mutate: getPagingData } = useGetScrollData({ setInfiniteBoardData });
 
   useEffect(() => {
     getPagingBoard();
     localStorage.setItem('limit', '10');
   }, []);
 
-  const { data: chattingData, refetch: refetchChattingData } =
-    useGetChattingData(); // 채팅 GET
+  const { refetch: refetchChattingData } = useGetChattingData(); // 채팅 GET
 
   const { data: myChat, refetch: getMyIndividualChat } =
     useGetMyIndividualChat(); // 1대1 채팅방 데이터 GET
@@ -198,23 +198,23 @@ const Home = () => {
     getMyIndividualChat,
   }); // 채팅 메세지 보내기
 
-  // 정렬
-  const { mutate: fetchAscendData } = useGetDateAscendData({
-    setInfiniteBoardData,
-  }); // 오래된 순
+  // // 정렬
+  // const { mutate: fetchAscendData } = useGetDateAscendData({
+  //   setInfiniteBoardData,
+  // }); // 오래된 순
 
-  const { mutate: fetchDescendData } = useGetDateDescendData({
-    setInfiniteBoardData,
-  }); // 최신 순
+  // const { mutate: fetchDescendData } = useGetDateDescendData({
+  //   setInfiniteBoardData,
+  // }); // 최신 순
 
-  const { mutate: fetchContentAscendData } = useGetContentAscendData({
-    setInfiniteBoardData,
-  }); // 이름 순
+  // const { mutate: fetchContentAscendData } = useGetContentAscendData({
+  //   setInfiniteBoardData,
+  // }); // 이름 순
 
   const { mutate: patchBoards } = usePatchBoard({
     formPatchData,
     refetchSpecificData,
-    refetchAllData,
+    getPagingData,
   }); // 게시글 Patch
 
   const { mutate: deleteBoards } = useDeleteBoard({
@@ -345,21 +345,6 @@ const Home = () => {
     setDeleteBoardId(id);
   }
 
-  // 오래된 순
-  const getDateAscendDataFunc = () => {
-    fetchAscendData();
-  };
-
-  // 최신 순
-  const getDateDescendDataFunc = () => {
-    fetchDescendData();
-  };
-
-  // 게시글 이름 순
-  const getContentAscendDataFuncs = () => {
-    fetchContentAscendData();
-  };
-
   function sortingBoards(value: string) {
     let sorting;
 
@@ -401,9 +386,9 @@ const Home = () => {
     { isOpen: friendRequestModal, close: closeFriendModal },
   ];
 
-  // useEffect(() => {
-  //   console.log('선택된 게시글 데이터: ', selected);
-  // }, [selected]);
+  useEffect(() => {
+    console.log('선택된 게시글 데이터: ', infiniteBoardData);
+  }, [infiniteBoardData]);
 
   return (
     <Container>
