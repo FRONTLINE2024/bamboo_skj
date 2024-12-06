@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 
 // constants
 import { universities } from '@/constants/universities';
-
+import { SetterOrUpdater } from 'recoil';
 // contexts
 import { boardContext } from '@/context/homeContext';
 
@@ -14,11 +14,15 @@ import BoardDate from './BoardDate';
 import BoardContent from './BoardInfo/BoardContent';
 import BoardButton from './BoardInfo/BoardButton';
 
+// types
+import { BoardType } from '@/types/home';
+
 interface BoardInfoType {
   handleSelectedImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setSelected: SetterOrUpdater<BoardType>;
 }
 
-const BoardInfo = ({ handleSelectedImg }: BoardInfoType) => {
+const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
   const context = useContext(boardContext);
 
   const { selected } = context;
@@ -31,7 +35,13 @@ const BoardInfo = ({ handleSelectedImg }: BoardInfoType) => {
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
 
-      handleSelectedImg(e);
+      // handleSelectedImg(e);
+
+      setSelected((prev) => ({
+        ...prev,
+        board_img: file, // file 객체를 상태에 저장
+      }));
+
       return () => URL.revokeObjectURL(imageUrl);
     }
   };

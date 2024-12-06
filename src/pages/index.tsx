@@ -387,8 +387,8 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    console.log('선택된 게시글 데이터: ', infiniteBoardData);
-  }, [infiniteBoardData]);
+    console.log('선택된 게시글 데이터: ', selected);
+  }, [selected]);
 
   return (
     <Container>
@@ -457,7 +457,10 @@ const Home = () => {
                 modifyChange,
               }}
             >
-              <BoardInfo handleSelectedImg={handleSelectedImg} />
+              <BoardInfo
+                handleSelectedImg={handleSelectedImg}
+                setSelected={setSelected}
+              />
             </boardContext.Provider>
           </Modal>
         )}
