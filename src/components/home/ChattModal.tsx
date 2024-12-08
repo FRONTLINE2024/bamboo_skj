@@ -3,8 +3,14 @@ import ReactDOM from 'react-dom';
 
 // styles
 import { ChattingContainer } from '../../styles/home/components/styles';
+
+// icons
 import { IoClose } from 'react-icons/io5';
+
+// libraries
 import { UseMutateFunction } from '@tanstack/react-query';
+
+// types
 import { messageType } from '@/types/chat';
 
 interface ChatModalType {

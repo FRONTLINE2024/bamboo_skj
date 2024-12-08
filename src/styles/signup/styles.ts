@@ -16,15 +16,15 @@ export const Container = styled.div<{ $borderColor: string }>`
   box-shadow: ${(props) => {
     switch (props.$borderColor) {
       case '#0B4A8F':
-        return `inset 0px 0px 10px 8px #0B4A8F`; // universityBlue
+        return `inset 0px 0px 10px 8px #0B4A8F`;
       case '#42AE37':
-        return `inset 0px 0px 10px 8px #42AE37`; // universityGreen
+        return `inset 0px 0px 10px 8px #42AE37`;
       case '#D60F14':
-        return `inset 0px 0px 10px 5px #D60F14`; // universityRed
+        return `inset 0px 0px 10px 5px #D60F14`;
       case '#8B7E75':
-        return `inset 0px 0px 10px 8px #8B7E75`; // universityGray
+        return `inset 0px 0px 10px 8px #8B7E75`;
       default:
-        return; // 기본 색상
+        return;
     }
   }};
 `;
@@ -109,15 +109,15 @@ export const InputContainer = styled.div<{ $borderColor: string }>`
   border: ${(props) => {
     switch (props.$borderColor) {
       case '#0B4A8F':
-        return `2px solid #0B4A8F`; // universityBlue
+        return `2px solid #0B4A8F`;
       case '#42AE37':
-        return `2px solid #42AE37`; // universityGreen
+        return `2px solid #42AE37`;
       case '#D60F14':
-        return `2px solid #D60F14`; // universityRed
+        return `2px solid #D60F14`;
       case '#8B7E75':
-        return `2px solid #8B7E75`; // universityGray
+        return `2px solid #8B7E75`;
       default:
-        return `2px solid ${theme.inputBorderColor}`; // 기본 색상
+        return `2px solid ${theme.inputBorderColor}`;
     }
   }};
   padding: 5px;

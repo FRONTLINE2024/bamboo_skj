@@ -1,9 +1,16 @@
+// pages
 import Signup from '@/pages/signup/index';
+
+// libraries
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { signup } from '../../pages/api/clients/signup'; // API 호출 경로를 수정하세요
+
+// apis
+import { signup } from '../../pages/api/clients/signup';
 import { user } from '@/mocks/api/userData';
+
+// hooks
 import { changeMessage, repeatInput } from '@/hooks/test';
 
 jest.mock('../api/clients/signup');
@@ -33,7 +40,6 @@ describe('Signup', () => {
       </RecoilRoot>
     );
 
-    // 테스트할 input 요소 가져오기
     idInput = screen.getByPlaceholderText('아이디 입력') as HTMLInputElement;
     pwdInput = screen.getByPlaceholderText('비밀번호 입력') as HTMLInputElement;
     confirmPwdInput = screen.getByPlaceholderText(
@@ -43,7 +49,6 @@ describe('Signup', () => {
   });
 
   test('회원가입 테스트', async () => {
-    // 회원가입 API가 성공하는 경우 설정
     (signup as jest.Mock).mockImplementation(() =>
       Promise.resolve({
         status: 201,

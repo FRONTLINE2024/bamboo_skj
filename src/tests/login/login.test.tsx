@@ -1,15 +1,25 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act } from 'react';
+import { useRouter } from 'next/navigation';
+
+// pages
 import Login from '@/pages/login/index';
-import '@testing-library/jest-dom';
+
+// libraries
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
+// types
 import { userType } from '@/types/login';
-import { useRouter } from 'next/navigation';
+
+// apis
 import { login } from '../../pages/api/clients/login';
-import { act } from 'react';
+
+// hooks
 import { changeMessage, repeatInput } from '@/hooks/test';
 
-jest.mock('../api/clients/login'); // 로그인 API 모킹
+jest.mock('../api/clients/login');
 
 const logins = async (loginData: userType) => {
   const response = await fetch('/api/login', {
@@ -87,17 +97,15 @@ describe('Login Page', () => {
       user_id: 'testUser',
       user_password: 'test1',
       user_nickname: '유저 닉네임',
+      university: '대학교',
     };
 
     const response = await logins(loginData);
-
-    // console.log('로그인 테스트 성공', response);
 
     expect(response.message).toBe('Login successful!');
   });
 
   it('로그인 실패: 유저 아이디가 존재하지 않을 때', async () => {
-    // 로그인 API가 유저 아이디 존재하지 않는 경우 설정
     (login as jest.Mock).mockImplementation(() =>
       Promise.reject({
         response: {

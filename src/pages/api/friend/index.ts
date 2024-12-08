@@ -12,7 +12,6 @@ export default async function handler(
     if (req.method === 'POST') {
       const { userID, friendUserID, status } = req.body;
 
-      // friendUserID가 실제 사용자 테이블에 존재하는지 확인
       const [userExist] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM user WHERE user_index = ?',
         [friendUserID]
@@ -52,12 +51,11 @@ export default async function handler(
     } else if (req.method === 'GET') {
       const { userID } = req.query;
 
-      // userID로 요청한 경우
       const [myRequestFromUser] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM friend WHERE friendUserID = ?',
         [userID]
       );
-      // userID로 요청을 받은 경우
+
       const [myRequestFromFriend] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM friend WHERE userID = ?',
         [userID]
@@ -96,9 +94,9 @@ export default async function handler(
       const deduplication = allRequests.filter((request) => {
         if (!seenEmails.has(request.userEmail)) {
           seenEmails.add(request.userEmail);
-          return true; // 중복이 아닐 경우 유지
+          return true;
         }
-        return false; // 중복인 경우 필터링
+        return false;
       });
 
       if (deduplication.length > 0) {

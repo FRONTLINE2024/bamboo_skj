@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+
 // img
 import Logo from '@/assets/images/FrontLine_Logo.png';
 

@@ -11,7 +11,7 @@ import {
 import Cookies from 'js-cookie';
 
 // types
-import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
+import { ChatDataType, messageType } from '@/types/chat';
 
 // styles
 import { ChatData } from '../../../styles/home/components/styles';
@@ -21,7 +21,6 @@ import { GrSearch } from 'react-icons/gr';
 import { TbArrowBackUp } from 'react-icons/tb';
 
 // components
-import { useSocket } from '@/components/provider/SocketWrapper';
 import ChatInput from './Chat/ChatInput';
 import ChatUserList from './Chat/ChatUserList';
 import ChatContent from './Chat/ChatContent';
@@ -36,7 +35,7 @@ import { getMyFriendRequest } from '@/pages/api/clients/home';
 import { userRequestType } from '@/types/home';
 
 // contexts
-import { chatContext } from '@/context/homeContext';
+import { useSocket } from '@/components/provider/SocketWrapper';
 
 interface ChatType {
   myChat: ChatDataType[] | undefined;

@@ -43,13 +43,13 @@ import useGetChattingData from '@/hooks/home/api/useGetChattingData';
 import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
 import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 import useGetMyIndividualChat from '@/hooks/home/api/useGetMyIndividualChat';
+import useGetScrollData from '@/hooks/home/api/useGetScrollData';
 
 // context
 import { chatContext, navContext, boardContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import useGetScrollData from '@/hooks/home/api/useGetScrollData';
 
 const Home = () => {
   // 라우터

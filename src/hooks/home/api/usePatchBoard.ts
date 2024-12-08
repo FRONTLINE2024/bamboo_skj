@@ -1,4 +1,3 @@
-import { SetStateAction } from 'react';
 // apis
 import { patchBoardData } from '@/pages/api/clients/home';
 

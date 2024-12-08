@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+
 // styles
 import { Flex } from '@/styles/common/direction';
 import {

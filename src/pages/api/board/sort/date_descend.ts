@@ -21,7 +21,7 @@ export default async function handler(
     }
   } catch (err) {
     console.error('Database error:', err);
-    res.status(500).json({ success: false, message: 'Database error' }); // 500: Internal Server Error
+    res.status(500).json({ success: false, message: 'Database error' });
   } finally {
     connection.end();
   }

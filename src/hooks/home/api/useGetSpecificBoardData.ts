@@ -18,7 +18,6 @@ const useGetSpecificBoardData = ({ selected }: useGetSpecificBoardDataType) => {
       if (!selected.id) throw new Error('Selected ID is required');
       const response = await getSpecificBoard(selected.id);
 
-      // console.log(response);
       return response.data;
     },
     enabled: !!selected.id,

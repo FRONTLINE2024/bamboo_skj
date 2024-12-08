@@ -2,10 +2,10 @@ import { SetStateAction } from 'react';
 
 // apis
 import { getToken } from '@/pages/api/clients/login';
-import { KakaoData } from './usePostSignupKakaoLogin';
 
 // types
 import { accessTokenType } from '@/types/login';
+import { KakaoData } from './usePostSignupKakaoLogin';
 
 // libraries
 import {

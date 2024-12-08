@@ -34,6 +34,6 @@ export const Letter = styled.span<{ $index: number }>`
 export const LogoContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(9, 0.5fr);
-  width: 300px; // 글자 길이에 맞춰 변경 가능
+  width: 300px;
   margin-bottom: -50px;
 `;

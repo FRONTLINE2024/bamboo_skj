@@ -23,9 +23,7 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     io.on('connection', (socket) => {
       console.log('New socket connected:', socket.id);
 
-      // 클라이언트에서 메시지를 보낼 때
       socket.on('sendMessage', (message) => {
-        // 모든 클라이언트에 메시지 브로드캐스트
         socket.broadcast.emit('message', message);
       });
 

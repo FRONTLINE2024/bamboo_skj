@@ -1,3 +1,6 @@
+import React from 'react';
+
+// libraries
 import {
   act,
   fireEvent,
@@ -5,14 +8,17 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import Home from '@/pages/index';
 import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import Cookie from 'js-cookie';
+
+// pages
+import Home from '@/pages/index';
+
+// components
 import Modal from '@/components/common/Modal';
 import BoardInfo from '@/components/home/BoardInfo';
-import React from 'react';
 
 jest.mock('js-cookie', () => ({
   get: jest.fn(),
@@ -20,7 +26,6 @@ jest.mock('js-cookie', () => ({
 }));
 
 jest.mock('../../pages/api/clients/home');
-//@/pages/api/clients/home
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
@@ -38,9 +43,9 @@ describe('Home Page', () => {
     (Cookie.get as jest.Mock).mockImplementation((key) => {
       switch (key) {
         case 'user_index':
-          return '1'; // 필요시 필요한 다른 키와 값을 추가할 수 있습니다.
+          return '1';
         default:
-          return null; // 기본적으로 null 반환
+          return null;
       }
     });
 
@@ -100,36 +105,15 @@ describe('Home Page', () => {
     });
 
     const mockOpenModal = jest.fn();
-    const mockInputSelectedBoardData = jest.fn();
-    const mockHandleImageClick = jest.fn();
     const mockHandleSelectedImg = jest.fn();
-    const mockPatchBoardData = jest.fn();
-    const mockModifyChange = jest.fn();
-    const mockFileInputRef = React.createRef<HTMLInputElement>();
-
-    const selectedMock = {
-      id: 1,
-      board_title: 'Initial Title',
-      createdAt: '2024-09-26',
-      board_content: 'Initial Content',
-      board_user_id: '123',
-      board_img: file,
-    };
-
-    const boardModifyMock = true;
+    const mockSetSelected = jest.fn();
 
     beforeEach(() =>
       render(
-        <Modal modal={true} openModal={mockOpenModal}>
+        <Modal modal={true} openModal={mockOpenModal} width={30} height={70}>
           <BoardInfo
-            selected={selectedMock}
-            boardModify={boardModifyMock}
-            inputSelectedBoardData={mockInputSelectedBoardData}
-            handleImageClick={mockHandleImageClick}
             handleSelectedImg={mockHandleSelectedImg}
-            fileInputRef={mockFileInputRef}
-            PatchBoardData={mockPatchBoardData}
-            modifyChange={mockModifyChange}
+            setSelected={mockSetSelected}
           />
         </Modal>
       )

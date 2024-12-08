@@ -10,7 +10,7 @@ export default async function handler(
   try {
     if (req.method === 'GET') {
       const { chat_user_id } = req.query;
-      // console.log(chat_user_id);
+
       const userID = chat_user_id;
       const chatUserId = parseInt(chat_user_id as string, 10);
 
@@ -38,7 +38,7 @@ export default async function handler(
         const matchingUser = userRow.find((u) => u.user_index === friendUserId);
         return {
           ...d,
-          chat_user_nickname: matchingUser ? matchingUser.user_nickname : null, // 닉네임 추가
+          chat_user_nickname: matchingUser ? matchingUser.user_nickname : null,
           university: matchingUser?.university,
         };
       });

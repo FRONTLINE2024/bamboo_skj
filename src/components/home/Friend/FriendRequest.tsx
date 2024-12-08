@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 // apis
 import usePostFriendAccept from '@/hooks/home/api/usePostFriendAccept';
 
@@ -28,6 +29,7 @@ const FriendRequest = ({ friendList, requestFriend }: FriendRequestType) => {
     status: 0,
     userID: 0,
     userEmail: '',
+    university: '',
   });
   const { userID, friendUserID, status } = requestData;
 

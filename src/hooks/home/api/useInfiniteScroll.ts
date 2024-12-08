@@ -24,12 +24,12 @@ const useInfiniteScroll = ({
     const response = await getInfiniteData({ offset, limit });
 
     return response.data;
-  }, [currentPage]); // currentPage가 변경될 때만 새롭게 생성
+  }, [currentPage]);
 
   // useMutation 훅 사용
   const { mutate, isSuccess } = useMutation({
     mutationKey: ['scrollData'],
-    mutationFn: fetchInfiniteData, // fetchInfiniteData 사용
+    mutationFn: fetchInfiniteData,
     onSuccess: (data: BoardType[]) => {
       setInfiniteBoardData((prev) => {
         const filteredPrev = prev.filter((item) => item.id !== 0);

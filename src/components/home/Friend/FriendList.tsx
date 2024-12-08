@@ -1,15 +1,20 @@
+import { SetStateAction } from 'react';
+
 // apis
 import { acceptFriend } from '@/pages/api/clients/home';
 
 // styles
 import { FriendRequestContainer } from '@/styles/home/styles';
+
+// types
 import { userRequestType } from '@/types/home';
+
+// libraries
 import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
-import { SetStateAction } from 'react';
 
 interface FriendListType {
   userID: number;

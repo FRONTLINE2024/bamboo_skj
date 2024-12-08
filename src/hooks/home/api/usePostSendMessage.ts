@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
 
-//apis
+// apis
 import { postChatMessage } from '@/pages/api/clients/home';
 
 // types

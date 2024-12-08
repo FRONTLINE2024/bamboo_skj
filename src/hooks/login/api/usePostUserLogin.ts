@@ -18,7 +18,6 @@ interface usePostUserLoginType {
   handleToast(): void;
 }
 
-// 정의된 AxiosError로 향후 검증
 interface AxiosError {
   response: {
     data: {

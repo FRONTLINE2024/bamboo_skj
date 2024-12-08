@@ -29,7 +29,6 @@ const runMiddleware = (
       req as unknown as Request,
       res as unknown as Response,
       (error?: Error | string | undefined) => {
-        // 정확한 타입 지정
         if (error && typeof error !== 'undefined') {
           return reject(error);
         }

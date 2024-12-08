@@ -7,7 +7,6 @@ import { postUserData } from '@/pages/api/clients/login';
 import { useMutation } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
 
-// Kakao data 타입 정의
 export interface KakaoData {
   data: {
     id: string;
@@ -42,8 +41,6 @@ const usePostSignupKakoLogin = ({
         accessToken,
       };
       const response = await postUserData(body);
-
-      // console.log(response);
 
       return response.data;
     },

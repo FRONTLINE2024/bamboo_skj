@@ -31,11 +31,11 @@ export default async function handler(
           'INSERT INTO user (user_id, user_password, user_nickname, university) VALUES (?, ?, ?, ?)',
           [user_id, user_password, user_nickname, university]
         );
-        res.status(201).json({ success: true, data: user_id }); // 201: Created
+        res.status(201).json({ success: true, data: user_id });
       } else {
         res
           .status(409)
-          .json({ success: false, message: 'User already exists' }); // 409: Conflict
+          .json({ success: false, message: 'User already exists' });
       }
     } else if (req.method === 'PATCH') {
       const { user_id, user_password } = req.body;
@@ -55,7 +55,7 @@ export default async function handler(
         if (result.affectedRows > 0) {
           res.status(200).json({ success: true, message: 'Update successful' });
         } else {
-          res.status(204).end(); // 변경된 내용이 없을 때
+          res.status(204).end();
         }
       } else {
         res.status(404).json({ success: false, message: 'User not found' });

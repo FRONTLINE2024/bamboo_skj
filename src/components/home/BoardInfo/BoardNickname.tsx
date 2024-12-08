@@ -5,6 +5,7 @@ import { boardContext } from '@/context/homeContext';
 
 // styles
 import { Flex } from '@/styles/common/direction';
+
 interface BoardNicknameType {
   sortingLogo(universityName: string): JSX.Element | undefined;
 }

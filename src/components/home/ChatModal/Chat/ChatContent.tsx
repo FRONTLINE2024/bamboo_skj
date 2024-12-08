@@ -3,6 +3,8 @@ import Cookies from 'js-cookie';
 
 // styles
 import { Flex } from '@/styles/common/direction';
+
+// types
 import { ChatDataType } from '@/types/chat';
 
 interface ChatContentType {

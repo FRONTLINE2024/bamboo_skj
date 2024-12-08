@@ -3,6 +3,7 @@ import { SetStateAction, useContext } from 'react';
 // styles
 import { Nav, WriteBtn } from '@/styles/styles';
 import { Flex } from '@/styles/common/direction';
+
 // components
 import ModalBoard from './ModalBoard';
 import ModalBoardContent from '../ModalBoard/ModalBoardContent';

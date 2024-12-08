@@ -6,6 +6,7 @@ import { ModalContainer } from '../../styles/common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';
+
 interface ModalType {
   children: React.ReactNode;
   modal: boolean;

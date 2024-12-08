@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+
+// styles
 import { ModalContainer } from '@/styles/common/styles';
 
 // icons

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 // styles
 import { Flex } from '@/styles/common/direction';
@@ -9,6 +10,7 @@ import {
   Container,
 } from '@/styles/signup/styles';
 import { LoginButton, SignupButton } from '@/styles/login/styles';
+import { SchoolContainer } from '@/styles/common/styles';
 
 // types
 import { signupType, universityType } from '@/types/signup';
@@ -34,8 +36,6 @@ import {
   universityGreen,
   universityGray,
 } from '@/constants/universities';
-import { SchoolContainer } from '@/styles/common/styles';
-import Image from 'next/image';
 
 const Signup = () => {
   // toast boolean
@@ -121,7 +121,7 @@ const Signup = () => {
         stateText: '비밀번호를 전부 입력해주세요!',
       }));
     } else {
-      login(); // 비밀번호가 일치하는 경우 회원가입을 시도합니다.
+      login();
     }
     handleToast();
   }
@@ -156,12 +156,12 @@ const Signup = () => {
       '#8B7E75': universityGray,
     };
 
-    let borderColor = '#FF6500'; // 기본 색상
+    let borderColor = '#FF6500';
 
     for (const [color, universities] of Object.entries(colorMap)) {
       if (universities.includes(name)) {
         borderColor = color;
-        break; // 원하는 값을 찾으면 루프 종료
+        break;
       }
     }
     setBorderColor(borderColor);

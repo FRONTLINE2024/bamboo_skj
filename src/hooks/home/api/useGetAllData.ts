@@ -18,7 +18,7 @@ const useGetAllData = ({ setData }: useGetAllDataType) => {
     queryKey: ['getData'],
     queryFn: async () => {
       const response = await AllData();
-      // console.log('게시글 전체 데이터: ', response);
+
       if (response.status === 200) {
         setData(response.data);
       }

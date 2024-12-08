@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+
 // contexts
 import { navContext } from '@/context/homeContext';
 

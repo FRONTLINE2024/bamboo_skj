@@ -1,7 +1,10 @@
-// icons
-import { chatContext } from '@/context/homeContext';
 import { useContext } from 'react';
+
+// icons
 import { SlArrowUpCircle } from 'react-icons/sl';
+
+// contexts
+import { chatContext } from '@/context/homeContext';
 
 interface ChatInputType {
   handleCompositionStart: () => void;

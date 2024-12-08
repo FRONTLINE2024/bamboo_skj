@@ -15,8 +15,6 @@ export const handlers = [
         return user;
     });
 
-    // console.log(findUser);
-
     if (findUser.length > 0) {
       return HttpResponse.json(loginSuccessData);
     } else {

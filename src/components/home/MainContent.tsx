@@ -47,15 +47,15 @@ const MainContent = ({
       }
     );
 
-    const currentRef = bottomRef.current; // 현재 ref 값을 변수에 복사
+    const currentRef = bottomRef.current;
 
     if (currentRef) {
-      observer.observe(currentRef); // 변수 사용
+      observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef); // 클린업 시 변수 사용
+        observer.unobserve(currentRef);
       }
     };
   }, []);
