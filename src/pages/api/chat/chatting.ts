@@ -34,16 +34,21 @@ export default async function handler(
         // 상대방 ID 찾기
         const friendUserId = compare.find((v) => chatUserId !== v);
 
+        const userId = compare.find((v) => chatUserId === v);
+
         // 상대방 ID와 매칭되는 사용자 찾기
         const matchingUser = userRow.find((u) => u.user_index === friendUserId);
+
+        // 내 아이디 찾기
+        const matchMyId = userRow.find((u) => u.user_index === userId);
+
         return {
           ...d,
+          user_id: matchMyId?.user_id,
           chat_user_nickname: matchingUser ? matchingUser.user_nickname : null,
           university: matchingUser?.university,
         };
       });
-
-      // console.log(inputUserId);
 
       if (myChat.length > 0) {
         res.status(200).json(inputUserId);

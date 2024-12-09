@@ -489,7 +489,9 @@ const Home = () => {
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
         >
-          <chatContext.Provider value={{ currentMessage, setCurrentMessage }}>
+          <chatContext.Provider
+            value={{ currentMessage, setCurrentMessage, width }}
+          >
             <Chat
               myChat={myChat}
               sendMessages={sendMessages}

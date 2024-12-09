@@ -66,6 +66,7 @@ const Chat = ({
   // 채팅방 데이터
   const [chatData, setChatData] = useState<ChatDataType[]>([
     {
+      user_id: '',
       chat_content: '',
       chat_id: 0,
       chat_user_id: 0,
@@ -143,6 +144,7 @@ const Chat = ({
     } else {
       setChatData([
         {
+          user_id: '',
           chat_content: '',
           chat_id: 0,
           chat_user_id: 0,

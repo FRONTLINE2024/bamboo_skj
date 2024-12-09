@@ -13,6 +13,7 @@ export interface ChattingDataType {
 
 export interface ChatDataType {
   chat_content: string;
+  user_id: string;
   chat_id: number;
   chat_user_id: number;
   createAt: string;

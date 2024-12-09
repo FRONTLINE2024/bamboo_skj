@@ -13,12 +13,13 @@ interface ChatContentType {
 }
 
 const ChatContent = ({ chatData, messageEndRef }: ChatContentType) => {
+  console.log(chatData);
   return chatData?.map((d, i) => (
     <div key={i}>
-      {Number(Cookies.get('user_index')) === d.chat_user_id ? (
+      {Number(Cookies.get('user_index')) === d.senderID ? (
         <div className="myChat">
           <div style={{ ...Flex, alignItems: 'flex-end' }}>
-            <span className="userName">{d.chat_user_nickname}</span>
+            <span className="userName">{d.user_id}</span>
             <div className="myContent">{d.chat_content}</div>
           </div>
         </div>

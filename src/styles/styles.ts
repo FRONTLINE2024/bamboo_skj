@@ -224,7 +224,7 @@ export const Container = styled.div`
 
   .chatSpinner {
     position: fixed;
-    bottom: 0.5rem;
+    bottom: 1rem;
     right: 1rem;
     cursor: pointer;
     border-radius: 50%;

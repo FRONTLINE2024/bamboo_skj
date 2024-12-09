@@ -16,6 +16,7 @@ export interface NavContextType {
 export interface ChatContextType {
   currentMessage: string;
   setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
+  width: number;
 }
 
 export interface BoardContextType {
@@ -41,6 +42,7 @@ export const navContext = createContext<NavContextType>({
 export const chatContext = createContext<ChatContextType>({
   currentMessage: '',
   setCurrentMessage: () => {},
+  width: 0,
 });
 
 export const boardContext = createContext<BoardContextType>({
