@@ -6,7 +6,30 @@ export const FriendRequestContainer = styled.div`
   flex-direction: column;
   padding: 3px 15px 3px 15px;
 
+  .container {
+    display: flex;
+    height: 70px;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #d2d2d1;
+    padding: 7px;
+  }
+  .userSection {
+    width: 92%;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .userEmail {
+    font-family: 'GmarketSansMedium';
+  }
+  .createAt {
+    font-family: 'GmarketSansLight';
+  }
   .btn {
+    width: 40px;
+    text-align: center;
     font-family: 'GmarketSansLight';
     cursor: pointer;
     background-color: ${theme.third};
@@ -21,6 +44,25 @@ export const FriendRequestContainer = styled.div`
       border: 1px solid ${theme.third};
     }
   }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 880px) and (max-width: 1000px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 880px) {
+    font-size: 0.7rem;
+
+    .container {
+      height: 50px;
+    }
+    .userSection {
+      height: 40px;
+    }
+  }
 `;
 
 export const FriendHeader = styled.header`
@@ -28,15 +70,34 @@ export const FriendHeader = styled.header`
   justify-content: space-evenly;
 
   span {
-    cursor: pointer; /* 클릭 가능한 느낌 */
+    cursor: pointer;
     border-bottom: 1px solid gray;
     padding-bottom: 10px;
     font-family: 'GmarketSansLight';
 
-    /* 색상 및 경계 색상 변경 */
     &.active {
-      color: ${theme.primary}; /* 활성화된 색상 */
-      border-bottom: 1px solid ${theme.primary}; /* 활성화된 경계 색상 */
+      color: ${theme.primary};
+      border-bottom: 1px solid ${theme.primary};
     }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 900px) and (max-width: 1000px) {
+    font-size: 0.8rem;
+  }
+
+  @media (min-width: 750px) and (max-width: 900px) {
+    font-size: 0.7rem;
+  }
+
+  @media (min-width: 660px) and (max-width: 750px) {
+    font-size: 0.65rem;
+  }
+
+  @media (max-width: 660px) {
+    font-size: 0.5rem;
   }
 `;

@@ -206,7 +206,4 @@ export const ChatData = styled.div`
       font-size: 0.6rem;
     }
   }
-
-  @media (max-width: 900px) {
-  }
 `;

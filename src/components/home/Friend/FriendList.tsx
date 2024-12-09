@@ -70,31 +70,10 @@ const FriendList = ({
         if (d.status === 1) {
           return (
             <FriendRequestContainer key={i}>
-              <div
-                style={{
-                  display: 'flex',
-                  height: '70px',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  borderBottom: '1px solid #d2d2d1',
-                  padding: '7px',
-                }}
-              >
-                <div
-                  style={{
-                    width: '92%',
-                    height: '50px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <span style={{ fontFamily: 'GmarketSansMedium' }}>
-                    {d.userEmail}
-                  </span>
-                  <span style={{ fontFamily: 'GmarketSansLight' }}>
-                    {getDate(d.createAt)}
-                  </span>
+              <div className="container">
+                <div className="userSection">
+                  <span className="userEmail">{d.userEmail}</span>
+                  <span className="createAt">{getDate(d.createAt)}</span>
                 </div>
 
                 <span className="btn" onClick={() => acceptFunc(d)}>
