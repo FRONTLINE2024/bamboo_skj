@@ -137,9 +137,10 @@ export const ToastContainer = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   top: 10%;
-  left: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   box-shadow: 0px 1px 2px 1px gray;
   border-radius: 0.2rem;
   font-family: 'GmarketSansMedium';
@@ -147,8 +148,43 @@ export const ToastContainer = styled.div`
   animation: 0.5s ${toastShow};
 
   span {
-    margin-right: 0.2rem;
     margin-left: 0.6rem;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: auto;
+    font-size: 0.8rem;
+    padding-right: 0.4rem;
+    padding-left: 0.4rem;
+
+    span {
+      font-size: 0.8rem;
+      margin-right: 0.4rem;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    width: auto;
+    font-size: 0.7rem;
+    padding-right: 0.3rem;
+    padding-left: 0.3rem;
+
+    span {
+      font-size: 0.7rem;
+      margin-right: 0.3rem;
+    }
+  }
+
+  @media (max-width: 800px) {
+    width: auto;
+    font-size: 0.6rem;
+    padding-right: 0.2rem;
+    padding-left: 0.2rem;
+
+    span {
+      font-size: 0.6rem;
+      margin-right: 0.2rem;
+    }
   }
 `;
 

@@ -13,7 +13,6 @@ const messageIcon = {
 };
 
 const Toast = ({ children, stateCode }: ToastType) => {
-  // console.log(stateCode);
   const [toastRoot, setToastRoot] = useState<HTMLElement | null>(null);
   const [icon, setIcon] = useState<string>('');
 

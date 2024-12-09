@@ -28,12 +28,13 @@ import Toast from '@/components/common/Toast';
 import { ToastStateType } from '@/types/home';
 
 const Login = () => {
+  // 클라이언트
   const [isClient, setIsClient] = useState<boolean>(false);
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
-    state: false,
-    stateText: '',
-    stateCode: '',
+    state: true,
+    stateText: '유저 아이디가 존재하지 않습니다!',
+    stateCode: '200',
   });
   const { state, stateText, stateCode } = toastState;
   // password show
@@ -45,14 +46,21 @@ const Login = () => {
     user_password: '',
     university: '',
   });
+  const { user_id, user_password } = loginData;
 
   const userIndex = isClient && localStorage.getItem('user_index');
+
+  // 뷰포트 크기
+  const [viewportSize, setViewportSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const { width, height } = viewportSize;
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const { user_id, user_password } = loginData;
 
   function handlePwd() {
     setIsShowed(!isShowed);
@@ -99,25 +107,43 @@ const Login = () => {
     findUser();
   }
 
+  const handleResize = () => {
+    setViewportSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  function sortingWidthOfLogo() {
+    switch (true) {
+      case width < 1070 && width > 1000:
+        return <RiKakaoTalkFill size={30} fill="#000000" />;
+      case width < 1000:
+        return <RiKakaoTalkFill size={26} fill="#000000" />;
+      default:
+        return <RiKakaoTalkFill size={36} fill="#000000" />;
+    }
+  }
+
   return (
     <>
       <div id="toast_message"></div>
       {state && (
         <Toast stateCode={stateCode}>
-          <div>{stateText}</div>
+          <div style={{ textAlign: 'center', width: '100%' }}>{stateText}</div>
         </Toast>
       )}
 
       <Container>
-        <div
-          style={{
-            ...Flex,
-            flexDirection: 'column',
-            height: '50%',
-            justifyContent: 'space-between',
-            transform: 'translateY(-10%)',
-          }}
-        >
+        <div className="container">
           <h2>FrontLine</h2>
 
           <div style={{ ...Flex, flexDirection: 'column', gap: '10px' }}>
@@ -166,17 +192,15 @@ const Login = () => {
             <Link data-testid="signup-link" href={'/signup'}>
               <SignupButton>회원가입</SignupButton>
             </Link>
+            <KakaoButton onClick={kakaoLogin}>
+              <div className="btn">{sortingWidthOfLogo()}</div>
+
+              <span className="loginText">카카오 로그인</span>
+              <span></span>
+              <span></span>
+            </KakaoButton>
           </div>
         </div>
-        <KakaoButton onClick={kakaoLogin}>
-          <div className="btn">
-            <RiKakaoTalkFill size={36} fill="#000000" />
-          </div>
-
-          <span className="loginText">카카오 로그인</span>
-          <span></span>
-          <span></span>
-        </KakaoButton>
       </Container>
     </>
   );

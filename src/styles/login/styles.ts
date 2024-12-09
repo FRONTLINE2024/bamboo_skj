@@ -19,9 +19,17 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-
   animation: 1s ${showContainer};
   animation-fill-mode: forwards;
+
+  .container {
+    height: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateY(-10%);
+  }
 
   h2 {
     font-family: 'GmarketSansBold';
@@ -51,6 +59,44 @@ export const Container = styled.div`
       border: 2px solid ${theme.primary};
     }
   }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .container {
+      height: 45%;
+    }
+
+    .inputContainer {
+      width: 25vw;
+      height: 30px;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    .container {
+      height: 43%;
+    }
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    .inputContainer {
+      width: 23vw;
+      height: 28px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .container {
+      height: 40%;
+    }
+    h2 {
+      font-size: 1.1rem;
+    }
+    .inputContainer {
+      width: 23vw;
+      height: 24px;
+    }
+  }
 `;
 
 const Button = styled.button`
@@ -64,6 +110,16 @@ const Button = styled.button`
   outline: none;
   border: none;
   cursor: pointer;
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 26vw;
+    height: 30px;
+  }
+
+  @media (max-width: 1000px) {
+    width: 24vw;
+    height: 30px;
+  }
 `;
 
 export const LoginButton = styled(Button)`
@@ -112,6 +168,42 @@ const SocialButton = styled.div`
   .loginText {
     width: 8rem;
     text-align: end;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 26vw;
+    height: 30px;
+    .loginText {
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 940px) and (max-width: 1000px) {
+    width: 24vw;
+    height: 30px;
+    .loginText {
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 940px) {
+    width: 24vw;
+    height: 30px;
+    .loginText {
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 900px) {
+    width: 24vw;
+    height: 30px;
+    .loginText {
+      font-size: 0.9rem;
+      text-align: start;
+    }
   }
 `;
 
