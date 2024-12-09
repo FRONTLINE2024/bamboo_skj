@@ -79,7 +79,7 @@ const MainContent = ({
 
   function sortingWidthOfImage(img: string | File | null) {
     switch (true) {
-      case width > 0 && width < 1500:
+      case width < 1500:
         return (
           img &&
           typeof img === 'string' && (

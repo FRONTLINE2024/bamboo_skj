@@ -32,9 +32,9 @@ const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
-    state: true,
-    stateText: '유저 아이디가 존재하지 않습니다!',
-    stateCode: '200',
+    state: false,
+    stateText: '',
+    stateCode: '',
   });
   const { state, stateText, stateCode } = toastState;
   // password show

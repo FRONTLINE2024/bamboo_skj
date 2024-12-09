@@ -119,6 +119,7 @@ export const Container = styled.div`
     justify-content: flex-start;
     align-items: space-between;
     flex-direction: column;
+    margin-top: 1.5rem;
   }
 
   .boardTitleInput {
@@ -138,7 +139,7 @@ export const Container = styled.div`
   .boardContent {
     display: flex;
     max-width: 99%;
-    min-height: 40vh;
+    height: 40vh;
     font-family: 'GmarketSansLight';
     font-weight: 600;
     padding: 0.5rem;
@@ -149,6 +150,37 @@ export const Container = styled.div`
 
     &:focus {
       border: 1px solid ${theme.primary};
+    }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .boardTitleInput {
+      font-size: 0.8rem;
+    }
+
+    .boardContent {
+      min-height: 35vh;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (min-width: 650px) and (max-width: 1000px) {
+    .boardTitleInput {
+      font-size: 0.7rem;
+    }
+    .boardContent {
+      min-height: 30vh;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .boardTitleInput {
+      font-size: 0.7rem;
+    }
+    .boardContent {
+      min-height: 25vh;
+      font-size: 0.7rem;
     }
   }
 
@@ -202,11 +234,14 @@ export const Container = styled.div`
   }
 
   .btnUpload {
-    width: 6vw;
+    width: 100px;
+    height: 19px;
     padding: 5px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 0.2rem;
-    text-align: center;
     font-size: 0.8rem;
     color: ${theme.secondary};
     border: 1px solid ${theme.secondary};
@@ -215,6 +250,22 @@ export const Container = styled.div`
     &:hover {
       color: white;
       background-color: ${theme.primary};
+    }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .btnUpload {
+      width: 90px;
+      height: 15px;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .btnUpload {
+      width: 80px;
+      height: 13px;
+      font-size: 0.7rem;
     }
   }
 
@@ -470,7 +521,8 @@ export const HomeInput = styled.input`
 `;
 
 export const WriteBtn = styled.button`
-  width: 50px;
+  width: 100px;
+  height: 30px;
   border-radius: 0.2rem;
   outline: none;
   border: 1px solid ${theme.primary};
@@ -486,6 +538,18 @@ export const WriteBtn = styled.button`
     background-color: white;
     color: ${theme.primary};
     border: 1px solid ${theme.primary};
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 90px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 1000px) {
+    width: 80px;
+    height: 24px;
+    font-size: 0.7rem;
   }
 `;
 
