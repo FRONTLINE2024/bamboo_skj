@@ -31,15 +31,7 @@ const Modal = ({ width, height, openModal, children }: ModalType) => {
         {/* 모달 헤더 */}
         <div className="modalHeader">
           <div onClick={openModal}>
-            <IoClose
-              style={{
-                marginRight: '0.4rem',
-                width: '20',
-                height: '20',
-                cursor: 'pointer',
-                color: 'black',
-              }}
-            />
+            <IoClose className="close" />
           </div>
         </div>
         {/* 모달 컨텐츠 부분 */}

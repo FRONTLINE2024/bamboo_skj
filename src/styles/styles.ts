@@ -16,10 +16,34 @@ export const Container = styled.div`
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
   }
+  .boardInfoContainer {
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 5px;
+    margin-top: 2rem;
+  }
 
   .publisher {
     font-family: 'GmarketSansBold';
     font-size: 1.2rem;
+  }
+
+  @media (max-width: 1000px) {
+    .publisher {
+      font-size: 1rem;
+    }
+  }
+
+  .nickname {
+    margin-left: 5px;
+  }
+
+  @media (max-width: 1000px) {
+    .nickname {
+      font-size: 0.8rem;
+    }
   }
 
   .date {
@@ -27,12 +51,42 @@ export const Container = styled.div`
     font-family: 'GmarketSansMedium';
   }
 
+  @media (max-width: 1000px) {
+    .date {
+      font-size: 0.9rem;
+    }
+  }
+
   .content {
-    width: 100%;
+    width: 90%;
     height: 40vh;
     overflow-y: scroll;
     margin-right: 0.3rem;
     font-family: 'GmarketSansLight';
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .content {
+      height: 35vh;
+    }
+  }
+
+  @media (min-width: 650px) and (max-width: 1000px) {
+    .content {
+      height: 25vh;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .content {
+      height: 15vh;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .content {
+      font-size: 0.9rem;
+    }
   }
 
   .content::-webkit-scrollbar {
@@ -43,6 +97,15 @@ export const Container = styled.div`
     display: flex;
     flex-direction: row;
   }
+
+  @media (max-width: 1000px) {
+    .row {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+
   .boardWriteContainer {
     height: 100%;
     display: flex;
@@ -104,7 +167,29 @@ export const Container = styled.div`
     &:focus {
       border: 1px solid ${theme.primary};
     }
+
+    @media (max-width: 1070px) {
+      .boardContent2 {
+        height: 15vh;
+      }
+    }
   }
+  .boardInfoButtonRow {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: 12vh;
+  }
+
+  @media (max-width: 1070px) {
+    .boardInfoButtonRow {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      height: 8vh;
+    }
+  }
+
   .boardWriteFile {
     width: 100%;
     display: flex;
@@ -213,8 +298,15 @@ export const Nav = styled.nav`
   margin-bottom: 0.5rem;
   margin-top: 1rem;
 
-  select {
-    width: auto;
+  .navRow {
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  select,
+  .sortButton {
     height: 30px;
     display: flex;
     align-items: center;
@@ -225,27 +317,28 @@ export const Nav = styled.nav`
     cursor: pointer;
   }
 
-  .sortButton {
+  select {
     width: auto;
-    height: 30px;
-    display: flex;
-    align-items: center;
+  }
+
+  .sortButton {
     text-align: center;
-    border: 1px solid #e2e2e2;
-    background-color: #f5f5f5;
-    font-family: 'GmarketSansMedium';
-    cursor: pointer;
+  }
+
+  @media (max-width: 970px) {
+    .navRow {
+      width: 120px;
+    }
   }
 `;
 
-export const Main = styled.main`
+export const Main = styled.main<{ $width: number }>`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  overflow-y: scroll;
-  flex-grow: 0.4;
+  /* flex-grow: 0.4; */
 
   &::-webkit-scrollbar {
     display: none;
@@ -257,6 +350,7 @@ export const Main = styled.main`
     width: 40%;
     cursor: pointer;
   }
+
   .boardHeader {
     width: 100%;
     height: 15px;
@@ -301,6 +395,62 @@ export const Main = styled.main`
     margin-left: 10px;
     object-fit: contain;
   }
+
+  .btnRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 4px;
+    height: 80%;
+  }
+
+  @media (min-width: 800px) and (max-width: 900px) {
+    .boardTitle {
+      font-size: 0.9rem;
+      width: 70%;
+    }
+
+    .boardCreateAt {
+      font-size: 0.7rem;
+    }
+
+    .btnRow {
+      height: auto;
+      padding: 0;
+      height: 30px;
+    }
+
+    .boardStructure {
+      height: 40px;
+      flex-grow: 1;
+    }
+
+    .boardRow {
+      height: 70px;
+    }
+  }
+
+  @media (max-width: 850px) {
+    .boardTitle {
+      font-size: 0.9rem;
+    }
+
+    .boardCreateAt {
+      font-size: 0.7rem;
+    }
+
+    .boardTitle {
+      width: 70%;
+    }
+
+    .boardContainer {
+      display: flex;
+      justify-content: center;
+      width: 80%;
+      cursor: pointer;
+    }
+  }
 `;
 
 export const HomeInput = styled.input`
@@ -320,6 +470,7 @@ export const HomeInput = styled.input`
 `;
 
 export const WriteBtn = styled.button`
+  width: 50px;
   border-radius: 0.2rem;
   outline: none;
   border: 1px solid ${theme.primary};
@@ -354,6 +505,11 @@ export const DeleteBtn = styled.button`
     background-color: white;
     color: ${theme.secondary};
     border: 1px solid ${theme.secondary};
+  }
+
+  @media (max-width: 970px) {
+    height: 20px;
+    font-size: 0.5rem;
   }
 `;
 

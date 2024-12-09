@@ -26,6 +26,7 @@ export interface BoardContextType {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
   PatchBoardData(): void;
   modifyChange(): void;
+  width: number;
 }
 
 // Context 생성 및 초기값 설정
@@ -59,4 +60,5 @@ export const boardContext = createContext<BoardContextType>({
   fileInputRef: { current: null },
   PatchBoardData: () => {},
   modifyChange: () => {},
+  width: 0,
 });

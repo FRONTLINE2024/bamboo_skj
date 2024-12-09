@@ -58,7 +58,6 @@ const Header = ({
                   marginTop: '6.5rem',
                   justifyContent: 'space-evenly',
                   height: '75px',
-                  // height: '200px',
                 }}
               >
                 <FaUserFriends

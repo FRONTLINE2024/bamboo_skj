@@ -8,14 +8,7 @@ const BoardButton = () => {
 
   const { selected, boardModify, PatchBoardData, modifyChange } = context;
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-        height: '12vh',
-      }}
-    >
+    <div className="boardInfoButtonRow">
       {Cookies.get('user_index') === String(selected.board_user_id) &&
         (boardModify ? (
           <ModifyBtn

@@ -52,7 +52,6 @@ const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
       const logo = universities.filter(
         (university) => university.name === universityName
       );
-      // console.log(logo);
 
       return (
         <Image
@@ -67,15 +66,7 @@ const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '10px',
-        gap: '5px',
-        marginTop: '2rem',
-      }}
-    >
+    <div className="boardInfoContainer">
       <BoardTitle />
       <BoardNickname sortingLogo={sortingLogo} />
       <BoardDate />

@@ -24,7 +24,7 @@ const NavBar = ({
     <Nav>
       <div></div>
       <div></div>
-      <div style={{ ...Flex, width: '10vw', justifyContent: 'space-between' }}>
+      <div className="navRow">
         <WriteBtn onClick={() => setIsBoardOpened(true)}>작성</WriteBtn>
         {isBoardOpened && (
           <ModalBoard modal={isBoardOpened} openModal={openModalBoard}>

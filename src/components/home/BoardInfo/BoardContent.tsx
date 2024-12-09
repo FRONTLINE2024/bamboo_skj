@@ -19,7 +19,36 @@ const BoardContent = ({ previewImage, handleFileChange }: BoardContentType) => {
     selected,
     handleImageClick,
     fileInputRef,
+    width,
   } = context;
+
+  function sortingWidthOfContent() {
+    if (previewImage && typeof previewImage === 'string') {
+      const commonStyles = {
+        borderRadius: width > 1000 ? '5px' : '3px',
+        boxShadow: '0px 1px 3px 1px gray',
+        cursor: 'pointer',
+        marginBottom: width <= 1000 ? '2px' : undefined,
+      };
+
+      const size =
+        width > 1000
+          ? { width: 200, height: 200 }
+          : { width: 130, height: 130 };
+
+      return (
+        <Image
+          src={previewImage}
+          style={commonStyles}
+          alt="이미지"
+          {...size}
+          unoptimized={true}
+          onClick={handleImageClick}
+        />
+      );
+    }
+  }
+
   return (
     <div className="row">
       <div className="content">
@@ -27,7 +56,6 @@ const BoardContent = ({ previewImage, handleFileChange }: BoardContentType) => {
           <textarea
             className="boardContent2"
             value={selected.board_content}
-            style={{ height: '20vh' }}
             onChange={(e) =>
               inputSelectedBoardData('board_content', e.target.value)
             }
@@ -38,21 +66,8 @@ const BoardContent = ({ previewImage, handleFileChange }: BoardContentType) => {
         )}
       </div>
 
-      {previewImage && typeof previewImage === 'string' && (
-        <Image
-          src={previewImage}
-          style={{
-            borderRadius: '5px',
-            boxShadow: '0px 1px 3px 1px gray',
-            cursor: 'pointer',
-          }}
-          alt="이미지"
-          width={200}
-          height={200}
-          unoptimized={true}
-          onClick={handleImageClick}
-        />
-      )}
+      {sortingWidthOfContent()}
+
       {boardModify && (
         <input
           type="file"

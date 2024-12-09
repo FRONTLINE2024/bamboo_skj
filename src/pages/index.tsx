@@ -52,6 +52,14 @@ import { chatContext, navContext, boardContext } from '@/context/homeContext';
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 const Home = () => {
+  // 초기화
+  const [isInitialize, setIsInitialize] = useState<boolean>(false);
+  // 뷰포트 크기
+  const [viewportSize, setViewportSize] = useState({
+    width: 0,
+    height: 0,
+  });
+  const { width, height } = viewportSize;
   // 라우터
   const router = useRouter();
   // 채팅
@@ -166,11 +174,10 @@ const Home = () => {
     }
   }, [successScrollData, isInitialized]);
 
-  const { data: InfiniteScrollData, mutate: getPagingBoardDelete } =
-    useGetInfiniteScroll({
-      setInfiniteBoardData,
-      deleteBoardId,
-    }); // 삭제 시 무한 스크롤 데이터 GET
+  const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
+    setInfiniteBoardData,
+    deleteBoardId,
+  }); // 삭제 시 무한 스크롤 데이터 GET
 
   const { mutate: getPagingData } = useGetScrollData({ setInfiniteBoardData });
 
@@ -197,19 +204,6 @@ const Home = () => {
     refetchChattingData,
     getMyIndividualChat,
   }); // 채팅 메세지 보내기
-
-  // // 정렬
-  // const { mutate: fetchAscendData } = useGetDateAscendData({
-  //   setInfiniteBoardData,
-  // }); // 오래된 순
-
-  // const { mutate: fetchDescendData } = useGetDateDescendData({
-  //   setInfiniteBoardData,
-  // }); // 최신 순
-
-  // const { mutate: fetchContentAscendData } = useGetContentAscendData({
-  //   setInfiniteBoardData,
-  // }); // 이름 순
 
   const { mutate: patchBoards } = usePatchBoard({
     formPatchData,
@@ -368,7 +362,7 @@ const Home = () => {
         setInfiniteBoardData(sorting);
         break;
       default:
-        break; // 기본값 추가
+        break;
     }
   }
 
@@ -385,6 +379,21 @@ const Home = () => {
     { isOpen: chattingModalBoolean, close: closeModalChat },
     { isOpen: friendRequestModal, close: closeFriendModal },
   ];
+
+  const handleResize = () => {
+    setViewportSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     console.log('선택된 게시글 데이터: ', selected);
@@ -443,6 +452,8 @@ const Home = () => {
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
           getPagingBoard={getPagingBoard}
+          width={width}
+          height={height}
         />
         {isOpened && (
           <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
@@ -455,6 +466,7 @@ const Home = () => {
                 fileInputRef,
                 PatchBoardData,
                 modifyChange,
+                width,
               }}
             >
               <BoardInfo

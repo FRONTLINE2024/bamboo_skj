@@ -29,19 +29,93 @@ export const ModalContainer = styled.div<{ width: number; height: number }>`
 
   .modal {
     width: 100%;
+    height: ${({ height }) => height - 5}vh;
     display: flex;
     flex-direction: column;
   }
 
   .modalHeader {
-    width: ${({ width }) => width}vw;
+    width: 100%;
     position: fixed;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    align-items: flex-start;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 0.2rem 0.2rem 0 0;
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
+  }
+
+  .close {
+    margin-right: 0.4rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: black;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 40vw;
+    height: 60vh;
+
+    .modalHeader {
+      width: 40vw;
+      height: 15px;
+      margin-top: 0;
+    }
+
+    .modal {
+      height: 38vh;
+    }
+
+    .close {
+      margin-right: 0.1rem;
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    width: 35vw;
+    height: 55vh;
+
+    .modalHeader {
+      width: 35vw;
+    }
+
+    .modal {
+      height: 32vh;
+    }
+
+    .close {
+      margin-right: 0.1rem;
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  @media (max-width: 650px) {
+    width: 35vw;
+    height: 46vh;
+
+    .modalHeader {
+      width: 35vw;
+      height: 15px;
+      margin-top: 0;
+    }
+    .boardInfoContainer {
+      margin-top: 1rem;
+    }
+
+    .modal {
+      height: 25vh;
+    }
+
+    .close {
+      margin-right: 0.1rem;
+      width: 15px;
+      height: 15px;
+    }
   }
 `;
 
@@ -70,7 +144,6 @@ export const ToastContainer = styled.div`
   border-radius: 0.2rem;
   font-family: 'GmarketSansMedium';
   background-color: white;
-
   animation: 0.5s ${toastShow};
 
   span {
