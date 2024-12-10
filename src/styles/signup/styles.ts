@@ -39,6 +39,15 @@ export const SignupContainer = styled.div`
   animation: 1s ${showContainer};
   animation-fill-mode: forwards;
 
+  .container {
+    height: 75%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateY(-10%);
+  }
+
   .inputContainer {
     width: 30vw;
     height: 30px;
@@ -61,6 +70,46 @@ export const SignupContainer = styled.div`
 
     &:focus-within {
       border: 2px solid ${theme.primary};
+    }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .container {
+      height: 70%;
+    }
+
+    .inputContainer {
+      width: 25vw;
+      height: 30px;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    .container {
+      height: 67%;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .inputContainer {
+      width: 23vw;
+      height: 28px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .container {
+      height: 64%;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+    .inputContainer {
+      width: 23vw;
+      height: 24px;
     }
   }
 
@@ -129,5 +178,20 @@ export const InputContainer = styled.div<{ $borderColor: string }>`
     border: none;
     font-family: 'GmarketSansMedium';
     color: black;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 25vw;
+    height: 30px;
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    width: 23vw;
+    height: 28px;
+  }
+
+  @media (max-width: 800px) {
+    width: 23vw;
+    height: 24px;
   }
 `;

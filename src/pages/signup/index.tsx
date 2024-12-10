@@ -40,9 +40,11 @@ import {
 const Signup = () => {
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
-    state: false,
-    stateText: '',
-    stateCode: '',
+    state: true,
+    // stateText: '',
+    // stateCode: '',
+    stateCode: '404',
+    stateText: '아이디는 4자리 이상으로 설정해주세요!',
   });
 
   const { state, stateCode, stateText } = toastState;
@@ -195,20 +197,20 @@ const Signup = () => {
 
       {state && (
         <Toast stateCode={stateCode}>
-          <div style={{ width: '100%', textAlign: 'center' }}>{stateText}</div>
+          <div
+            style={{
+              textAlign: 'center',
+              marginLeft: '0.2rem',
+              marginRight: '1rem',
+            }}
+          >
+            {stateText}
+          </div>
         </Toast>
       )}
 
       <SignupContainer>
-        <div
-          style={{
-            ...Flex,
-            flexDirection: 'column',
-            height: '75%',
-            justifyContent: 'space-between',
-            transform: 'translateY(-10%)',
-          }}
-        >
+        <div className="container">
           <h2>FrontLine</h2>
 
           <div

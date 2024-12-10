@@ -132,13 +132,13 @@ const toastShow = keyframes`
 `;
 
 export const ToastContainer = styled.div`
-  width: 25vw;
+  width: auto;
   height: 40px;
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  top: 10%;
+  bottom: 7%;
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0px 1px 2px 1px gray;
