@@ -19,11 +19,10 @@ import BoardButton from './BoardInfo/BoardButton';
 import { BoardType } from '@/types/home';
 
 interface BoardInfoType {
-  handleSelectedImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setSelected: SetterOrUpdater<BoardType>;
 }
 
-const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
+const BoardInfo = ({ setSelected }: BoardInfoType) => {
   const context = useContext(boardContext);
 
   const { selected } = context;

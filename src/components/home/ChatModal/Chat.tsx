@@ -40,7 +40,6 @@ import { useSocket } from '@/components/provider/SocketWrapper';
 interface ChatType {
   myChat: ChatDataType[] | undefined;
   sendMessages: UseMutateFunction<void, Error, void, unknown>;
-  currentMessage: string;
   setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
   getMyIndividualChat: (
     options?: RefetchOptions | undefined
@@ -53,12 +52,7 @@ export interface listType {
   university: string;
 }
 
-const Chat = ({
-  myChat,
-  sendMessages,
-  currentMessage,
-  setCurrentMessage,
-}: ChatType) => {
+const Chat = ({ myChat, sendMessages, setCurrentMessage }: ChatType) => {
   // 소켓
   const { socket } = useSocket();
   // 입력중인지 판단
@@ -133,14 +127,12 @@ const Chat = ({
   }
 
   function processChattingRoom({ id, userNickname }: listType) {
-    const thisChattingRoom = myChat?.filter((chat) => {
-      if (chat.chat_user_nickname === userNickname) {
-        return chat;
-      }
-    });
+    const thisChattingRoom = (myChat || []).filter(
+      (chat) => chat.chat_user_nickname === userNickname
+    );
 
-    if (thisChattingRoom?.length! > 0) {
-      setChatData(thisChattingRoom!);
+    if (thisChattingRoom.length > 0) {
+      setChatData(thisChattingRoom);
     } else {
       setChatData([
         {

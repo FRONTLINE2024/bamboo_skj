@@ -24,7 +24,6 @@ interface MainContentType {
     options?: MutateOptions<BoardType[], Error, void, unknown> | undefined
   ) => void;
   width: number;
-  height: number;
 }
 
 const MainContent = ({
@@ -33,7 +32,6 @@ const MainContent = ({
   boardDelete,
   getPagingBoard,
   width,
-  height,
 }: MainContentType) => {
   const bottomRef = useRef(null);
 

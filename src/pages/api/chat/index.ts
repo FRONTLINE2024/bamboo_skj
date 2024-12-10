@@ -13,10 +13,6 @@ const chatHandler = async (
   try {
     if (req.method === 'POST') {
       const { chat_content, chat_user_id, receiverID } = req.body;
-      const message = {
-        currentMessage: chat_content,
-        receiverID: receiverID,
-      };
       const senderID = chat_user_id;
 
       await connection.execute<RowDataPacket[]>(

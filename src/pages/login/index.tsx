@@ -56,7 +56,7 @@ const Login = () => {
     height: 0,
   });
 
-  const { width, height } = viewportSize;
+  const { width } = viewportSize;
 
   useEffect(() => {
     setIsClient(true);
