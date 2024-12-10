@@ -147,7 +147,7 @@ const Home = () => {
     board_img: selected.board_img,
   });
 
-  // React Query
+  // TanStack Query
   const { refetch: refetchAllData } = useGetAllData({
     setData,
   }); // 모든 데이터 GET
@@ -335,7 +335,6 @@ const Home = () => {
   // 게시글 삭제 함수
   function boardDelete(id: number) {
     deleteBoards(id);
-    //setState 함수
     setDeleteBoardId(id);
   }
 

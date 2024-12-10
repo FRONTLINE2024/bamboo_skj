@@ -53,25 +53,17 @@ const UserList = ({
         return;
       }
 
-      console.log('친구 아이디들: ', myFriendIDs, myFriendIDs2);
-
       myFriendIDs?.push(...myFriendIDs2);
 
       const { data } = response;
-
-      console.log(myFriendIDs);
 
       const removeOne = myFriendIDs?.filter(
         (id) => id !== Number(Cookies.get('user_index'))
       );
 
-      // console.log(removeOne);
-
       const usersNotFriends = data.filter((d: userEntireType) => {
         return !removeOne?.includes(d.user_index);
       });
-
-      console.log('Users not in friend list: ', usersNotFriends);
 
       return usersNotFriends;
     },
@@ -86,11 +78,6 @@ const UserList = ({
         friendUserID,
         status: false,
       });
-
-      // if (response.status === 200) {
-      //   getEntireUser();
-      //   requestFriend();
-      // }
 
       console.log(response);
 

@@ -4,7 +4,6 @@ import { SetStateAction, createContext } from 'react';
 import { messageType } from '@/types/chat';
 import { BoardType } from '@/types/home';
 
-// 상태 타입 정의
 export interface NavContextType {
   inputBoardData: (sort: string, value: string | number) => void;
   writeBoard: () => void;

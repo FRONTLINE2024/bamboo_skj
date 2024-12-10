@@ -10,14 +10,14 @@ export default async function handler(
 
   try {
     if (req.method === 'GET') {
-      const { offset, limit } = req.query; // 기본값 설정s
+      const { offset, limit } = req.query;
 
       const [rows] = await connection.execute<RowDataPacket[]>(
         'SELECT * FROM board LIMIT ? OFFSET ?',
         [limit, offset]
       );
 
-      res.status(200).json(rows); // 200: OK
+      res.status(200).json(rows);
     } else {
       res.status(405).json({ success: false, message: 'Method not allowed' });
     }

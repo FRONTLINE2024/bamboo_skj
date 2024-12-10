@@ -40,7 +40,7 @@ const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
 
       setSelected((prev) => ({
         ...prev,
-        board_img: file, // file 객체를 상태에 저장
+        board_img: file,
       }));
 
       return () => URL.revokeObjectURL(imageUrl);

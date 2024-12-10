@@ -33,9 +33,6 @@ const FriendRequest = ({ friendList, requestFriend }: FriendRequestType) => {
   });
   const { userID, friendUserID, status } = requestData;
 
-  // 친구 요청
-  // const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
-
   // 친구 수락
   const { mutate: acceptFriend } = usePostFriendAccept({
     requestFriend,

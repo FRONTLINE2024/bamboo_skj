@@ -48,7 +48,7 @@ const usePostUserLogin = ({
       Cookie.set('user_index', data.data.user_index);
       router.push('/');
     },
-    // 타입 지정 알아보기
+
     onError(err: AxiosError) {
       setToastState((prev) => ({
         ...prev,

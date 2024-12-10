@@ -93,7 +93,7 @@ const Login = () => {
     }
   }
 
-  // React Query
+  // TanStack Query
   const { mutate: userLogins } = usePostUserLogin({
     loginData,
     setToastState,

@@ -40,11 +40,9 @@ import {
 const Signup = () => {
   // toast boolean
   const [toastState, setToastState] = useState<ToastStateType>({
-    state: true,
-    // stateText: '',
-    // stateCode: '',
-    stateCode: '404',
-    stateText: '아이디는 4자리 이상으로 설정해주세요!',
+    state: false,
+    stateText: '',
+    stateCode: '',
   });
 
   const { state, stateCode, stateText } = toastState;
