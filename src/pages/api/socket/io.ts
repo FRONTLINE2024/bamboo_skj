@@ -1,43 +1,43 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+// import { NextApiRequest, NextApiResponse } from 'next';
 
-// libraries
-import { Server as NetServer } from 'http';
-import { Socket } from 'net';
-import { Server as ServerIO } from 'socket.io';
+// // libraries
+// import { Server as NetServer } from 'http';
+// import { Socket } from 'net';
+// import { Server as ServerIO } from 'socket.io';
 
-// types
-import { ServerToClientEvents } from '@/types/socket';
+// // types
+// import { ServerToClientEvents } from '@/types/socket';
 
-export type NextApiResponseServerIO = NextApiResponse & {
-  socket: Socket & {
-    server: NetServer & {
-      io: ServerIO<ServerToClientEvents>;
-    };
-  };
-};
+// export type NextApiResponseServerIO = NextApiResponse & {
+//   socket: Socket & {
+//     server: NetServer & {
+//       io: ServerIO<ServerToClientEvents>;
+//     };
+//   };
+// };
 
-const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  if (!res.socket.server.io) {
-    const httpServer = res.socket.server as NetServer;
-    const io = new ServerIO(httpServer, {
-      path: '/api/socket/io',
-      addTrailingSlash: false,
-    });
+// const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+//   if (!res.socket.server.io) {
+//     const httpServer = res.socket.server as NetServer;
+//     const io = new ServerIO(httpServer, {
+//       path: '/api/socket/io',
+//       addTrailingSlash: false,
+//     });
 
-    io.on('connection', (socket) => {
-      socket.on('sendMessage', (message) => {
-        socket.broadcast.emit('message', message);
-      });
+//     io.on('connection', (socket) => {
+//       socket.on('sendMessage', (message) => {
+//         socket.broadcast.emit('message', message);
+//       });
 
-      socket.on('disconnect', () => {
-        console.log('Socket disconnected:', socket.id);
-      });
-    });
+//       socket.on('disconnect', () => {
+//         console.log('Socket disconnected:', socket.id);
+//       });
+//     });
 
-    res.socket.server.io = io;
-  }
+//     res.socket.server.io = io;
+//   }
 
-  res.end();
-};
+//   res.end();
+// };
 
-export default ioHandler;
+// export default ioHandler;
